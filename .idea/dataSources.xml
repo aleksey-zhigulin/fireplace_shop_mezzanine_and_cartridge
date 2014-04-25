@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="1043694832">
+    <data-source source="LOCAL" name="dev" uuid="e29f1617-286c-4a54-8d45-1fcc91125259">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:C:\Users\work\PycharmProjects\fp\dev.db</jdbc-url>
+      <libraries />
+    </data-source>
+  </component>
+</project>
+
