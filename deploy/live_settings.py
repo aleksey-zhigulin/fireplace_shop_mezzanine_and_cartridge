@@ -7,17 +7,17 @@ ALLOWED_HOSTS = [%(domains_python)s]
 DATABASES = {
     "default": {
         # Ends with "postgresql_psycopg2", "mysql", "sqlite3" or "oracle".
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "ENGINE": "django.db.backends.mysql",
         # DB name or path to database file if using sqlite3.
-        "NAME": "%(proj_name)s",
+        "NAME": "9252095267",
         # Not used with sqlite3.
-        "USER": "%(proj_name)s",
+        "USER": "9252095267",
         # Not used with sqlite3.
-        "PASSWORD": "%(db_pass)s",
+        "PASSWORD": "kBcwGP",
         # Set to empty string for localhost. Not used with sqlite3.
-        "HOST": "127.0.0.1",
+        "HOST": "localhost",
         # Set to empty string for default. Not used with sqlite3.
-        "PORT": "",
+        "PORT": "3306",
     }
 }
 
@@ -30,7 +30,7 @@ CACHE_MIDDLEWARE_KEY_PREFIX = "%(proj_name)s"
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.memcached.MemcachedCache",
-        "LOCATION": "127.0.0.1:11211",
+        "LOCATION": "unix:///home/users/9/9252095267/memcached/memcached.sock:0",
     }
 }
 

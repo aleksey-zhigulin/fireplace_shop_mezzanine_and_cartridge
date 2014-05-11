@@ -551,7 +551,6 @@
       <primary-key columns="id"/>
       <foreign-key name="#FAKE_shop_product_1" columns="site_id" ref-table="django_site" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
       <exported-key name="#FAKE_shop_discountcode_products_1" table="shop_discountcode_products" schema="" catalog="" columns="product_id"/>
-      <exported-key name="#FAKE_shop_productaction_1" table="shop_productaction" schema="" catalog="" columns="product_id"/>
       <exported-key name="#FAKE_shop_productimage_1" table="shop_productimage" schema="" catalog="" columns="product_id"/>
       <exported-key name="#FAKE_shop_productvariation_2" table="shop_productvariation" schema="" catalog="" columns="product_id"/>
       <exported-key name="#FAKE_shop_sale_products_1" table="shop_sale_products" schema="" catalog="" columns="product_id"/>
@@ -582,14 +581,14 @@
       <index name="shop_product_upsell_products_f8955233" unique="true" columns="from_product_id"/>
     </table>
     <table name="shop_productaction" schema="" catalog="" type="TABLE">
-      <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
-      <column name="product_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
       <column name="timestamp" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
-      <column name="total_cart" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="product_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
       <column name="total_purchase" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="total_cart" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
       <primary-key columns="id"/>
-      <foreign-key name="#FAKE_shop_productaction_1" columns="product_id" ref-table="shop_product" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
-      <index name="shop_productaction_7f1b40ad" unique="true" columns="product_id"/>
+      <index name="shop_productaction_c1b56944" unique="true" columns="product_id"/>
+      <index name="shop_productaction_product_id__timestamp" unique="true" columns="product_id,timestamp"/>
     </table>
     <table name="shop_productimage" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>

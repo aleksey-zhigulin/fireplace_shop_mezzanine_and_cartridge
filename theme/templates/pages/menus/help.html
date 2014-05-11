@@ -2,11 +2,11 @@
 
 {% spaceless %}
 {% if page_branch_in_menu %}
-<ul class="nav nav-list navlist-menu-level-{{ branch_level }}">
+<ul class="list-inline">
   {% for page in page_branch %}
       {% if page.in_menu %}
-          {% if page.is_current_child %}
-              <li{% if page.is_current %} class="active"{% endif %} id="tree-menu-{{ page.html_id }}">
+          {% if not page.has_children_in_menu %}
+              <li id="tree-menu-{{ page.html_id }}">
                 <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
               </li>
           {% else %}

@@ -1,0 +1,46 @@
+.right-inner-addon {
+    position: relative;
+}
+
+.right-inner-addon > button,
+.right-inner-addon > .btn:active,
+.right-inner-addon > .btn:hover  {
+    position: absolute;
+    background: transparent;
+    border: none;
+    top: 1px;
+    right: 0px;
+    box-shadow: none;
+}
+
+.navbar-nav.nav-justified > li{
+    float:none;
+}
+
+.navbar-collapse {
+    padding: 0;
+}
+
+footer {
+    background-image: url('/static/img/bg_footer.png');
+    padding-bottom: 15px;
+}
+
+.nav-footer > ul > li {
+    padding: 0;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  margin-bottom: 130px;
+}
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 130px;
+}

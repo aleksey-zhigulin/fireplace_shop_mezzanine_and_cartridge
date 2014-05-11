@@ -1,3 +1,4 @@
+ # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
 ######################
@@ -8,6 +9,10 @@ from __future__ import absolute_import, unicode_literals
 # with default values, but are common enough to be put here, commented
 # out, for convenient overriding.
 
+SHOP_USE_WISHLIST = False
+SHOP_PAYMENT_STEP_ENABLED = False
+SHOP_CATEGORY_USE_FEATURED_IMAGE = True
+SHOP_USE_HIERARCHICAL_URLS = True
 # Sequence of available credit card types for payment.
 # SHOP_CARD_TYPES = ("Mastercard", "Visa", "Diners", "Amex")
 
@@ -56,10 +61,11 @@ from __future__ import absolute_import, unicode_literals
 
 # Sequence of value/name pairs for types of product options,
 # eg Size, Colour.
-# SHOP_OPTION_TYPE_CHOICES = (
-#     (1, "Size"),
-#     (2, "Colour"),
-# )
+SHOP_OPTION_TYPE_CHOICES = (
+    (1, "Size"),
+    (2, "Colour"),
+    # (3, "Мощность"),
+)
 
 # Sequence of indexes from the SHOP_OPTION_TYPE_CHOICES setting that
 # control how the options should be ordered in the admin,
@@ -104,11 +110,12 @@ from __future__ import absolute_import, unicode_literals
 # menus a page should appear in. Note that if a menu template is used
 # that doesn't appear in this setting, all pages will appear in it.
 
-# PAGE_MENU_TEMPLATES = (
-#     (1, "Top navigation bar", "pages/menus/dropdown.html"),
-#     (2, "Left-hand tree", "pages/menus/tree.html"),
-#     (3, "Footer", "pages/menus/footer.html"),
-# )
+PAGE_MENU_TEMPLATES = (
+    (1, "Top navigation bar", "pages/menus/dropdown.html"),
+    (2, "Left-hand tree", "pages/menus/tree.html"),
+    (3, "Footer", "pages/menus/footer.html"),
+    (4, "Help links", "pages/menus/help.html"),
+)
 
 # A sequence of fields that will be injected into Mezzanine's (or any
 # library's) models. Each item in the sequence is a four item sequence.
@@ -146,7 +153,7 @@ from __future__ import absolute_import, unicode_literals
 # If True, the south application will be automatically added to the
 # INSTALLED_APPS setting.
 USE_SOUTH = True
-
+PAGES_MENU_SHOW_ALL = False
 
 ########################
 # MAIN DJANGO SETTINGS #
@@ -192,7 +199,7 @@ LANGUAGES = (
 DEBUG = False
 
 # Whether a user's session cookie expires when the Web browser is closed.
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 SITE_ID = 1
 
@@ -291,7 +298,7 @@ ROOT_URLCONF = "%s.urls" % PROJECT_DIRNAME
 # or "C:/www/django/templates".
 # Always use forward slashes, even on Windows.
 # Don't forget to use absolute paths, not relative paths.
-TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "theme/templates"),)
+# TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
 
 
 ################
@@ -313,12 +320,13 @@ INSTALLED_APPS = (
     "mezzanine.conf",
     "mezzanine.core",
     "mezzanine.generic",
-    "mezzanine.blog",
+    # "mezzanine.blog",
     "mezzanine.forms",
     "mezzanine.pages",
     "mezzanine.galleries",
-    "mezzanine.twitter",
+    # "mezzanine.twitter",
     "mezzanine.accounts",
+    # "robokassa",
     #"mezzanine.mobile",
 )
 
@@ -372,9 +380,9 @@ PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 
 # These will be added to ``INSTALLED_APPS``, only if available.
 OPTIONAL_APPS = (
-    "debug_toolbar",
-    "django_extensions",
-    "compressor",
+    # "debug_toolbar",
+    # "django_extensions",
+    # "compressor",
     PACKAGE_NAME_FILEBROWSER,
     PACKAGE_NAME_GRAPPELLI,
 )
@@ -388,23 +396,23 @@ DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
 # These settings are used by the default fabfile.py provided.
 # Check fabfile.py for defaults.
 
-# FABRIC = {
-#     "SSH_USER": "", # SSH username
-#     "SSH_PASS":  "", # SSH password (consider key-based authentication)
-#     "SSH_KEY_PATH":  "", # Local path to SSH key file, for key-based auth
-#     "HOSTS": [], # List of hosts to deploy to
-#     "VIRTUALENV_HOME":  "", # Absolute remote path for virtualenvs
-#     "PROJECT_NAME": "", # Unique identifier for project
-#     "REQUIREMENTS_PATH": "", # Path to pip requirements, relative to project
-#     "GUNICORN_PORT": 8000, # Port gunicorn will listen on
-#     "LOCALE": "en_US.UTF-8", # Should end with ".UTF-8"
-#     "LIVE_HOSTNAME": "www.example.com", # Host for public site.
-#     "REPO_URL": "", # Git or Mercurial remote repo URL for the project
-#     "DB_PASS": "", # Live database password
-#     "ADMIN_PASS": "", # Live admin user password
-#     "SECRET_KEY": SECRET_KEY,
-#     "NEVERCACHE_KEY": NEVERCACHE_KEY,
-# }
+FABRIC = {
+    "SSH_USER": "9252095267", # SSH username
+    "SSH_PASS":  "kBcwGP", # SSH password (consider key-based authentication)
+    "SSH_KEY_PATH":  "", # Local path to SSH key file, for key-based auth
+    "HOSTS": [], # List of hosts to deploy to
+    "VIRTUALENV_HOME":  "", # Absolute remote path for virtualenvs
+    "PROJECT_NAME": "", # Unique identifier for project
+    "REQUIREMENTS_PATH": "", # Path to pip requirements, relative to project
+    "GUNICORN_PORT": 8000, # Port gunicorn will listen on
+    "LOCALE": "ru_RU.UTF-8", # Should end with ".UTF-8"
+    "LIVE_HOSTNAME": "www..com", # Host for public site.
+    "REPO_URL": "", # Git or Mercurial remote repo URL for the project
+    "DB_PASS": "", # Live database password
+    "ADMIN_PASS": "", # Live admin user password
+    "SECRET_KEY": SECRET_KEY,
+    "NEVERCACHE_KEY": NEVERCACHE_KEY,
+}
 
 
 ##################
