@@ -682,4 +682,7 @@
       <index name="twitter_tweet_1f3ceafc" unique="true" columns="query_id"/>
     </table>
   </data-source>
+  <data-source source="LOCAL" name="Django default" uuid="9c236364-1252-48a2-8dc9-1801ba56588e">
+    <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
+  </data-source>
 </component>

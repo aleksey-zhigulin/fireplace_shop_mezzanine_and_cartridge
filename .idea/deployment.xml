@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="9252095267.myjino.ru" />
+  <component name="PublishConfigData" autoUpload="Always" serverName="9252095267.myjino.ru" exclude=".svn;.cvs;.idea;.DS_Store;.git;.hg;.vagrant;bootstrap.sh;local_settings.py;.db;wsgi.py;.gitignore;.hgignore;">
+    <serverData>
+      <paths name="9252095267.myjino.ru">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/django/test/fireplace_shop" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="азбука-камня.рф">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/django/fireplace_shop" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
 </project>
 

@@ -53,8 +53,8 @@
     <div class="row">
 
         <div class="col-md-2 left">
-            <script src="{% static "holder.js" %}"></script>
-            <a href="/"><img src="holder.js/180x120"></a>
+            <script src="{% static "js/holder.js" %}"></script>
+            <a href="/"><img src="js/holder.js/180x120"></a>
         </div>
         <div class="col-md-5 middle">
             <h3>+7(495)ХХХ-ХХ-ХХ <small>ежедневно с 10:00 до 19:00</small></h3>
@@ -94,14 +94,14 @@
 
 {% nevercache %}
 {% if messages %}
-<div class="messages">
+{#<div class="messages">#}
 {% for message in messages %}
 <div class="alert alert-dismissable alert-{{ message.tags }}" data-alert="alert">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
     {{ message }}
 </div>
 {% endfor %}
-</div>
+{#</div>#}
 {% endif %}
 {% endnevercache %}
 

@@ -1,5 +1,11 @@
- # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+import os
+
+# Make these unique, and don't share it with anybody.
+SECRET_KEY = "7cb81402-d283-4100-96e6-6bb2e27a836aeff48417-1f5d-4266-955c-00fd52f3fb8d6b54bcd2-bc0a-4118-823f-06f4cc8180ee"
+NEVERCACHE_KEY = "08d9da92-015e-4bfa-81dc-61feefdc50d5bdaca748-13e2-4161-b1a3-de8d70912c697283c6ba-35fd-4eac-b059-89a93d13e8cf"
+
 
 ######################
 # CARTRIDGE SETTINGS #
@@ -13,6 +19,7 @@ SHOP_USE_WISHLIST = False
 SHOP_PAYMENT_STEP_ENABLED = False
 SHOP_CATEGORY_USE_FEATURED_IMAGE = True
 SHOP_USE_HIERARCHICAL_URLS = True
+SHOP_USE_RATINGS = False
 # Sequence of available credit card types for payment.
 # SHOP_CARD_TYPES = ("Mastercard", "Visa", "Diners", "Amex")
 
@@ -33,7 +40,7 @@ SHOP_USE_HIERARCHICAL_URLS = True
 # Controls the formatting of monetary values accord to the locale
 # module in the python standard library. If an empty string is
 # used, will fall back to the system's locale.
-# SHOP_CURRENCY_LOCALE = ""
+SHOP_CURRENCY_LOCALE = "ru_RU.UTF-8"
 
 # Dotted package path and class name of the function that
 # is called on submit of the billing/shipping checkout step. This
@@ -62,9 +69,7 @@ SHOP_USE_HIERARCHICAL_URLS = True
 # Sequence of value/name pairs for types of product options,
 # eg Size, Colour.
 SHOP_OPTION_TYPE_CHOICES = (
-    (1, "Size"),
-    (2, "Colour"),
-    # (3, "Мощность"),
+    (1, "Размер"),
 )
 
 # Sequence of indexes from the SHOP_OPTION_TYPE_CHOICES setting that
@@ -163,13 +168,17 @@ PAGES_MENU_SHOW_ALL = False
 # In the format (('Full Name', 'email@example.com'),
 #                ('Full Name', 'anotheremail@example.com'))
 ADMINS = (
-    # ('Your Name', 'your_email@domain.com'),
+     ('Алексей Жигулин', 'a.a.zhigulin@yandex.ru'),
 )
 MANAGERS = ADMINS
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
-# See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = []
+# See https://docs.djangoproject.com/en/1.5/ref/settings/#s-hosts
+ALLOWED_HOSTS = ['9252095267.myjino.ru',
+                 'xn----7sbabc9awctk3dxi.xn--p1ai',
+                 'азбука-камня.рф',
+                 'azbuka-kamnya.ru',
+                 'azbuka-kamnya.com']
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -240,17 +249,17 @@ FILE_UPLOAD_PERMISSIONS = 0o644
 DATABASES = {
     "default": {
         # Add "postgresql_psycopg2", "mysql", "sqlite3" or "oracle".
-        "ENGINE": "django.db.backends.",
+        "ENGINE": "django.db.backends.mysql",
         # DB name or path to database file if using sqlite3.
-        "NAME": "",
+        "NAME": "9252095267_test",
         # Not used with sqlite3.
-        "USER": "",
+        "USER": "9252095267",
         # Not used with sqlite3.
-        "PASSWORD": "",
+        "PASSWORD": "kBcwGP",
         # Set to empty string for localhost. Not used with sqlite3.
-        "HOST": "",
+        "HOST": "127.0.0.1",
         # Set to empty string for default. Not used with sqlite3.
-        "PORT": "",
+        "PORT": "3306",
     }
 }
 
@@ -280,7 +289,8 @@ STATIC_URL = "/static/"
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = os.path.join(PROJECT_ROOT, STATIC_URL.strip("/"))
+
+STATIC_ROOT = os.path.join(os.path.expanduser('~'), 'domains/9252095267.myjino.ru/static/')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -289,10 +299,10 @@ MEDIA_URL = STATIC_URL + "media/"
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = os.path.join(PROJECT_ROOT, *MEDIA_URL.strip("/").split("/"))
+MEDIA_ROOT = STATIC_ROOT + 'media/'
 
 # Package/module name to import the root urlpatterns from for the project.
-ROOT_URLCONF = "%s.urls" % PROJECT_DIRNAME
+ROOT_URLCONF = "urls"
 
 # Put strings here, like "/home/html/django_templates"
 # or "C:/www/django/templates".
@@ -326,7 +336,6 @@ INSTALLED_APPS = (
     "mezzanine.galleries",
     # "mezzanine.twitter",
     "mezzanine.accounts",
-    # "robokassa",
     #"mezzanine.mobile",
 )
 
@@ -343,6 +352,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
     "django.core.context_processors.tz",
     "mezzanine.conf.context_processors.settings",
+    "mezzanine.pages.context_processors.page",
 )
 
 # List of middleware classes to use. Order is important; in the request phase,
@@ -388,31 +398,6 @@ OPTIONAL_APPS = (
 )
 
 DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
-
-###################
-# DEPLOY SETTINGS #
-###################
-
-# These settings are used by the default fabfile.py provided.
-# Check fabfile.py for defaults.
-
-FABRIC = {
-    "SSH_USER": "9252095267", # SSH username
-    "SSH_PASS":  "kBcwGP", # SSH password (consider key-based authentication)
-    "SSH_KEY_PATH":  "", # Local path to SSH key file, for key-based auth
-    "HOSTS": [], # List of hosts to deploy to
-    "VIRTUALENV_HOME":  "", # Absolute remote path for virtualenvs
-    "PROJECT_NAME": "", # Unique identifier for project
-    "REQUIREMENTS_PATH": "", # Path to pip requirements, relative to project
-    "GUNICORN_PORT": 8000, # Port gunicorn will listen on
-    "LOCALE": "ru_RU.UTF-8", # Should end with ".UTF-8"
-    "LIVE_HOSTNAME": "www..com", # Host for public site.
-    "REPO_URL": "", # Git or Mercurial remote repo URL for the project
-    "DB_PASS": "", # Live database password
-    "ADMIN_PASS": "", # Live admin user password
-    "SECRET_KEY": SECRET_KEY,
-    "NEVERCACHE_KEY": NEVERCACHE_KEY,
-}
 
 
 ##################

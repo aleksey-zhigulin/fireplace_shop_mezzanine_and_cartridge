@@ -36,6 +36,7 @@ html {
 }
 body {
   margin-bottom: 130px;
+  background-image: url('/static/img/bg.png');
 }
 footer {
   position: absolute;

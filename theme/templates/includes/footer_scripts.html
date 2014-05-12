@@ -15,3 +15,15 @@ _gaq.unshift(['_setAccount', '{{ settings.GOOGLE_ANALYTICS_ID }}']);
 })(document, 'script');
 {% endif %}
 </script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        window.setTimeout(function() {
+            $(".alert").fadeTo(1500, 0).slideUp(500, function(){
+                $(this).remove();
+            });
+        }, 700);
+
+    });
+</script>
