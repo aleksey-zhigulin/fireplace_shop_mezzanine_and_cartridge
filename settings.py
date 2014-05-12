@@ -317,6 +317,7 @@ ROOT_URLCONF = "urls"
 
 INSTALLED_APPS = (
     "theme",
+    "product_db",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
