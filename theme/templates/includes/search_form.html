@@ -1,13 +1,14 @@
 {% load mezzanine_tags i18n future %}
 <form action="{% url "search" %}" role="search">
 
-    <div class="form-group right-inner-addon">
+    <div class="form-group input-group">
         <input class="form-control" placeholder="поиск в товарах" type="text" name="q" value="{{ request.REQUEST.q }}">
-        <button class="btn btn-default" type="submit">
-            <span class="glyphicon glyphicon-search"></span>
-        </button>
+        <span class="input-group-btn">
+            <button class="btn btn-default" type="submit">
+                <span class="glyphicon glyphicon-search"></span>
+            </button>
+        </span>
     </div>
-    <input type="hidden" name="type" value="{{ search_model_choices.1.1 }}">
+    <input type="hidden" name="type" value="{{ search_model_choices.0.1 }}">
 
 </form>
-

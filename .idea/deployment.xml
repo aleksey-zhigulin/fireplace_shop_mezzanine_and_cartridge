@@ -6,7 +6,11 @@
         <serverdata>
           <mappings>
             <mapping deploy="/django/test/fireplace_shop" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/domains/9252095267.myjino.ru/static" local="$PROJECT_DIR$/theme/static" web="/" />
           </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/theme/static/css/src" />
+          </excludedPaths>
         </serverdata>
       </paths>
       <paths name="азбука-камня.рф">

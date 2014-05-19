@@ -46,9 +46,9 @@ ul, ol {
 .messages {
   margin-top: 20px;
 }
-.tree > .nav .nav > li {
-  padding-left: 15px;
-}
+/*.tree > .nav .nav > li {*/
+  /*padding-left: 15px;*/
+/*}*/
 .tree .active > a {
   background-color: #EEEEEE;
 }
@@ -356,8 +356,7 @@ img.pull-left {
   width: 25%;
 }
 .form-actions {
-  background-color: #F8F8F8;
-  border-top: 1px solid #E7E7E7;
+  background-color: transparent;
   padding: 20px;
   margin-bottom: 15px;
   border-radius: 5px;

@@ -70,6 +70,10 @@ SHOP_CURRENCY_LOCALE = "ru_RU.UTF-8"
 # eg Size, Colour.
 SHOP_OPTION_TYPE_CHOICES = (
     (1, "Размер"),
+    (2, "Рамка"),
+    (3, "Мощность"),
+    (4, "Масса"),
+    (5, "Высота стекла"),
 )
 
 # Sequence of indexes from the SHOP_OPTION_TYPE_CHOICES setting that
@@ -121,6 +125,8 @@ PAGE_MENU_TEMPLATES = (
     (3, "Footer", "pages/menus/footer.html"),
     (4, "Help links", "pages/menus/help.html"),
 )
+
+PAGE_MENU_TEMPLATES_DEFAULT = (1, 2)
 
 # A sequence of fields that will be injected into Mezzanine's (or any
 # library's) models. Each item in the sequence is a four item sequence.
@@ -317,7 +323,6 @@ ROOT_URLCONF = "urls"
 
 INSTALLED_APPS = (
     "theme",
-    "product_db",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

@@ -11,8 +11,8 @@
             <span class="glyphicon glyphicon-edit"></span> {% trans "Update profile" %}</a>
     {% else %}
         <a href="{% url "profile_update" %}">{{ request.user|username_or:"email" }}</a>
-        ,
-        <a href="{% url "logout" %}?next={{ request.path }}" class="btn btn-sm btn-account">
+        &nbsp;
+        <a href="{% url "logout" %}?next={{ request.path }}" class="btn btn-default btn-sm btn-account">
             <span class="glyphicon glyphicon-log-out"></span>
             {% trans "Log out" %}
         </a>

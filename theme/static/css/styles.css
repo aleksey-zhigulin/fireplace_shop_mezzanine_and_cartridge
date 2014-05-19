@@ -1,47 +1,61 @@
-.right-inner-addon {
-    position: relative;
+/*.right-inner-addon {*/
+  /*position: relative;*/
+/*}*/
+/*.right-inner-addon > button,*/
+/*.right-inner-addon > .btn:active,*/
+/*.right-inner-addon > .btn:hover  {*/
+    /*position: absolute;*/
+    /*background: transparent;*/
+    /*border: none;*/
+    /*top: 1px;*/
+    /*right: 0px;*/
+    /*box-shadow: none;*/
+/*}*/
+
+.navbar-nav.nav-justified {
+    display:table;
 }
 
-.right-inner-addon > button,
-.right-inner-addon > .btn:active,
-.right-inner-addon > .btn:hover  {
-    position: absolute;
-    background: transparent;
-    border: none;
-    top: 1px;
-    right: 0px;
-    box-shadow: none;
-}
-
-.navbar-nav.nav-justified > li{
+.navbar-nav.nav-justified > li {
     float:none;
+    width:auto;
 }
 
-.navbar-collapse {
-    padding: 0;
-}
-
-footer {
-    background-image: url('/static/img/bg_footer.png');
-    padding-bottom: 15px;
-}
-
-.nav-footer > ul > li {
-    padding: 0;
-}
 
 html {
   position: relative;
   min-height: 100%;
 }
+
 body {
   margin-bottom: 130px;
-  background-image: url('/static/img/bg.png');
+  background-image: url('/static/img/bg_lighter.png');
 }
+
 footer {
+  background-image: url('/static/img/bg_footer.png');
+  padding-bottom: 15px;
   position: absolute;
   bottom: 0;
   width: 100%;
-  /* Set the fixed height of the footer here */
+   /*Set the fixed height of the footer here*/
   height: 130px;
 }
+
+
+
+.breadcrumb {
+  padding:0 15px 0 0;
+  margin-bottom: 0;
+  list-style: none;
+  background: transparent;
+}
+
+
+.navbar-collapse {
+    padding: 0;
+}
+/*.nav-footer > ul > li {*/
+    /*padding: 0;*/
+/*}*/
+

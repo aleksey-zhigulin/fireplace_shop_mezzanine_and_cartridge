@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="LessManager">
+    <option name="deleteCssFiles" value="false" />
+    <option name="moveCssFiles" value="false" />
+    <option name="lessProfileMap">
+      <map>
+        <entry key="0">
+          <value>
+            <LessProfile>
+              <option name="cssDirectories">
+                <list>
+                  <CssDirectory>
+                    <option name="path" value="E:\work\fireplace_shop\theme\static\css" />
+                  </CssDirectory>
+                </list>
+              </option>
+              <option name="id" value="0" />
+              <option name="includePattern" value="bootstrap.less" />
+              <option name="lessDirPath" value="E:\work\fireplace_shop\theme\static\css\src" />
+              <option name="name" value="theme" />
+            </LessProfile>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="moveCssFiles" value="false" />
+    <option name="deleteCssFiles" value="false" />
+  </component>
+</project>
+

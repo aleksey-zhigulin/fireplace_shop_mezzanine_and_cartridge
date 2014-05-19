@@ -5,11 +5,21 @@
 <ul class="nav nav-list navlist-menu-level-{{ branch_level }}">
   {% for page in page_branch %}
       {% if page.in_menu %}
+          {% if page.is_current and not page.has_children_in_menu %}
+              <style>
+                #main .left {
+                    display: none;
+                }
+                #main .right {
+                    width: 100%;
+                }
+              </style>
+          {% endif %}
           {% if page.is_current_child %}
-              <li{% if page.is_current %} class="active"{% endif %} id="tree-menu-{{ page.html_id }}">
+              <li id="tree-menu-{{ page.html_id }}">
                 <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
               </li>
-          {% else %}
+          {% elif page.is_current_or_ascendant %}
               {% page_menu page %}
           {% endif %}
       {% endif %}
