@@ -1,10 +1,15 @@
-from __future__ import print_function
+# -*- coding: utf-8 -*-
+
+from __future__ import print_function, unicode_literals
 
 import unicodecsv as csv
+from xlrd import open_workbook
 import os
 import shutil
 import sys
 import datetime
+import random
+
 from optparse import make_option
 
 from django.core.management.base import BaseCommand
@@ -20,8 +25,8 @@ from cartridge.shop.models import ProductVariation
 from cartridge.shop.models import Category
 from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 
-# images get copied from thie directory
-LOCAL_IMAGE_DIR = "/tmp/orig"
+# images get copied from this directory
+LOCAL_IMAGE_DIR = settings.PROJECT_ROOT + "/img"
 # images get copied to this directory under STATIC_ROOT
 IMAGE_SUFFIXES = [".jpg", ".JPG", ".jpeg", ".JPEG", ".tif", ".gif", ".GIF"]
 EMPTY_IMAGE_ENTRIES = ["Please add", "N/A", ""]
@@ -35,7 +40,6 @@ DESCRIPTION = _("Description")
 SKU = _("SKU")
 IMAGE = _("Image")
 CATEGORY = _("Category")
-# SIZE = _("Size")
 NUM_IN_STOCK = _("Number in Stock")
 UNIT_PRICE = _("Unit Price")
 SALE_PRICE = _("Sale Price")
@@ -92,8 +96,8 @@ class Command(BaseCommand):
 
 
 def _product_from_row(row):
-    product, created = Product.objects.get_or_create(title=row[TITLE])
-    product.content = unicode('<p>') +  row[CONTENT] + unicode('</p>')
+    product, created = Product.objects.create(title=row[TITLE])
+    product.content = row[CONTENT]
     product.description = row[DESCRIPTION]
     # TODO: set the 2 below from spreadsheet.
     product.status = CONTENT_STATUS_PUBLISHED
@@ -111,17 +115,15 @@ def _product_from_row(row):
 
 
 def _make_image(image_str, product):
-    if image_str in EMPTY_IMAGE_ENTRIES:
-        return None
-    # try adding various image suffixes, if none given in original filename.
-    root, suffix = os.path.splitext(image_str)
-    if suffix not in IMAGE_SUFFIXES:
-        raise CommandError("INCORRECT SUFFIX: %s" % image_str)
+    # if image_str in EMPTY_IMAGE_ENTRIES:
+    #     return None
+    # root, suffix = os.path.splitext(image_str)
+    # if suffix not in IMAGE_SUFFIXES:
+    #     raise CommandError("INCORRECT SUFFIX: %s" % image_str)
     image_path = os.path.join(LOCAL_IMAGE_DIR, image_str)
-    if not os.path.exists(image_path):
-        raise CommandError("NO FILE %s" % image_path)
-    shutil.copy(image_path, PRODUCT_IMAGE_DIR)
-    #shutil.copy(image_path, os.path.join(PRODUCT_IMAGE_DIR, "orig"))
+    # if not os.path.exists(image_path):
+    #     raise CommandError("NO FILE %s" % image_path)
+    # shutil.copy(image_path, PRODUCT_IMAGE_DIR)
     image, created = ProductImage.objects.get_or_create(
         file="%s" % (os.path.join(SITE_MEDIA_IMAGE_DIR, image_str)),
         description=image_str, # TODO: handle column for this.
@@ -135,17 +137,21 @@ def _make_date(date_str, time_str):
     return date
 
 
-def import_products(csv_file):
+def import_products(xls_file):
     print(_("Importing .."))
-    # More appropriate for testing.
-    #Product.objects.all().delete()
-    reader = csv.DictReader(open(csv_file), encoding='cp1251', delimiter=';')
-    for row in reader:
+    sheet = open_workbook(xls_file,).sheet_by_index(0)
+    random.seed()
+    for row_index in range(1, sheet.nrows):
+        row = {k: v for k, v in zip(
+            (sheet.cell(0, col_index).value for col_index in xrange(sheet.ncols)),
+            (sheet.cell(row_index, col_index).value for col_index in xrange(sheet.ncols))
+        )}
         product = _product_from_row(row)
         try:
             variation = ProductVariation.objects.create(
                 # strip whitespace
-                sku=row[SKU].replace(" ", ""),
+                # sku=row[SKU].replace(" ", ""),
+                sku=random.randint(100000, 199999),
                 product=product,
             )
         except IntegrityError:
@@ -158,19 +164,22 @@ def import_products(csv_file):
             variation.sale_price = row[SALE_PRICE]
         if row[SALE_START_DATE] and row[SALE_START_TIME]:
             variation.sale_from = _make_date(row[SALE_START_DATE],
-                                                row[SALE_START_TIME])
+                                             row[SALE_START_TIME])
         if row[SALE_END_DATE] and row[SALE_END_TIME]:
             variation.sale_to = _make_date(row[SALE_END_DATE],
-                                                row[SALE_END_TIME])
+                                           row[SALE_END_TIME])
         for option in TYPE_CHOICES:
             if row[option]:
                 name = "option%s" % TYPE_CHOICES[option]
                 setattr(variation, name, row[option])
                 new_option, created = ProductOption.objects.get_or_create(
                     type=TYPE_CHOICES[option], # TODO: set dynamically
-                    name=row[option])
+                    name=row[option]
+                )
         variation.save()
-        image = _make_image(row[IMAGE], product)
+        image = ''
+        for img in row[IMAGE].split(','):
+            image = _make_image(img, product)
         if image:
             variation.image = image
         product.variations.manage_empty()
