@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from __future__ import unicode_literals
 
 from socket import gethostname
@@ -323,4 +325,12 @@ register_setting(
         "editing them in the admin.",
     editable=False,
     default=True,
+)
+
+register_setting(
+    name="SHOP_EURO_EXCHANGE_RATE",
+    label=_("Текущий курс евро"),
+    description="Устанавливает курс евро для вычисления цены",
+    editable=True,
+    default=40,
 )

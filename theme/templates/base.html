@@ -37,6 +37,7 @@
 <script src="{% static "mezzanine/js/"|add:settings.JQUERY_FILENAME %}"></script>
 <script src="{% static "js/bootstrap.js" %}"></script>
 <script src="{% static "js/bootstrap-extras.js" %}"></script>
+<script src="{% static "js/ajax-forms.js" %}"></script>
 {% block extra_js %}{% endblock %}
 {% endcompress %}
 <!--[if lt IE 9]>
@@ -53,15 +54,15 @@
 
     <div class="row">
 
-        <div class="col-md-2 left">
+        <div class="col-md-2 left logo">
             <a href="/"><img src={% static "img/logo.png" %}></a>
         </div>
-        <div class="col-md-5 middle">
-            <h3>+7(495)ХХХ-ХХ-ХХ <small>ежедневно с 10:00 до 19:00</small></h3>
-            {% page_menu "pages/menus/help.html" %}
+        <div class="col-md-7 middle">
+            <h3>+7(4967)64-05-69, +7(499)390-21-86 <small>ежедневно с 10:00 до 19:00</small></h3>
+            <ul class="list-inline">
+                {% page_menu "pages/menus/help.html" %}
+            </ul>
             <p>{% search_form "all" %}</p>
-        </div>
-        <div class="col-md-2 middle">
         </div>
         <div class="col-md-3 right">
             {% nevercache %}

@@ -3,7 +3,7 @@
 from __future__ import print_function, unicode_literals
 
 import unicodecsv as csv
-from xlrd import open_workbook
+import xlrd, xlwt
 import os
 import shutil
 import sys
@@ -60,43 +60,75 @@ fieldnames = [TITLE, CONTENT, DESCRIPTION, CATEGORY,
 # TODO: Make sure no options conflict with other fieldnames.
 fieldnames += TYPE_CHOICES.keys()
 
+COLUMN = {v: k for k, v in enumerate((
+    'Категория',
+    'Заголовок',
+    'Артикул',
+    'Содержимое',
+    'Изображение',
+    'Цена',
+    'Валюта',
+    'Масса',
+    'Размер',
+    'Мощность',
+    'Высота стекла',
+    'Рамка',
+    'Описание',
+    'Цена на распродаже',
+    'Начало распродажи',
+    'Время начала распродажи',
+    'Дата окончания распродажи',
+    'Время окончания распродажи',
+    'В наличии',
+))}
+
 
 class Command(BaseCommand):
     args = '--import/--export <csv_file>'
     help = _('Import/Export products from a csv file.')
 
     option_list = BaseCommand.option_list + (
-        make_option('--import',
+        make_option('--import-xls',
             action='store_true',
-            dest='import',
+            dest='import-xls',
+            default=False,
+            help=_('Import products from xls file.')),
+        make_option('--export-xls',
+            action='store_true',
+            dest='export-xls',
+            default=False,
+            help=_('Export products to xls file.')),
+        make_option('--export-csv',
+            action='store_true',
+            dest='export-csv',
+            default=False,
+            help=_('Export products to csv file.')),
+        make_option('--import-csv',
+            action='store_true',
+            dest='import-csv',
             default=False,
             help=_('Import products from csv file.')),
-        make_option('--export',
-            action='store_true',
-            dest='export',
-            default=False,
-            help=_('Export products from csv file.')),
     )
 
     def handle(self, *args, **options):
         if sys.version_info[0] == 3:
             raise CommandError("Python 3 not supported")
         try:
-            csv_file = args[0]
+            file = args[0]
         except IndexError:
-            raise CommandError(_("Please provide csv file to import"))
-        if options["import"] and options["export"]:
-            raise CommandError("can't both import and export")
-        if not options["import"] and not options["export"]:
-            raise CommandError(_("need to import or export"))
-        if options['import']:
-            import_products(csv_file)
-        elif options['export']:
-            export_products(csv_file)
+            raise CommandError(_("Please provide csv or xls file to import"))
+        if options['import-csv']:
+            import_csv(file)
+        elif options['export-csv']:
+            export_products(file)
+        elif options['import-xls']:
+            import_xls(file)
+        elif options['export-xls']:
+            export_xls(file)
 
 
 def _product_from_row(row):
-    product, created = Product.objects.create(title=row[TITLE])
+    product, created = Product.objects.get_or_create(title=row[TITLE])
     product.content = row[CONTENT]
     product.description = row[DESCRIPTION]
     # TODO: set the 2 below from spreadsheet.
@@ -137,25 +169,28 @@ def _make_date(date_str, time_str):
     return date
 
 
-def import_products(xls_file):
+def import_xls(xls_file):
+    Product.objects.all().delete()
     print(_("Importing .."))
     sheet = open_workbook(xls_file,).sheet_by_index(0)
-    random.seed()
     for row_index in range(1, sheet.nrows):
         row = {k: v for k, v in zip(
             (sheet.cell(0, col_index).value for col_index in xrange(sheet.ncols)),
             (sheet.cell(row_index, col_index).value for col_index in xrange(sheet.ncols))
         )}
         product = _product_from_row(row)
-        try:
-            variation = ProductVariation.objects.create(
-                # strip whitespace
-                # sku=row[SKU].replace(" ", ""),
-                sku=random.randint(100000, 199999),
-                product=product,
-            )
-        except IntegrityError:
-            raise CommandError("Product with SKU exists! sku: %s" % row[SKU])
+        while True:
+            try:
+                variation = ProductVariation.objects.create(
+                    # strip whitespace
+                    # sku=row[SKU].replace(" ", ""),
+                    sku=random.randint(100000, 199999),
+                    product=product,
+                )
+                break
+            except IntegrityError:
+                print("Product with SKU exists! sku: %s" % row[SKU])
+                # raise CommandError("Product with SKU exists! sku: %s" % row[SKU])
         if row[NUM_IN_STOCK]:
             variation.num_in_stock = row[NUM_IN_STOCK]
         if row[UNIT_PRICE]:
@@ -190,8 +225,40 @@ def import_products(xls_file):
     print("Variations: %s" % ProductVariation.objects.all().count())
     print("Products: %s" % Product.objects.all().count())
 
+def export_xls(xls_file):
+    print(_("Exporting .."))
+    xls = xlwt.Workbook(encoding='utf-8')
+    xls_sheet = xls.add_sheet('1')
 
-def export_products(csv_file):
+    for field in fieldnames:
+        xls_sheet.write(0, COLUMN[field], field)
+    for row_index, pv in enumerate(ProductVariation.objects.all(), start=1):
+        xls_sheet.write(row_index, COLUMN[TITLE], pv.product.title)
+        xls_sheet.write(row_index, COLUMN[CONTENT], pv.product.content.strip('<p>').strip('</p>'))
+        xls_sheet.write(row_index, COLUMN[DESCRIPTION], pv.product.description)
+        xls_sheet.write(row_index, COLUMN[SKU], pv.sku)
+        xls_sheet.write(row_index, COLUMN[IMAGE], unicode(pv.image))
+        xls_sheet.write(row_index, COLUMN[CATEGORY] , max([unicode(i) for i in pv.product.categories.all()]))
+
+        for option in TYPE_CHOICES:
+            xls_sheet.write(row_index, COLUMN[option], getattr(pv, "option%s" % TYPE_CHOICES[option]))
+
+        xls_sheet.write(row_index, COLUMN[NUM_IN_STOCK], pv.num_in_stock)
+        xls_sheet.write(row_index, COLUMN[UNIT_PRICE], pv.unit_price)
+        xls_sheet.write(row_index, COLUMN[SALE_PRICE], pv.sale_price)
+        try:
+            xls_sheet.write(row_index, COLUMN[SALE_START_DATE], pv.sale_from.strftime(DATE_FORMAT))
+            xls_sheet.write(row_index, COLUMN[SALE_START_TIME], pv.sale_from.strftime(TIME_FORMAT))
+        except AttributeError:
+            pass
+        try:
+            xls_sheet.write(row_index, COLUMN[SALE_END_DATE], pv.sale_to.strftime(DATE_FORMAT))
+            xls_sheet.write(row_index, COLUMN[SALE_END_TIME], pv.sale_to.strftime(TIME_FORMAT))
+        except AttributeError:
+            pass
+    xls.save(xls_file)
+
+def export_csv(csv_file):
     print(_("Exporting .."))
     filehandle = open(csv_file, 'w')
     writer = csv.DictWriter(filehandle, delimiter=';', encoding='cp1251', fieldnames=fieldnames)
@@ -226,3 +293,5 @@ def export_products(csv_file):
             pass
         writer.writerow(row)
     filehandle.close()
+
+

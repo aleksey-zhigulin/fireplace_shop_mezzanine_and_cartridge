@@ -83,9 +83,9 @@ class Priced(models.Model):
         the unit price.
         """
         if self.on_sale():
-            return self.sale_price
+            return self.sale_price * settings.SHOP_EURO_EXCHANGE_RATE
         elif self.has_price():
-            return self.unit_price
+            return self.unit_price * settings.SHOP_EURO_EXCHANGE_RATE
         return Decimal("0")
 
     def copy_price_fields_to(self, obj_to):

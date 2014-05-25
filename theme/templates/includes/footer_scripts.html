@@ -27,3 +27,9 @@ _gaq.unshift(['_setAccount', '{{ settings.GOOGLE_ANALYTICS_ID }}']);
 
     });
 </script>
+
+<script>
+    $('#myModal').on('hidden.bs.modal', function () {
+      $(this).removeData('bs.modal');
+    });
+</script>

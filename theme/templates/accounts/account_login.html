@@ -1,5 +1,7 @@
 {% extends "accounts/account_form.html" %}
-{% load i18n future %}
+{% load i18n future accounts_tags %}
+
+{% block action %}{{ request.path }}?next=/топки{% endblock %}
 
 {% block main %}
 

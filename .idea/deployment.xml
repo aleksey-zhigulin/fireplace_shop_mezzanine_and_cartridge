@@ -10,6 +10,7 @@
           </mappings>
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/theme/static/css/src" />
+            <excludedPath local="true" path="$PROJECT_DIR$/static" />
           </excludedPaths>
         </serverdata>
       </paths>

@@ -2,7 +2,6 @@
 
 {% spaceless %}
 {% if page_branch_in_menu %}
-<ul class="list-inline">
   {% for page in page_branch %}
       {% if page.in_menu %}
           {% if not page.has_children_in_menu %}
@@ -14,6 +13,5 @@
           {% endif %}
       {% endif %}
   {% endfor %}
-</ul>
 {% endif %}
 {% endspaceless %}

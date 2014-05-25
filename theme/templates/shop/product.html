@@ -58,7 +58,7 @@ $(document).ready(function() {
 {% block main %}
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
     {% if images %}
     {% spaceless %}
     <ul id="product-images-large" class="list-unstyled list-inline">
@@ -87,48 +87,48 @@ $(document).ready(function() {
     {% endif %}
 
     </div>
-        <div class="col-md-6">
-        {% if product.available and has_available_variations %}
-        <ul id="variations" class="list-unstyled">
-            {% for variation in variations %}
-            <li id="variation-{{ variation.sku }}"
-                {% if not variation.default %}style="display:none;"{% endif %}>
-                {% if variation.has_price %}
-                    {% if variation.on_sale %}
-                        <span class="old-price">{{ variation.unit_price|currency }}</span>
-                        {% trans "On sale:" %}
-                    {% endif %}
-                    <span class="price">{{ variation.price|currency }}</span>
-                {% else %}
-                    {% if has_available_variations %}
-                    <span class="error-msg">
-                    {% trans "The selected options are currently unavailable." %}
-                    </span>
-                    {% endif %}
-                {% endif %}
-            </li>
-            {% endfor %}
-        </ul>
-
-        {% errors_for add_product_form %}
-
-        <form method="post" id="add-cart" class="shop-form">
-            {% fields_for add_product_form %}
-            <div class="form-actions">
-                <input type="submit" class="btn btn-primary btn-lg pull-left" name="add_cart" value="{% trans "Buy" %}">
-                {% if settings.SHOP_USE_WISHLIST %}
-                <input type="submit" class="btn btn-default btn-lg pull-left" name="add_wishlist" value="{% trans "Save for later" %}">
-                {% endif %}
-            </div>
-        </form>
-        {% else %}
-        <p class="error-msg">{% trans "This product is currently unavailable." %}</p>
-        {% endif %}
+        <div class="col-md-8">
+        {% editable product.content %}
+        {{ product.content|richtext_filters|safe }}
+        {% endeditable %}
+{#        {% if product.available and has_available_variations %}#}
+{#        <ul id="variations" class="list-unstyled">#}
+{#            {% for variation in variations %}#}
+{#            <li id="variation-{{ variation.sku }}"#}
+{#                {% if not variation.default %}style="display:none;"{% endif %}>#}
+{#                {% if variation.has_price %}#}
+{#                    {% if variation.on_sale %}#}
+{#                        <span class="old-price">{{ variation.unit_price|currency }}</span>#}
+{#                        {% trans "On sale:" %}#}
+{#                    {% endif %}#}
+{#                    <span class="price">{{ variation.price|currency }}</span>#}
+{#                {% else %}#}
+{#                    {% if has_available_variations %}#}
+{#                    <span class="error-msg">#}
+{#                    {% trans "The selected options are currently unavailable." %}#}
+{#                    </span>#}
+{#                    {% endif %}#}
+{#                {% endif %}#}
+{#            </li>#}
+{#            {% endfor %}#}
+{#        </ul>#}
+{##}
+{#        {% errors_for add_product_form %}#}
+{##}
+{#        <form method="post" id="add-cart" class="shop-form">#}
+{#            {% fields_for add_product_form %}#}
+{#            <div class="form-actions">#}
+{#                <input type="submit" class="btn btn-primary btn-lg pull-left" name="add_cart" value="{% trans "Buy" %}">#}
+{#                {% if settings.SHOP_USE_WISHLIST %}#}
+{#                <input type="submit" class="btn btn-default btn-lg pull-left" name="add_wishlist" value="{% trans "Save for later" %}">#}
+{#                {% endif %}#}
+{#            </div>#}
+{#        </form>#}
+{#        {% else %}#}
+{#        <p class="error-msg">{% trans "This product is currently unavailable." %}</p>#}
+{#        {% endif %}#}
     </div>
     </div>
-    {% editable product.content %}
-    {{ product.content|richtext_filters|safe }}
-    {% endeditable %}
 
     {% if settings.SHOP_USE_RATINGS %}
     <div class="panel panel-default rating">
