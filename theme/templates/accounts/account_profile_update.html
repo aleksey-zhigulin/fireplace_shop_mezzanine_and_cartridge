@@ -2,6 +2,6 @@
 {% load i18n future %}
 
 {% block account_form_actions %}
-{{ block.super }}
-<a class="btn btn-default btn-lg pull-left" href="{% url "shop_order_history" %}">{% trans "View past orders" %}</a>
+    {{ block.super }}
+    <a class="btn btn-default btn-lg pull-left" href="{% url "shop_order_history" %}">{% trans "View past orders" %}</a>
 {% endblock %}

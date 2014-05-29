@@ -1,3 +1,5 @@
+/*Catalog navbar*/
+
 .navbar-nav.nav-justified {
     display:table;
 }
@@ -7,6 +9,22 @@
     width:auto;
 }
 
+#nav-wrapper.container {
+    padding: 0;
+}
+
+.navbar-collapse {
+    padding: 0;
+}
+
+#nav.affix {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 8999;
+}
+
+/*Fixed bottom footer*/
 
 html {
   position: relative;
@@ -15,20 +33,18 @@ html {
 
 body {
   margin-bottom: 130px;
-  background-image: url('/static/img/bg_lighter.png');
 }
 
 footer {
-  background-image: url('/static/img/bg_footer.png');
   padding-bottom: 15px;
   position: absolute;
   bottom: 0;
   width: 100%;
-   /*Set the fixed height of the footer here*/
   height: 130px;
 }
 
 
+/*Breadcumb*/
 
 .breadcrumb {
   padding:0 15px 0 0;
@@ -37,15 +53,17 @@ footer {
   background: transparent;
 }
 
+/*Fixed bottom cart*/
 
-.navbar-collapse {
-    padding: 0;
+#cart.affix {
+    position: fixed;
+    bottom: 0;
+    z-index: 1;
+    right: 0;
 }
 
-.logo img {
-    border: solid 1px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    border-color: #ddd;
-    border-radius: 5px;
-    margin-bottom: 10px;
+#cart.panel {
+    margin-bottom: 0;
+    background-color: black;
 }
+

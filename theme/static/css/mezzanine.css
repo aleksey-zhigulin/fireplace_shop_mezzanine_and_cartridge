@@ -4,8 +4,8 @@
 ==========================================*/
 
 body {
-  padding-top: 20px;
-  line-height: 165%;
+  /*padding-top: 20px;*/
+  /*line-height: 165%;*/
 }
 h1 {
   margin-bottom: 15px;
@@ -28,14 +28,14 @@ ul, ol {
 .navlist-menu-level-0 {
   margin:-5px 0;
 }
-.navbar-text {
-  font-style: italic;
-  font-size: 11px;
-  color: #aaa !important;
-  line-height: 100%;
-  padding-top: 5px;
-  margin:15px 20px 0 5px;
-}
+/*.navbar-text {*/
+  /*font-style: italic;*/
+  /*font-size: 11px;*/
+  /*color: #aaa !important;*/
+  /*line-height: 100%;*/
+  /*padding-top: 5px;*/
+  /*margin:15px 20px 0 5px;*/
+/*}*/
 .navbar-form.navbar-right {
   padding-right: 0;
   margin-right: -10px;

@@ -17,7 +17,7 @@ NEVERCACHE_KEY = "08d9da92-015e-4bfa-81dc-61feefdc50d5bdaca748-13e2-4161-b1a3-de
 
 SHOP_USE_WISHLIST = False
 SHOP_PAYMENT_STEP_ENABLED = False
-SHOP_CATEGORY_USE_FEATURED_IMAGE = True
+SHOP_CATEGORY_USE_FEATURED_IMAGE = False
 SHOP_USE_HIERARCHICAL_URLS = True
 SHOP_USE_RATINGS = False
 # Sequence of available credit card types for payment.
@@ -257,7 +257,7 @@ DATABASES = {
         # Add "postgresql_psycopg2", "mysql", "sqlite3" or "oracle".
         "ENGINE": "django.db.backends.mysql",
         # DB name or path to database file if using sqlite3.
-        "NAME": "9252095267_test",
+        "NAME": "9252095267",
         # Not used with sqlite3.
         "USER": "9252095267",
         # Not used with sqlite3.
@@ -295,7 +295,7 @@ STATIC_URL = "/static/"
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
 
-STATIC_ROOT = os.path.join(os.path.expanduser('~'), 'domains/9252095267.myjino.ru/static/')
+STATIC_ROOT = os.path.join(os.path.expanduser('~'), 'domains/xn----7sbabc9awctk3dxi.xn--p1ai/static/')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.

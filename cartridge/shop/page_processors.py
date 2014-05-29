@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from __future__ import unicode_literals
 
 from django.template.defaultfilters import slugify
@@ -14,9 +16,17 @@ def category_processor(request, page):
     """
     Add paging/sorting to the products for the category.
     """
+    #TODO: return products from subcategories grouped in categories
+
     settings.use_editable()
-    products = Product.objects.published(for_user=request.user
-                                ).filter(page.category.filters()).distinct()
+
+    sub_categories = page.category.children.published()
+    child_categories = Category.objects.filter(id__in=sub_categories)
+
+    products = Product.objects.published(for_user=request.user).filter(category__in=child_categories).distinct()
+    if not products:
+        products = Product.objects.published(for_user=request.user).filter(page.category.filters()).distinct()
+
     sort_options = [(slugify(option[0]), option[1])
                     for option in settings.SHOP_PRODUCT_SORT_OPTIONS]
     sort_by = request.GET.get("sort", sort_options[0][1])
@@ -25,6 +35,5 @@ def category_processor(request, page):
                         settings.SHOP_PER_PAGE_CATEGORY,
                         settings.MAX_PAGING_LINKS)
     products.sort_by = sort_by
-    sub_categories = page.category.children.published()
-    child_categories = Category.objects.filter(id__in=sub_categories)
+
     return {"products": products, "child_categories": child_categories}

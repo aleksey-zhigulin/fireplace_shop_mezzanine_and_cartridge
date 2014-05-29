@@ -9,7 +9,7 @@ jQuery(function($) {
             data: $form.serialize(),
 
             success: function(data, status) {
-//                $target.html(data);
+                $target.html(data);
                 $('#myModal').modal('hide');
             }
         });

@@ -1,7 +1,7 @@
 {% load mezzanine_tags i18n future %}
-<form action="{% url "search" %}" role="search">
+<form class="navbar-form navbar-left" action="{% url "search" %}" role="search">
 
-    <div class="form-group input-group">
+    <div class="input-group">
         <input class="form-control" placeholder="поиск в товарах" type="text" name="q" value="{{ request.REQUEST.q }}">
         <span class="input-group-btn">
             <button class="btn btn-default" type="submit">

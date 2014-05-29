@@ -16,6 +16,8 @@ _gaq.unshift(['_setAccount', '{{ settings.GOOGLE_ANALYTICS_ID }}']);
 {% endif %}
 </script>
 
+{#  Auto closing alerts #}
+
 <script type="text/javascript">
     $(document).ready(function () {
 
@@ -28,8 +30,49 @@ _gaq.unshift(['_setAccount', '{{ settings.GOOGLE_ANALYTICS_ID }}']);
     });
 </script>
 
+{#  Makes modal reload    #}
+
 <script>
     $('#myModal').on('hidden.bs.modal', function () {
       $(this).removeData('bs.modal');
+    });
+</script>
+
+{#  Nav Affix helper    #}
+
+<script>
+    $(function() {
+        $('#nav-wrapper').height($("#nav").height());
+
+        $('#nav').affix({
+            offset: { top: $('#nav').offset().top }
+        });
+    });
+</script>
+
+{#  Fixed width of affixed element    #}
+
+<script>
+$('#nav').each(function () {
+    var elem = $(this);
+    var parentPanel = $('#nav-wrapper');
+    var resizeFn = function () {
+    var sideBarNavWidth = $(parentPanel).width();
+    elem.width(sideBarNavWidth);
+    };
+    resizeFn();
+    $(window).resize(resizeFn);
+});
+</script>
+
+{#  Cart panel affix helper    #}
+
+<script>
+    $(function() {
+{#        $('#cart-wrapper').height($("#cart").height());#}
+
+        $('#cart').affix({
+            offset: { bottom: $('#cart').offset().bottom }
+        });
     });
 </script>

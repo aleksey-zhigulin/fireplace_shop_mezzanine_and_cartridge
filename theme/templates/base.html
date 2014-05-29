@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
 <link rel="stylesheet" href="{% static "css/mezzanine.css" %}">
 <link rel="stylesheet" href="{% static "css/bootstrap-theme.css" %}">
+<link rel="stylesheet" href="{% static "css/styles.css" %}">
 {% if LANGUAGE_BIDI %}
 <link rel="stylesheet" href="{% static "css/rtl.css" %}">
 {% endif %}
@@ -29,7 +30,6 @@
 {% endif %}
 {% endifinstalled %}
 {% block extra_css %}
-<link rel="stylesheet" href="{% static "css/styles.css" %}">
 {% endblock %}
 {% endcompress %}
 
@@ -50,70 +50,36 @@
 
 <body id="{% block body_id %}body{% endblock %}">
 
-<div class="container">
-
-    <div class="row">
-
-        <div class="col-md-2 left logo">
-            <a href="/"><img src={% static "img/logo.png" %}></a>
-        </div>
-        <div class="col-md-7 middle">
-            <h3>+7(4967)64-05-69, +7(499)390-21-86 <small>ежедневно с 10:00 до 19:00</small></h3>
-            <ul class="list-inline">
-                {% page_menu "pages/menus/help.html" %}
-            </ul>
-            <p>{% search_form "all" %}</p>
-        </div>
-        <div class="col-md-3 right">
-            {% nevercache %}
-            {% include "includes/user_panel.html" %}
-            {% endnevercache %}
-        </div>
-
-    </div>
-
-</div>
+{% include "includes/top_menu.html" %}
 
 <div class="container">
-    <div class="navbar navbar-default" role="navigation">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">{% trans "Toggle Navigation" %}</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            {% if settings.SITE_TITLE %}<a class="navbar-brand visible-xs" href="/">{{ settings.SITE_TITLE }}</a>{% endif %}
-        </div>
-        <div class="navbar-collapse collapse">
-            {% page_menu "pages/menus/dropdown.html" %}
-        </div>
-    </div>
+    <a href="/"><img src="{% static "img/logo1.png" %}"></a>
 </div>
 
-<div class="container">
+    {% include "includes/catalog.html" %}
 
-    {% nevercache %}
-    {% if messages %}
-    {#<div class="messages">#}
-    {% for message in messages %}
-    <div class="alert alert-dismissable alert-{{ message.tags }}" data-alert="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        {{ message }}
+    <div class="container">
+
+        {% nevercache %}
+        {% if messages %}
+        {#<div class="messages">#}
+        {% for message in messages %}
+        <div class="alert alert-dismissable alert-{{ message.tags }}" data-alert="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {{ message }}
+        </div>
+        {% endfor %}
+        {#</div>#}
+        {% endif %}
+        {% endnevercache %}
+
+        <ul class="breadcrumb">
+        {% spaceless %}
+        {% block breadcrumb_menu %}{% page_menu "pages/menus/breadcrumb.html" %}{% endblock %}
+        {% endspaceless %}
+        </ul>
+        <h1 id="h1_category">{% block title %}{% endblock %}</h1>
     </div>
-    {% endfor %}
-    {#</div>#}
-    {% endif %}
-    {% endnevercache %}
-
-    <ul class="breadcrumb">
-    {% spaceless %}
-    {% block breadcrumb_menu %}{% page_menu "pages/menus/breadcrumb.html" %}{% endblock %}
-    {% endspaceless %}
-    </ul>
-    <h1 id="h1_category">{% block title %}{% endblock %}</h1>
-
-</div>
 
 <div class="container" id="main">
 
@@ -122,19 +88,26 @@
             <div class="col-md-3 left">
                 <div class="panel panel-default tree">{% page_menu "pages/menus/tree.html" %}</div>
             </div>
-            <div class="col-md-9 right">
-                {% block main_2col %}{% endblock %}
+            <div class="col-md-9 right panel panel-default">
+                <div class="panel-body">
+                    {% block main_2col %}{% endblock %}
+                </div>
             </div>
         </div>
     {% endblock %}
 
 </div>
 
+</div>
+
+{% nevercache %}
+{% include "includes/user_panel.html" %}
+{% endnevercache %}
 
 <footer>
-<div class="container">
-{% page_menu "pages/menus/footer.html" %}
-</div>
+    <div class="container">
+    {% page_menu "pages/menus/footer.html" %}
+    </div>
 </footer>
 
 {% include "includes/footer_scripts.html" %}

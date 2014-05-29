@@ -137,11 +137,10 @@ def _product_from_row(row):
 
     for category in row[CATEGORY].split(","):
         parent_category, created = Category.objects.get_or_create(title=category.split(" / ")[0])
-        product.categories.add(parent_category)
         for sub_category in category.split(" / ")[1:]:
             cat, created = Category.objects.get_or_create(title=sub_category, parent=parent_category)
             parent_category = cat
-            product.categories.add(parent_category)
+        product.categories.add(parent_category)
 
     return product
 
@@ -172,7 +171,7 @@ def _make_date(date_str, time_str):
 def import_xls(xls_file):
     Product.objects.all().delete()
     print(_("Importing .."))
-    sheet = open_workbook(xls_file,).sheet_by_index(0)
+    sheet = xlrd.open_workbook(xls_file,).sheet_by_index(0)
     for row_index in range(1, sheet.nrows):
         row = {k: v for k, v in zip(
             (sheet.cell(0, col_index).value for col_index in xrange(sheet.ncols)),
@@ -217,10 +216,13 @@ def import_xls(xls_file):
             image = _make_image(img, product)
         if image:
             variation.image = image
-        product.variations.manage_empty()
-        product.variations.set_default_images([])
-        product.copy_default_variation()
-        product.save()
+        try:
+            product.variations.manage_empty()
+            product.variations.set_default_images([])
+            product.copy_default_variation()
+            product.save()
+        except IndexError:
+            print(row[TITLE])
 
     print("Variations: %s" % ProductVariation.objects.all().count())
     print("Products: %s" % Product.objects.all().count())

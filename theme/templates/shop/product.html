@@ -59,34 +59,33 @@ $(document).ready(function() {
 
     <div class="row">
         <div class="col-md-4">
-    {% if images %}
-    {% spaceless %}
-    <ul id="product-images-large" class="list-unstyled list-inline">
-        {% for image in images %}
-        <li id="image-{{ image.id }}-large"{% if not forloop.first %}style="display:none;"{% endif %}>
-            <a class="product-image-large" href="{{ MEDIA_URL }}{{ image.file }}">
-                <img alt="{{ image.description }}" src="{{ MEDIA_URL }}{% thumbnail image.file 0 300 %}" class="img-thumbnail img-responsive col-xs-12">
-            </a>
-        </li>
-        {% endfor %}
-    </ul>
+            {% if images %}
+            {% spaceless %}
+            <ul id="product-images-large" class="list-unstyled list-inline">
+                {% for image in images %}
+                <li id="image-{{ image.id }}-large"{% if not forloop.first %}style="display:none;"{% endif %}>
+                    <a class="product-image-large" href="{{ MEDIA_URL }}{{ image.file }}">
+                        <img alt="{{ image.description }}" src="{{ MEDIA_URL }}{% thumbnail image.file 0 300 %}" class="img-thumbnail img-responsive col-xs-12">
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
 
-    {% if images|length != 1 %}
-    <ul id="product-images-thumb" class="list-unstyled list-inline">
-        {% for image in images %}
-        <li>
-            <a class="thumbnail" id="image-{{ image.id }}" href="{{ MEDIA_URL }}{{ image.file }}">
-                <img alt="{{ image.description }}" src="{{ MEDIA_URL }}{% thumbnail image.file 75 75 %}">
-            </a>
-        </li>
-        {% endfor %}
-    </ul>
-    {% endif %}
+            {% if images|length != 1 %}
+            <ul id="product-images-thumb" class="list-unstyled list-inline">
+                {% for image in images %}
+                <li>
+                    <a class="thumbnail" id="image-{{ image.id }}" href="{{ MEDIA_URL }}{{ image.file }}">
+                        <img alt="{{ image.description }}" src="{{ MEDIA_URL }}{% thumbnail image.file 75 75 %}">
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
 
-    {% endspaceless %}
-    {% endif %}
-
-    </div>
+            {% endspaceless %}
+            {% endif %}
+        </div>
         <div class="col-md-8">
         {% editable product.content %}
         {{ product.content|richtext_filters|safe }}

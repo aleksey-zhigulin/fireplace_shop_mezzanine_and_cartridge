@@ -1,0 +1,29 @@
+{% load pages_tags mezzanine_tags %}
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand visible-xs" href="/">{{ settings.SITE_TITLE }}</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                {% page_menu "pages/menus/help.html" %}
+            </ul>
+            {% search_form "all" %}
+            <p class="navbar-text">+7(4967)64-05-69, +7(499)390-21-86 <small>ежедневно с 10:00 до 19:00</small></p>
+            {% ifinstalled mezzanine.accounts %}
+            {% include "accounts/includes/user_panel.html" %}
+            {% endifinstalled %}
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" data-target="{{ request.path }}" aria-hidden="true">
+</div>

@@ -1,38 +1,26 @@
-{#{% extends "base.html" %}#}
 {% load i18n mezzanine_tags pages_tags %}
-{##}
-{#{% block meta_title %}{{ title }}{% endblock %}#}
-{#{% block title %}{{ title }}{% endblock %}#}
-{#{% block body_id %}account{% endblock %}#}
-{##}
-{#{% block breadcrumb_menu %}#}
-{#{{ block.super }}#}
-{#<li>{{ title }}</li>#}
-{#{% endblock %}#}
-{##}
-
 
 <div class="modal-dialog">
-    {% errors_for form %}
-    <form method="post" data-async {% if form.is_multipart %}enctype="multipart/form-data"{% endif %} action="{% block action %}{% endblock %}">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">{{ title }}</h4>
-          </div>
-          <div class="modal-body">
+    <div class="modal-content">
+        {% errors_for form %}
+        <form method="post" data-async {% if form.is_multipart %}enctype="multipart/form-data"{% endif %} action="{% block action %}{% endblock %}">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">{{ title }}</h4>
+            </div>
+            <div class="modal-body">
                 <fieldset>
                     {% fields_for form %}
                 </fieldset>
                 {% block main %}{% endblock %}
-          </div>
-          <div class="modal-footer">
-            <div class="form-actions">
-                {% block account_form_actions %}
-                    <input id="account-form" class="btn btn-primary" type="submit"  value="{{ title }}">
-                {% endblock %}
             </div>
-          </div>
-        </div>
-    </form>
+            <div class="modal-footer">
+                <div class="form-actions">
+                    {% block account_form_actions %}
+                        <input id="account-form" class="btn btn-primary" type="submit"  value="{{ title }}">
+                    {% endblock %}
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
