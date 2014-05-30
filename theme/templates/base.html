@@ -53,8 +53,13 @@
 {% include "includes/top_menu.html" %}
 
 <div class="container">
-    <a href="/"><img src="{% static "img/logo1.png" %}"></a>
-</div>
+
+    <div class="logo-wrapper">
+        <div class="logo">
+            <a href="/"><img src="{% static "img/logo1.png" %}"></a>
+        </div>
+    </div>
+
 
     {% include "includes/catalog.html" %}
 
@@ -78,30 +83,36 @@
         {% block breadcrumb_menu %}{% page_menu "pages/menus/breadcrumb.html" %}{% endblock %}
         {% endspaceless %}
         </ul>
+
         <h1 id="h1_category">{% block title %}{% endblock %}</h1>
     </div>
 
-<div class="container" id="main">
+    <div class="container" id="main">
 
-    {% block main %}
-        <div class="row">
-            <div class="col-md-3 left">
-                <div class="panel panel-default tree">{% page_menu "pages/menus/tree.html" %}</div>
-            </div>
-            <div class="col-md-9 right panel panel-default">
-                <div class="panel-body">
-                    {% block main_2col %}{% endblock %}
+        {% block main %}
+            <div class="row">
+                <div class="col-xs-12 col-md-3 left">
+                    <div class="panel panel-default tree">
+                        <h5 style="padding-left: 10px">
+                        Категории
+                        </h5>
+                        {% page_menu "pages/menus/tree.html" %}
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-9 right panel panel-default">
+                    <div class="panel-body">
+                        {% block main_2col %}{% endblock %}
+                    </div>
                 </div>
             </div>
-        </div>
-    {% endblock %}
+        {% endblock %}
 
-</div>
+    </div>
 
 </div>
 
 {% nevercache %}
-{% include "includes/user_panel.html" %}
+    {% include "includes/user_panel.html" %}
 {% endnevercache %}
 
 <footer>
