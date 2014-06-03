@@ -24,8 +24,6 @@ var _gaq = [['_trackPageview'], ['_addTrans',
     '',
     // total - required
     decimal({{ order.item_total }}{% if order.discount_total %} - {{ order.discount_total }}{% endif %}),
-    // tax
-    decimal({% if order.tax_total %}{{ order.tax_total }}{% else %}0{% endif %}),
     // shipping
     decimal({{ order.shipping_total }}),
     // city
@@ -60,27 +58,27 @@ _gaq.push(['_trackTrans']);
 {% endif %}
 {% endblock %}
 
-{% block title %}{% trans "Order Complete" %}{% endblock %}
+{% block title %}{% trans "Заказ принят!" %}{% endblock %}
 
 {% block breadcrumb_menu %}
 {% for step in steps %}
 <li>{{ step.title }}</li>
 {% endfor %}
-<li><strong>{% trans "Complete" %}</strong></li>
+<li><strong>{% trans "Готово" %}</strong></li>
 {% endblock %}
 
 
 {% block main %}
-<p>{% trans "Thank you for shopping with us, your order is complete." %}</p>
-<p>{% trans "We've sent you a receipt via email." %}</p>
-<p>{% trans "You can also view your invoice using one of the links below." %}</p>
+<p>{% trans "Спасибо за покупку, ваш заказ принят!" %}</p>
+<p>{% trans "На ваш Email отправлено письмо с информация о заказе." %}</p>
+<p>{% trans "Вы так же можете ознакомиться с информацией о заказе используя ссылки ниже." %}</p>
 <br>
 <form class="order-complete-form" method="post" action="{% url "shop_invoice_resend" order.id %}?next={{ request.path }}">
     {% csrf_token %}
     {% if has_pdf %}
-    <a class="btn btn-primary" href="{% url "shop_invoice" order.id %}?format=pdf">{% trans "Download PDF invoice" %}</a>
+    <a class="btn btn-primary" href="{% url "shop_invoice" order.id %}?format=pdf">{% trans "Скачать счет в формате PDF" %}</a>
     {% endif %}
-    <a class="btn btn-default" target="_blank" href="{% url "shop_invoice" order.id %}">{% trans "View invoice in your browser" %}</a>
-    <input type="submit" class="btn btn-default" value="{% trans "Re-send order email" %}">
+    <a class="btn btn-default" target="_blank" href="{% url "shop_invoice" order.id %}">{% trans "Посмотреть счет в браузере" %}</a>
+    <input type="submit" class="btn btn-default" value="{% trans "Отправить письмо еще раз" %}">
 </form>
 {% endblock %}

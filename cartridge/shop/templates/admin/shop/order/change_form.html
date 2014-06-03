@@ -8,7 +8,7 @@
 </form>
 <ul class="object-tools">
     <li><a href="{% url "shop_invoice" object_id %}?format=pdf">{% trans "Download PDF invoice" %}</a></li>
-    <li><a href="#" onclick="document.getElementById('resend-email').submit(); return false;">{% trans "Re-send order email" %}</a></li>
+    <li><a href="#" onclick="document.getElementById('resend-email').submit(); return false;">{% trans "Отправить счет еще раз" %}</a></li>
     <li><a href="history/" class="historylink">{% trans "History" %}</a></li>
 </ul>
 {% endif %}{% endif %}

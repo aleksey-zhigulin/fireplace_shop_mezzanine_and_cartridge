@@ -23,6 +23,18 @@
     text-align: center;
 }
 
+#more > a,
+#more > a:hover,
+#more > a:active,
+#more > a:focus {
+    background-color: transparent;
+}
+
+#more {
+    margin-left: 0;
+    margin-right: 0;
+}
+
 /*Catalog nav*/
 
 .nav-justified {

@@ -16,14 +16,20 @@
                 {% page_menu "pages/menus/help.html" %}
             </ul>
             {% search_form "all" %}
-            <div class="nav navbar-nav navbar-left">
-                <p class="navbar-text hidden-sm" style="font-weight: bold">
+            <div class="dropdown nav navbar-nav navbar-left">
+                <p class="navbar-text" style="font-weight: bold">
                     <span class=" glyphicon glyphicon-earphone"></span>
-                    +7(4967)64-05-69, +7(499)390-21-86
+                    +7(499)390-21-86
+                    <div class="navbar-text dropdown" id="more">
+                        <a data-toggle="dropdown" href="#">ещё<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                        <strong>+7(4967)64-05-69</strong><br>
+                        Пн-Сб с 10:00 до 19:00<br>
+                        Вс с 10:00 до 17:00
+                        </ul>
+                    </div>
                 </p>
-                <p class="navbar-text">
-                    <small class="visible-lg">Пн-Сб с 10:00 до 19:00</small>
-                </p>
+
             </div>
             {% ifinstalled mezzanine.accounts %}
             {% include "accounts/includes/user_panel.html" %}

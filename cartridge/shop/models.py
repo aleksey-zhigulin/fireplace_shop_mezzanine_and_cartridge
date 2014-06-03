@@ -400,22 +400,11 @@ class Category(Page, RichText):
 class Order(models.Model):
 
     billing_detail_first_name = CharField(_("First name"), max_length=100)
-    billing_detail_last_name = CharField(_("Last name"), max_length=100)
-    billing_detail_street = CharField(_("Street"), max_length=100)
-    billing_detail_city = CharField(_("City/Suburb"), max_length=100)
-    billing_detail_state = CharField(_("State/Region"), max_length=100)
-    billing_detail_postcode = CharField(_("Zip/Postcode"), max_length=10)
-    billing_detail_country = CharField(_("Country"), max_length=100)
     billing_detail_phone = CharField(_("Phone"), max_length=20)
     billing_detail_email = models.EmailField(_("Email"))
-    shipping_detail_first_name = CharField(_("First name"), max_length=100)
-    shipping_detail_last_name = CharField(_("Last name"), max_length=100)
     shipping_detail_street = CharField(_("Street"), max_length=100)
     shipping_detail_city = CharField(_("City/Suburb"), max_length=100)
     shipping_detail_state = CharField(_("State/Region"), max_length=100)
-    shipping_detail_postcode = CharField(_("Zip/Postcode"), max_length=10)
-    shipping_detail_country = CharField(_("Country"), max_length=100)
-    shipping_detail_phone = CharField(_("Phone"), max_length=20)
     additional_instructions = models.TextField(_("Additional instructions"),
                                                blank=True)
     time = models.DateTimeField(_("Time"), auto_now_add=True, null=True)
@@ -423,14 +412,12 @@ class Order(models.Model):
     user_id = models.IntegerField(blank=True, null=True)
     shipping_type = CharField(_("Shipping type"), max_length=50, blank=True)
     shipping_total = fields.MoneyField(_("Shipping total"))
-    tax_type = CharField(_("Tax type"), max_length=50, blank=True)
-    tax_total = fields.MoneyField(_("Tax total"))
     item_total = fields.MoneyField(_("Item total"))
     discount_code = fields.DiscountCodeField(_("Discount code"), blank=True)
     discount_total = fields.MoneyField(_("Discount total"))
     total = fields.MoneyField(_("Order total"))
-    transaction_id = CharField(_("Transaction ID"), max_length=255, null=True,
-                               blank=True)
+    # transaction_id = CharField(_("Transaction ID"), max_length=255, null=True,
+    #                            blank=True)
 
     status = models.IntegerField(_("Status"),
                             choices=settings.SHOP_ORDER_STATUS_CHOICES,
@@ -441,7 +428,7 @@ class Order(models.Model):
     # These are fields that are stored in the session. They're copied to
     # the order in setup() and removed from the session in complete().
     session_fields = ("shipping_type", "shipping_total", "discount_total",
-                      "discount_code", "tax_type", "tax_total")
+                      "discount_code")
 
     class Meta:
         verbose_name = _("Order")
@@ -452,8 +439,7 @@ class Order(models.Model):
         return "#%s %s %s" % (self.id, self.billing_name(), self.time)
 
     def billing_name(self):
-        return "%s %s" % (self.billing_detail_first_name,
-                          self.billing_detail_last_name)
+        return "%s" % (self.billing_detail_first_name)
 
     def setup(self, request):
         """
@@ -473,8 +459,6 @@ class Order(models.Model):
             self.total += self.shipping_total
         if self.discount_total is not None:
             self.total -= Decimal(self.discount_total)
-        if self.tax_total is not None:
-            self.total += Decimal(self.tax_total)
         self.save()  # We need an ID before we can add related items.
         for item in request.cart:
             product_fields = [f.name for f in SelectedProduct._meta.fields]

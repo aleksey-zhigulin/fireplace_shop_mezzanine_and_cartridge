@@ -7,7 +7,7 @@
 <div class="confirmation col-md-6">
     <div class="panel panel-default">
     <div class="panel-body">
-    <h3>{% trans "Billing Details" %}</h3>
+    <h3>{% trans "Заказчик" %}</h3>
         <ul class="list-unstyled">
         {% for field, value in form.billing_detail_fields.values %}
             <li><label>{{ field }}:</label> {{ value }}</li>
@@ -20,7 +20,7 @@
 <div class="confirmation col-md-6">
     <div class="panel panel-default">
     <div class="panel-body">
-    <h3>{% trans "Shipping Details" %}</h3>
+    <h3>{% trans "Адрес доставки" %}</h3>
     <ul class="list-unstyled">
         {% for field, value in form.shipping_detail_fields.values %}
             <li><label>{{ field }}:</label> {{ value }}</li>

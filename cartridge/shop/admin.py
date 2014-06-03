@@ -274,12 +274,11 @@ class OrderAdmin(admin.ModelAdmin):
         css = {"all": ("cartridge/css/admin/order.css",)}
 
     ordering = ("status", "-id")
-    list_display = ("id", "billing_name", "total", "time", "status",
-                    "transaction_id", "invoice")
+    list_display = ("id", "billing_name", "total", "time", "status", "invoice")
     list_editable = ("status",)
     list_filter = ("status", "time")
     list_display_links = ("id", "billing_name",)
-    search_fields = (["id", "status", "transaction_id"] +
+    search_fields = (["id", "status"] +
                      billing_fields + shipping_fields)
     date_hierarchy = "time"
     radio_fields = {"status": admin.HORIZONTAL}
@@ -289,9 +288,9 @@ class OrderAdmin(admin.ModelAdmin):
         (_("Billing details"), {"fields": address_pairs(billing_fields)}),
          (_("Shipping details"), {"fields": address_pairs(shipping_fields)}),
         (None, {"fields": ("additional_instructions", ("shipping_total",
-            "shipping_type"), ('tax_total', 'tax_type'),
+            "shipping_type"),
              ("discount_total", "discount_code"), "item_total",
-            ("total", "status"), "transaction_id")}),
+            ("total", "status"))}),
     )
 
 

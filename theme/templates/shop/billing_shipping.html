@@ -26,18 +26,24 @@
 
 {% errors_for form %}
 
-<fieldset>
-    <legend>{% trans "Billing Details" %}</legend>
-    {% fields_for form.billing_detail_fields %}
-</fieldset>
+<div class="row">
+    <div class="col-lg-6">
+        <fieldset>
+            <legend>{% trans "Заказчик" %}</legend>
+            {% fields_for form.billing_detail_fields %}
+        </fieldset>
+    </div>
+    <div class="col-lg-6">
+        <fieldset>
+            <legend>{% trans "Адрес доставки" %}</legend>
+            {% fields_for form.same_billing_shipping_field %}
+            <div id="shipping_fields">{% fields_for form.shipping_detail_fields %}</div>
+            {% fields_for form.additional_instructions_field %}
+            {% fields_for form.remember_field %}
+        </fieldset>
+    </div>
+</div>
 
-<fieldset>
-    <legend>{% trans "Delivery Details" %}</legend>
-    {% fields_for form.same_billing_shipping_field %}
-    <div id="shipping_fields">{% fields_for form.shipping_detail_fields %}</div>
-    {% fields_for form.additional_instructions_field %}
-    {% fields_for form.remember_field %}
-</fieldset>
 
 {% if not settings.SHOP_CHECKOUT_STEPS_SPLIT and settings.SHOP_PAYMENT_STEP_ENABLED %}
 {% include "shop/includes/payment_fields.html" %}
