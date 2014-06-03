@@ -196,6 +196,12 @@ footer {
     margin-bottom: 0;
     background-image: none;
     background-color: black;
+    border-radius: 0;
+    border-top-left-radius: 10px;
+}
+#bottom_cart > .panel-body {
+    padding-bottom: 5px;
+    padding-top: 5px;
 }
 
 /* Home page */

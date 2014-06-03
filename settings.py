@@ -17,25 +17,24 @@ NEVERCACHE_KEY = "08d9da92-015e-4bfa-81dc-61feefdc50d5bdaca748-13e2-4161-b1a3-de
 
 SHOP_USE_WISHLIST = False
 SHOP_PAYMENT_STEP_ENABLED = False
-SHOP_CATEGORY_USE_FEATURED_IMAGE = True
-SHOP_USE_HIERARCHICAL_URLS = True
 SHOP_USE_RATINGS = False
+
 # Sequence of available credit card types for payment.
 # SHOP_CARD_TYPES = ("Mastercard", "Visa", "Diners", "Amex")
 
 # Setting to turn on featured images for shop categories. Defaults to False.
-# SHOP_CATEGORY_USE_FEATURED_IMAGE = True
+SHOP_CATEGORY_USE_FEATURED_IMAGE = True
 
 # Set an alternative OrderForm class for the checkout process.
 # SHOP_CHECKOUT_FORM_CLASS = 'cartridge.shop.forms.OrderForm'
 
 # If True, the checkout process is split into separate
 # billing/shipping and payment steps.
-# SHOP_CHECKOUT_STEPS_SPLIT = True
+SHOP_CHECKOUT_STEPS_SPLIT = False
 
 # If True, the checkout process has a final confirmation step before
 # completion.
-# SHOP_CHECKOUT_STEPS_CONFIRMATION = True
+SHOP_CHECKOUT_STEPS_CONFIRMATION = True
 
 # Controls the formatting of monetary values accord to the locale
 # module in the python standard library. If an empty string is

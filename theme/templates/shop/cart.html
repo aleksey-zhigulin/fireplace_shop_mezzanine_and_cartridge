@@ -10,8 +10,7 @@
 {% endblock %}
 
 {% block main %}
-<div class="panel panel-default">
-    <div class="panel-body">
+
     {% if request.cart.has_items %}
         <form method="post" class="cart-form">
         {% csrf_token %}
@@ -111,7 +110,5 @@
         {% else %}
         <p>{% trans "Your Cart is empty." %}</p>
         {% endif %}
-    </div>
-</div>
 
 {% endblock %}
