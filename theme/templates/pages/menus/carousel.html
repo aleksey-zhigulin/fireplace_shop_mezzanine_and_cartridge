@@ -1,0 +1,45 @@
+{% load i18n future pages_tags shop_tags mezzanine_tags %}
+
+{% spaceless %}
+{% if page_branch_in_menu %}
+  {% for page in page_branch %}
+      {% if page.in_menu %}
+          <a href="{{ page.get_absolute_url }}" class="thumbnail">
+            <div class="caption">
+                <h4>{{ page.title }}</h4>
+            </div>
+            <div id="carousel" class="carousel slide" data-ride="carousel">
+              <ol class="carousel-indicators">
+                <li data-target="#carousel" data-slide-to="0" class="active"></li>
+                <li data-target="#carousel" data-slide-to="1"></li>
+                <li data-target="#carousel" data-slide-to="2"></li>
+                <li data-target="#carousel" data-slide-to="3"></li>
+                <li data-target="#carousel" data-slide-to="4"></li>
+                <li data-target="#carousel" data-slide-to="5"></li>
+                <li data-target="#carousel" data-slide-to="6"></li>
+                <li data-target="#carousel" data-slide-to="7"></li>
+                <li data-target="#carousel" data-slide-to="8"></li>
+                <li data-target="#carousel" data-slide-to="9"></li>
+              </ol>
+              <div class="carousel-inner">
+                {% for product in products %}
+                    <div class="item {% if forloop.first %}active{% endif %}">
+                        {% if product.image %}
+                        <div class="wrapper">
+                            <img class="center-block" src="{{ MEDIA_URL }}{{ product.image }}">
+                        </div>
+                        {% else %}
+                        <div class="placeholder"></div>
+                        {% endif %}
+                    </div>
+               {% endfor %}
+              </div>
+            </div>
+          </a>
+      {% endif %}
+      {% if page.has_children_in_menu %}
+          {% page_menu page %}
+      {% endif %}
+  {% endfor %}
+{% endif %}
+{% endspaceless %}

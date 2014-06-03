@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DataSourceManagerImpl" format="xml" hash="3877024507">
+  <component name="DataSourceManagerImpl" format="xml" hash="1955672009">
     <data-source source="LOCAL" name="Django default" uuid="9c236364-1252-48a2-8dc9-1801ba56588e">
       <driver-ref>mysql</driver-ref>
       <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
@@ -13,6 +13,7 @@
       <driver-ref>sqlite.xerial</driver-ref>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:E:\work\fireplace_shop\dev.db</jdbc-url>
+      <default-dialect>TEXT</default-dialect>
       <libraries />
     </data-source>
   </component>

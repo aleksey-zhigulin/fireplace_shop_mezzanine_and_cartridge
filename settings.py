@@ -17,7 +17,7 @@ NEVERCACHE_KEY = "08d9da92-015e-4bfa-81dc-61feefdc50d5bdaca748-13e2-4161-b1a3-de
 
 SHOP_USE_WISHLIST = False
 SHOP_PAYMENT_STEP_ENABLED = False
-SHOP_CATEGORY_USE_FEATURED_IMAGE = False
+SHOP_CATEGORY_USE_FEATURED_IMAGE = True
 SHOP_USE_HIERARCHICAL_URLS = True
 SHOP_USE_RATINGS = False
 # Sequence of available credit card types for payment.
@@ -120,10 +120,15 @@ SHOP_OPTION_TYPE_CHOICES = (
 # that doesn't appear in this setting, all pages will appear in it.
 
 PAGE_MENU_TEMPLATES = (
-    (1, "Top navigation bar", "pages/menus/dropdown.html"),
-    (2, "Left-hand tree", "pages/menus/tree.html"),
-    (3, "Footer", "pages/menus/footer.html"),
-    (4, "Help links", "pages/menus/help.html"),
+    (1, "Основной каталог", "pages/menus/dropdown.html"),
+    (2, "Левое меню", "pages/menus/tree.html"),
+    (3, "Подвал", "pages/menus/footer.html"),
+    (4, "Верхняя панель", "pages/menus/help.html"),
+    (5, "Популярные категории 1", "pages/menus/first_col.html"),
+    (6, "Слайды на главной", "pages/menus/carousel.html"),
+    (7, "Популярные категории 2", "pages/menus/second_col.html"),
+    (8, "Популярные категории 3", "pages/menus/third_col.html"),
+    (9, "Дополнительные ссылки на главной", "pages/menus/home_extra.html"),
 )
 
 PAGE_MENU_TEMPLATES_DEFAULT = (1, 2)
@@ -403,6 +408,14 @@ OPTIONAL_APPS = (
 )
 
 DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
+
+EMAIL_HOST = 'smtp.jino.ru'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'noreply@azbuka-kamnya.ru'
+EMAIL_HOST_PASSWORD = str('kBcwGP')
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'noreply@azbuka-kamnya.ru'
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
 
 ##################

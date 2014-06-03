@@ -54,29 +54,30 @@
 
 <div class="container">
 
-    <div class="logo-wrapper">
+    <div class="container logo-wrapper">
         <div class="logo">
             <a href="/"><img src="{% static "img/logo1.png" %}"></a>
         </div>
     </div>
 
-
     {% include "includes/catalog.html" %}
 
     <div class="container">
 
+{% comment %}
         {% nevercache %}
         {% if messages %}
-        {#<div class="messages">#}
+        <div class="messages">
         {% for message in messages %}
         <div class="alert alert-dismissable alert-{{ message.tags }}" data-alert="alert">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             {{ message }}
         </div>
         {% endfor %}
-        {#</div>#}
+        </div>
         {% endif %}
         {% endnevercache %}
+{% endcomment %}
 
         <ul class="breadcrumb">
         {% spaceless %}
@@ -99,9 +100,11 @@
                         {% page_menu "pages/menus/tree.html" %}
                     </div>
                 </div>
-                <div class="col-xs-12 col-md-9 right panel panel-default">
-                    <div class="panel-body">
-                        {% block main_2col %}{% endblock %}
+                <div class="col-xs-12 col-md-9 right">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            {% block main_2col %}{% endblock %}
+                        </div>
                     </div>
                 </div>
             </div>

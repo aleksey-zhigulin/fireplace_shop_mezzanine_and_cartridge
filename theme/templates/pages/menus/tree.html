@@ -4,17 +4,17 @@
 {% if page_branch_in_menu %}
 <ul class="nav nav-list navlist-menu-level-{{ branch_level }}">
   {% for page in page_branch %}
+      {% if page.is_current_or_ascendant and not page.has_children_in_menu %}
+          <style>
+            #main .left {
+                display: none;
+            }
+            #main .right {
+                width: 100%;
+            }
+          </style>
+      {% endif %}
       {% if page.in_menu %}
-          {% if page.is_current and not page.has_children_in_menu %}
-              <style>
-                #main .left {
-                    display: none;
-                }
-                #main .right {
-                    width: 100%;
-                }
-              </style>
-          {% endif %}
           {% if page.is_current_child %}
               <li id="tree-menu-{{ page.html_id }}">
                 <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>

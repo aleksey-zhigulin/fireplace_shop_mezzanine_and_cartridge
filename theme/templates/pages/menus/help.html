@@ -1,27 +1,14 @@
 {% load i18n future pages_tags %}
 
 {% spaceless %}
-{% if page_branch_in_menu %}
-  {% for page in page_branch %}
-      {% if page.in_menu %}
-          {% if page.is_current and not page.has_children_in_menu %}
-              <style>
-                #main .left {
-                    display: none;
-                }
-                #main .right {
-                    width: 100%;
-                }
-              </style>
-          {% endif %}
-          {% if not page.has_children_in_menu %}
-              <li class="{% if page.is_current_or_ascendant %}active{% endif %}" id="tree-menu-{{ page.html_id }}">
-                <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
-              </li>
-          {% else %}
-              {% page_menu page %}
-          {% endif %}
-      {% endif %}
-  {% endfor %}
-{% endif %}
+{% for page in page_branch %}
+  {% if page.in_menu %}
+      <li class="{% if page.is_current_or_ascendant %}active{% endif %}" id="tree-menu-{{ page.html_id }}">
+        <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
+      </li>
+  {% endif %}
+  {% if page.has_children_in_menu %}
+      {% page_menu page %}
+  {% endif %}
+{% endfor %}
 {% endspaceless %}
