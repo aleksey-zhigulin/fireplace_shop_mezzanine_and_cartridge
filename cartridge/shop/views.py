@@ -298,8 +298,7 @@ def checkout_steps(request, form_class=OrderForm):
                     response = redirect("shop_complete")
                     if form.cleaned_data.get("remember"):
                         remembered = "%s:%s" % (sign(order.key), order.key)
-                        set_cookie(response, "remember", remembered,
-                                   secure=request.is_secure())
+                        response.set_cookie("remember", remembered, secure=request.is_secure())
                     else:
                         response.delete_cookie("remember")
                     return response

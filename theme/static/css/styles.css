@@ -1,5 +1,24 @@
 /*Top menu*/
 
+@media (min-width: 768px) {
+    .navbar-form {
+       width: 240px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .navbar-form {
+       width: 300px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    #top_menu > li > a {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+}
+
 .navbar {
   background-image:    -moz-linear-gradient(top, #f5f5f5 0%, #d6d6d6 100%); /* FF3.6+ */
   background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f5f5f5), color-stop(100%,#d6d6d6)); /* Chrome,Safari4+ */
@@ -42,6 +61,13 @@
   border: 1px solid #ccc;
   border-radius: 5px;
 }
+@media (min-width: 768px) {
+    #catalog > li > a {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
 .nav-justified > li > a {
   white-space: nowrap;
   padding-top: 15px;
@@ -254,11 +280,11 @@ footer {
     height: 254px;
 }
 
-.home .col-lg-3 > a {
+.home .col-lg-2 > a {
     height: 150px;
 }
-.home .col-lg-3 .wrapper,
-.home .col-lg-3 .wrapper img {
+.home .col-lg-2 .wrapper,
+.home .col-lg-2 .wrapper img {
     height: 100px;
 }
 

@@ -9,6 +9,5 @@ def home(request, template="index.html"):
     products = Product.objects.published(for_user=request.user).filter(
         category__in=Category.objects.filter(title__iexact="Собственное производство")
     ).distinct()
-    print products
     context = {"products": products[:10]}
     return render(request, template, context)

@@ -12,13 +12,13 @@
             <a class="navbar-brand visible-xs" href="/">{{ settings.SITE_TITLE }}</a>
         </div>
         <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav" id="top_menu">
                 {% page_menu "pages/menus/help.html" %}
             </ul>
             {% search_form "all" %}
-            <div class="dropdown nav navbar-nav navbar-left">
+            <div class="hidden-sm dropdown nav navbar-nav navbar-left">
                 <p class="navbar-text" style="font-weight: bold">
-                    <span class=" glyphicon glyphicon-earphone"></span>
+                    <span class="glyphicon glyphicon-earphone"></span>
                     +7(499)390-21-86
                     <div class="navbar-text dropdown" id="more">
                         <a data-toggle="dropdown" href="#">ещё<span class="caret"></span></a>
