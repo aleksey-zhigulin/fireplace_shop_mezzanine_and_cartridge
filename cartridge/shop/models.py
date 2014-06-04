@@ -51,6 +51,7 @@ class Priced(models.Model):
     """
 
     unit_price = fields.MoneyField(_("Unit price"))
+    currency = fields.CharField(_("Currency"), blank=False, max_length=3, default='EUR')
     sale_id = models.IntegerField(null=True)
     sale_price = fields.MoneyField(_("Sale price"))
     sale_from = models.DateTimeField(_("Sale start"), blank=True, null=True)
@@ -83,9 +84,9 @@ class Priced(models.Model):
         the unit price.
         """
         if self.on_sale():
-            return self.sale_price * settings.SHOP_EURO_EXCHANGE_RATE
+            return self.sale_price * (settings.SHOP_EURO_EXCHANGE_RATE if self.currency == 'EUR' else 1)
         elif self.has_price():
-            return self.unit_price * settings.SHOP_EURO_EXCHANGE_RATE
+            return self.unit_price * (settings.SHOP_EURO_EXCHANGE_RATE if self.currency == 'EUR' else 1)
         return Decimal("0")
 
     def copy_price_fields_to(self, obj_to):

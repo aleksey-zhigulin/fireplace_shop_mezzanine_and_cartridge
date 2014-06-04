@@ -9,6 +9,8 @@
 {{ block.super }}
 {% endblock %}
 
+{% block cart_panel %}{% endblock %}
+
 {% block main %}
 
     {% if request.cart.has_items %}

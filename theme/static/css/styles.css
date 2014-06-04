@@ -273,3 +273,9 @@ footer {
     padding-bottom: 10px;
 }
 
+/*  Messages  */
+
+.messages {
+    padding: 0;
+    margin-top: 10px;
+}

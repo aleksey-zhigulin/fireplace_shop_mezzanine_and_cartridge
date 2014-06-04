@@ -67,7 +67,7 @@ def product(request, slug, template="shop/product.html",
                 request.cart.add_item(add_product_form.variation, quantity)
                 recalculate_cart(request)
                 info(request, _("Item added to cart"))
-                return redirect("shop_cart")
+                return redirect(request.path)
             else:
                 skus = request.wishlist
                 sku = add_product_form.variation.sku

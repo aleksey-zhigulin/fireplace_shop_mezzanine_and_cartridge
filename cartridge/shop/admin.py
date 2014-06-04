@@ -87,7 +87,7 @@ class CategoryAdmin(PageAdmin):
 # If variations aren't used, the variation inline should always
 # provide a single inline for managing the single variation per
 # product.
-variation_fields = ["sku", "num_in_stock", "unit_price",
+variation_fields = ["sku", "num_in_stock", "unit_price", "currency",
                     "sale_price", "sale_from", "sale_to", "image"]
 if settings.SHOP_USE_VARIATIONS:
     variation_fields.insert(1, "default")
