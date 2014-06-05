@@ -62,11 +62,12 @@ ul, ol {
 .nav-footer > ul {
   display: inline-block;
   width: 120px;
-  margin-left: 50px;
+  margin-left: 25px;
+  margin-right: 25px;
   vertical-align: top;
 }
 .nav-footer > ul > li {
-  padding: px 0;
+  padding: 0;
 }
 footer {
   background-color: #F8F8F8;

@@ -18,7 +18,6 @@
 {% compress css %}
 <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
 <link rel="stylesheet" href="{% static "css/mezzanine.css" %}">
-<link rel="stylesheet" href="{% static "css/bootstrap-theme.css" %}">
 <link rel="stylesheet" href="{% static "css/styles.css" %}">
 {% if LANGUAGE_BIDI %}
 <link rel="stylesheet" href="{% static "css/rtl.css" %}">
@@ -33,13 +32,7 @@
 {% endblock %}
 {% endcompress %}
 
-{% compress js %}
-<script src="{% static "mezzanine/js/"|add:settings.JQUERY_FILENAME %}"></script>
-<script src="{% static "js/bootstrap.js" %}"></script>
-<script src="{% static "js/bootstrap-extras.js" %}"></script>
-<script src="{% static "js/ajax-forms.js" %}"></script>
-{% block extra_js %}{% endblock %}
-{% endcompress %}
+
 <!--[if lt IE 9]>
 <script src="{% static "js/html5shiv.js" %}"></script>
 <script src="{% static "js/respond.min.js" %}"></script>
@@ -64,6 +57,7 @@
 
     <div class="container">
 
+{% comment %}
         {% nevercache %}
         {% if messages %}
         <div class="messages">
@@ -76,6 +70,7 @@
         </div>
         {% endif %}
         {% endnevercache %}
+{% endcomment %}
 
         <ul class="breadcrumb">
         {% spaceless %}
@@ -101,9 +96,7 @@
 </div>
 
 {% nevercache %}
-{% block cart_panel %}
     {% include "includes/cart_panel.html" %}
-{% endblock %}
 {% endnevercache %}
 
 <footer>
@@ -111,6 +104,14 @@
     {% page_menu "pages/menus/footer.html" %}
     </div>
 </footer>
+
+{% compress js %}
+<script src="{% static "mezzanine/js/"|add:settings.JQUERY_FILENAME %}"></script>
+<script src="{% static "js/bootstrap.js" %}"></script>
+<script src="{% static "js/bootstrap-extras.js" %}"></script>
+<script src="{% static "js/ajax-forms.js" %}"></script>
+{% block extra_js %}{% endblock %}
+{% endcompress %}
 
 {% include "includes/footer_scripts.html" %}
 

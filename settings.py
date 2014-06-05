@@ -186,7 +186,6 @@ MANAGERS = ADMINS
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#s-hosts
 ALLOWED_HOSTS = ['9252095267.myjino.ru',
                  'xn----7sbabc9awctk3dxi.xn--p1ai',
-                 'азбука-камня.рф',
                  'azbuka-kamnya.ru',
                  'azbuka-kamnya.com']
 
@@ -401,7 +400,7 @@ PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 OPTIONAL_APPS = (
     # "debug_toolbar",
     # "django_extensions",
-    # "compressor",
+    "compressor",
     PACKAGE_NAME_FILEBROWSER,
     PACKAGE_NAME_GRAPPELLI,
 )

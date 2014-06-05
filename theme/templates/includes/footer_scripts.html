@@ -1,4 +1,4 @@
-{% load mezzanine_tags %}
+{% load staticfiles mezzanine_tags %}
 
 {% editable_loader %}
 
@@ -49,3 +49,5 @@ _gaq.unshift(['_setAccount', '{{ settings.GOOGLE_ANALYTICS_ID }}']);
         });
     });
 </script>
+
+<script src="{% static "js/ajax-forms.js" %}"></script>
