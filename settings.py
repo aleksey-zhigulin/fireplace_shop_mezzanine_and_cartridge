@@ -281,6 +281,19 @@ DATABASES = {
     }
 }
 
+
+#############
+# MEMCACHED #
+#############
+
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': 'unix:///home/users/9/9252095267/memcached/memcached.sock',
+    }
+}
+
 #########
 # PATHS #
 #########
@@ -347,13 +360,10 @@ INSTALLED_APPS = (
     "mezzanine.conf",
     "mezzanine.core",
     "mezzanine.generic",
-    # "mezzanine.blog",
     "mezzanine.forms",
     "mezzanine.pages",
     "mezzanine.galleries",
-    # "mezzanine.twitter",
     "mezzanine.accounts",
-    #"mezzanine.mobile",
 )
 
 # List of processors used by RequestContext to populate the context.
@@ -376,7 +386,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 # these middleware classes will be applied in the order given, and in the
 # response phase the middleware will be applied in reverse order.
 MIDDLEWARE_CLASSES = (
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     "mezzanine.core.middleware.UpdateCacheMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
@@ -391,8 +400,6 @@ MIDDLEWARE_CLASSES = (
     "mezzanine.core.middleware.TemplateForHostMiddleware",
     "mezzanine.core.middleware.AdminLoginInterfaceSelectorMiddleware",
     "mezzanine.core.middleware.SitePermissionMiddleware",
-    # Uncomment the following if using any of the SSL settings:
-    # "mezzanine.core.middleware.SSLRedirectMiddleware",
     "mezzanine.pages.middleware.PageMiddleware",
     "mezzanine.core.middleware.FetchFromCacheMiddleware",
 )
@@ -416,6 +423,11 @@ OPTIONAL_APPS = (
 )
 
 DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
+
+
+#########
+# EMAIL #
+#########
 
 EMAIL_HOST = 'smtp.jino.ru'
 EMAIL_PORT = 587

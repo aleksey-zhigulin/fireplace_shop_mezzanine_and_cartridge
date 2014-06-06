@@ -5,10 +5,7 @@
 <head>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-{% keywords_for page as keywords %}
-{% if keywords %}
-<meta name="keywords" content="{% for keyword in keywords %}{% if not forloop.first %}, {% endif %}{{ keyword }}{% endfor %}">
-{% endif %}
+<meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
 <meta name="description" content="{% block meta_description %}{% endblock %}">
 <title>{% block meta_title %}{% endblock %}{% if settings.SITE_TITLE %} | {{ settings.SITE_TITLE }}{% endif %}</title>
 <link rel="shortcut icon" href="{% static "img/favicon.ico" %}">
