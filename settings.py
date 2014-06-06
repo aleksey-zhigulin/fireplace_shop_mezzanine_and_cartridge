@@ -6,6 +6,15 @@ import os
 SECRET_KEY = "7cb81402-d283-4100-96e6-6bb2e27a836aeff48417-1f5d-4266-955c-00fd52f3fb8d6b54bcd2-bc0a-4118-823f-06f4cc8180ee"
 NEVERCACHE_KEY = "08d9da92-015e-4bfa-81dc-61feefdc50d5bdaca748-13e2-4161-b1a3-de8d70912c697283c6ba-35fd-4eac-b059-89a93d13e8cf"
 
+######################
+# ROBOTS SETTINGS    #
+######################
+
+ROBOTS_USE_SITEMAP = True
+
+ROBOTS_SITEMAP_URLS = [
+    'http://azbuka-kamnya.ru/sitemap.xml',
+]
 
 ######################
 # CARTRIDGE SETTINGS #
@@ -266,7 +275,7 @@ DATABASES = {
         # Not used with sqlite3.
         "PASSWORD": "kBcwGP",
         # Set to empty string for localhost. Not used with sqlite3.
-        "HOST": "127.0.0.1",
+        "HOST": "localhost",
         # Set to empty string for default. Not used with sqlite3.
         "PORT": "3306",
     }
@@ -298,7 +307,7 @@ STATIC_URL = "/static/"
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
 
-STATIC_ROOT = os.path.join(os.path.expanduser('~'), 'domains/xn----7sbabc9awctk3dxi.xn--p1ai/static/')
+STATIC_ROOT = os.path.join(os.path.expanduser('~'), 'domains/azbuka-kamnya.ru/static/')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -367,6 +376,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 # these middleware classes will be applied in the order given, and in the
 # response phase the middleware will be applied in reverse order.
 MIDDLEWARE_CLASSES = (
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     "mezzanine.core.middleware.UpdateCacheMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
@@ -398,8 +408,8 @@ PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
 
 # These will be added to ``INSTALLED_APPS``, only if available.
 OPTIONAL_APPS = (
-    # "debug_toolbar",
-    # "django_extensions",
+    "debug_toolbar",
+    "robots",
     "compressor",
     PACKAGE_NAME_FILEBROWSER,
     PACKAGE_NAME_GRAPPELLI,
