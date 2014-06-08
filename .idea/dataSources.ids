@@ -328,6 +328,7 @@
       <column name="description" sqlType="TEXT" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
       <column name="title" sqlType="VARCHAR(500)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
       <column name="short_url" sqlType="VARCHAR(200)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="slug" sqlType="VARCHAR(2000)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <column name="login_required" sqlType="BOOL" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
       <column name="site_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
       <column name="in_sitemap" sqlType="BOOL" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
@@ -335,13 +336,12 @@
       <column name="_meta_title" sqlType="VARCHAR(500)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <column name="parent_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
       <column name="titles" sqlType="VARCHAR(1000)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
-      <column name="publish_date" sqlType="DATETIME" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="content_model" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <column name="gen_description" sqlType="BOOL" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
       <column name="created" sqlType="DATETIME" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
-      <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
-      <column name="content_model" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="publish_date" sqlType="DATETIME" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <column name="in_menus" sqlType="VARCHAR(100)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
-      <column name="slug" sqlType="VARCHAR(2000)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
       <column name="expiry_date" sqlType="DATETIME" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <primary-key columns="id"/>
       <index name="pages_page_410d0aac" unique="true" columns="parent_id"/>
@@ -358,6 +358,44 @@
       <column name="InvId" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
       <primary-key columns="id"/>
       <index name="robokassa_successnotification_66bf81ec" unique="true" columns="InvId"/>
+    </table>
+    <table name="robots_rule" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="robot" sqlType="VARCHAR(255)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="crawl_delay" sqlType="DECIMAL" length="2000000000" precision="10" nullable="true" jdbcType="6"/>
+      <primary-key columns="id"/>
+    </table>
+    <table name="robots_rule_allowed" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="rule_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="url_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <index name="robots_rule_allowed_c379dc61" unique="true" columns="url_id"/>
+      <index name="robots_rule_allowed_fb21b565" unique="true" columns="rule_id"/>
+      <index name="robots_rule_allowed_rule_id__url_id" unique="true" columns="rule_id,url_id"/>
+    </table>
+    <table name="robots_rule_disallowed" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="rule_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="url_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <index name="robots_rule_disallowed_c379dc61" unique="true" columns="url_id"/>
+      <index name="robots_rule_disallowed_fb21b565" unique="true" columns="rule_id"/>
+      <index name="robots_rule_disallowed_rule_id__url_id" unique="true" columns="rule_id,url_id"/>
+    </table>
+    <table name="robots_rule_sites" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="rule_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="site_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <index name="robots_rule_sites_99732b5c" unique="true" columns="site_id"/>
+      <index name="robots_rule_sites_fb21b565" unique="true" columns="rule_id"/>
+      <index name="robots_rule_sites_rule_id__site_id" unique="true" columns="rule_id,site_id"/>
+    </table>
+    <table name="robots_url" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="pattern" sqlType="VARCHAR(255)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="id"/>
     </table>
     <table name="shop_cart" schema="" catalog="" type="TABLE">
       <column name="last_updated" sqlType="DATETIME" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
@@ -430,38 +468,24 @@
       <index name="shop_discountcode_products_discountcode_id__product_id" unique="true" columns="discountcode_id,product_id"/>
     </table>
     <table name="shop_order" schema="" catalog="" type="TABLE">
-      <column name="billing_detail_postcode" sqlType="VARCHAR(10)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
-      <column name="shipping_detail_country" sqlType="VARCHAR(100)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
-      <column name="additional_instructions" sqlType="TEXT" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
-      <column name="billing_detail_city" sqlType="VARCHAR(100)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
-      <column name="shipping_type" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
-      <column name="billing_detail_country" sqlType="VARCHAR(100)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
-      <column name="shipping_detail_phone" sqlType="VARCHAR(20)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
-      <column name="shipping_detail_city" sqlType="VARCHAR(100)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
-      <column name="total" sqlType="DECIMAL" length="2000000000" precision="10" nullable="true" jdbcType="6"/>
-      <column name="shipping_detail_postcode" sqlType="VARCHAR(10)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
-      <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
-      <column name="billing_detail_phone" sqlType="VARCHAR(20)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
-      <column name="tax_total" sqlType="DECIMAL" length="2000000000" precision="10" nullable="true" jdbcType="6"/>
-      <column name="shipping_detail_last_name" sqlType="VARCHAR(100)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
-      <column name="billing_detail_street" sqlType="VARCHAR(100)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
-      <column name="shipping_detail_first_name" sqlType="VARCHAR(100)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
-      <column name="billing_detail_last_name" sqlType="VARCHAR(100)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
-      <column name="discount_code" sqlType="VARCHAR(20)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
       <column name="status" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
-      <column name="shipping_total" sqlType="DECIMAL" length="2000000000" precision="10" nullable="true" jdbcType="6"/>
-      <column name="shipping_detail_state" sqlType="VARCHAR(100)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
-      <column name="item_total" sqlType="DECIMAL" length="2000000000" precision="10" nullable="true" jdbcType="6"/>
-      <column name="billing_detail_state" sqlType="VARCHAR(100)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
-      <column name="key" sqlType="VARCHAR(40)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
-      <column name="user_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
-      <column name="billing_detail_first_name" sqlType="VARCHAR(100)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
       <column name="shipping_detail_street" sqlType="VARCHAR(100)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="user_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <column name="shipping_type" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
       <column name="billing_detail_email" sqlType="VARCHAR(75)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
-      <column name="transaction_id" sqlType="VARCHAR(255)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
-      <column name="time" sqlType="DATETIME" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="shipping_total" sqlType="DECIMAL" length="2000000000" precision="10" nullable="true" jdbcType="6"/>
+      <column name="additional_instructions" sqlType="TEXT" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="shipping_detail_state" sqlType="VARCHAR(100)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
       <column name="discount_total" sqlType="DECIMAL" length="2000000000" precision="10" nullable="true" jdbcType="6"/>
-      <column name="tax_type" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="billing_detail_phone" sqlType="VARCHAR(20)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="key" sqlType="VARCHAR(40)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="time" sqlType="DATETIME" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="shipping_detail_city" sqlType="VARCHAR(100)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="item_total" sqlType="DECIMAL" length="2000000000" precision="10" nullable="true" jdbcType="6"/>
+      <column name="total" sqlType="DECIMAL" length="2000000000" precision="10" nullable="true" jdbcType="6"/>
+      <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <column name="discount_code" sqlType="VARCHAR(20)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="billing_detail_first_name" sqlType="VARCHAR(100)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
       <primary-key columns="id"/>
     </table>
     <table name="shop_orderitem" schema="" catalog="" type="TABLE">
@@ -481,7 +505,9 @@
       <column name="image" sqlType="VARCHAR(100)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <column name="site_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
       <column name="keywords_string" sqlType="VARCHAR(500)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="currency" sqlType="VARCHAR(3)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
       <column name="in_sitemap" sqlType="BOOL" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="content_model" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
       <column name="sale_to" sqlType="DATETIME" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <column name="sale_from" sqlType="DATETIME" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
@@ -553,6 +579,11 @@
       <primary-key columns="id"/>
       <index name="shop_productimage_c1b56944" unique="true" columns="product_id"/>
     </table>
+    <table name="shop_productkamin" schema="" catalog="" type="TABLE">
+      <column name="product_ptr_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="power" sqlType="VARCHAR(4)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="product_ptr_id"/>
+    </table>
     <table name="shop_productoption" schema="" catalog="" type="TABLE">
       <column name="type" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
       <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
@@ -566,16 +597,17 @@
       <column name="num_in_stock" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
       <column name="default" sqlType="BOOL" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
       <column name="sale_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <column name="option1" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <column name="unit_price" sqlType="DECIMAL" length="2000000000" precision="10" nullable="true" jdbcType="6"/>
+      <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <column name="currency" sqlType="VARCHAR(3)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
       <column name="image_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
       <column name="sale_price" sqlType="DECIMAL" length="2000000000" precision="10" nullable="true" jdbcType="6"/>
-      <column name="option1" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
-      <column name="option2" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
-      <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
-      <column name="sale_from" sqlType="DATETIME" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
-      <column name="option3" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <column name="option4" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <column name="option5" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="option2" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="option3" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="sale_from" sqlType="DATETIME" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <primary-key columns="id"/>
       <index name="shop_productvariation_c1b56944" unique="true" columns="product_id"/>
       <index name="shop_productvariation_b2433b87" unique="true" columns="image_id"/>

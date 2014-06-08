@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 from __future__ import division, unicode_literals
 from future.builtins import str, super
@@ -10,7 +11,7 @@ from operator import iand, ior
 from django.core.urlresolvers import reverse
 from django.db import models, connection
 from django.db.models.signals import m2m_changed
-from django.db.models import CharField, Q
+from django.db.models import CharField, F, Q
 from django.db.models.base import ModelBase
 from django.dispatch import receiver
 from django.utils.timezone import now
@@ -29,6 +30,7 @@ from mezzanine.core.models import Displayable, RichText, Orderable
 from mezzanine.generic.fields import RatingField
 from mezzanine.pages.models import Page
 from mezzanine.utils.models import AdminThumbMixin, upload_to
+
 
 from cartridge.shop import fields, managers
 from cartridge.shop.utils import clear_session
@@ -51,7 +53,7 @@ class Priced(models.Model):
     """
 
     unit_price = fields.MoneyField(_("Unit price"))
-    currency = fields.CharField(_("Currency"), blank=False, max_length=3, default='EUR')
+    currency = fields.CharField(_("Валюта"), blank=False, max_length=3, default='EUR')
     sale_id = models.IntegerField(null=True)
     sale_price = fields.MoneyField(_("Sale price"))
     sale_from = models.DateTimeField(_("Sale start"), blank=True, null=True)
@@ -101,11 +103,26 @@ class Priced(models.Model):
         obj_to.save()
 
 
-class Product(Displayable, Priced, RichText, AdminThumbMixin):
+class BaseProduct(Displayable):
+    """
+    Exists solely to store ``DisplayableManager`` as the main manager.
+    If it's defined on ``Product``, a concrete model, then each
+    ``Product`` subclass loses the custom manager.
+    """
+
+    objects = DisplayableManager()
+
+    class Meta:
+        abstract = True
+
+
+class Product(BaseProduct, Priced, RichText, AdminThumbMixin):
     """
     Container model for a product that stores information common to
     all of its variations such as the product's title and description.
     """
+
+    content_model = models.CharField(editable=False, max_length=50, null=True)
 
     available = models.BooleanField(_("Available for purchase"),
                                     default=False)
@@ -120,8 +137,6 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
                              verbose_name=_("Upsell products"), blank=True)
     rating = RatingField(verbose_name=_("Rating"))
 
-    objects = DisplayableManager()
-
     admin_thumb_field = "image"
 
     search_fields = {"variations__sku": 100}
@@ -129,6 +144,24 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
     class Meta:
         verbose_name = _("Product")
         verbose_name_plural = _("Products")
+
+    @classmethod
+    def get_content_models(cls):
+        """
+        Return all ``Product`` subclasses.
+        """
+        is_product_subclass = lambda cls: issubclass(cls, Product)
+        cmp = lambda a, b: (int(b is Product) - int(a is Product) or
+                            a._meta.verbose_name < b._meta.verbose_name)
+        return sorted(filter(is_product_subclass, models.get_models()), cmp)
+
+    def get_content_model(self):
+        """
+        Provides a generic method of retrieving the instance of the custom
+        product's model, if there is one.
+        """
+
+        return getattr(self, self.content_model, None) if self.content_model else None
 
     def save(self, *args, **kwargs):
         """
@@ -141,6 +174,8 @@ class Product(Displayable, Priced, RichText, AdminThumbMixin):
         if updating and not settings.SHOP_USE_VARIATIONS:
             default = self.variations.get(default=True)
             self.copy_price_fields_to(default)
+        else:
+            self.content_model = self._meta.object_name.lower()
 
     @models.permalink
     def get_absolute_url(self):
@@ -844,3 +879,24 @@ class DiscountCode(Discount):
     class Meta:
         verbose_name = _("Discount code")
         verbose_name_plural = _("Discount codes")
+
+class ProductTopka(Product):
+
+    power = models.IntegerField(_("Мощность, кВт"), blank=True, default=None)
+    mass = models.IntegerField(_("Масса, кг"), blank=True, default=None)
+    performance = models.IntegerField(_("КПД, %"), blank=True, default=None)
+    size = fields.CharField(_("Размер"), blank=True, max_length=20, default=None)
+    fuel = fields.CharField(_("Вид топлива"), blank=True, max_length=30, default=None)
+
+    def get_characteristics(self):
+        characteristics = {
+            _("Мощность, кВт"): self.power,
+            _("Масса, кг"): self.mass,
+            _("КПД, %"): self.performance,
+            _("Размер"): self.size,
+            _("Вид топлива"): self.fuel,
+        }
+        return characteristics
+    class Meta:
+        verbose_name = _("Топка")
+        verbose_name_plural = _("Топки")

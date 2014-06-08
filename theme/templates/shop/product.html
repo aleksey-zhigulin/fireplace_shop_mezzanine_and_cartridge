@@ -58,7 +58,7 @@ $(document).ready(function() {
 {% block main %}
 
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-5">
                 {% if images %}
                 {% spaceless %}
                 <ul id="product-images-large" class="list-unstyled list-inline">
@@ -86,15 +86,12 @@ $(document).ready(function() {
                 {% endspaceless %}
                 {% endif %}
             </div>
-            <div class="col-md-5">
-                {% editable product.content %}
-                {{ product.content|richtext_filters|safe }}
-                {% endeditable %}
+            <div class="col-md-4">
+                {% block characteristics %}{% endblock %}
             </div>
             <div class="col-md-3">
                 <div class="panel panel-default">
                     <div class="panel-body">
-
                         {% if product.available and has_available_variations %}
                         <ul id="variations" class="list-unstyled">
                             {% for variation in variations %}
@@ -134,6 +131,17 @@ $(document).ready(function() {
 
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default rating">
+            <div class="panel-heading">
+                <h4>Описание</h4>
+            </div>
+            <div class="panel-body">
+                {% editable product.content %}
+                {{ product.content|richtext_filters|safe }}
+                {% endeditable %}
             </div>
         </div>
 

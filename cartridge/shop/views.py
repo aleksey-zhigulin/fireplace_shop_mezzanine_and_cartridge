@@ -91,7 +91,14 @@ def product(request, slug, template="shop/product.html",
         "add_product_form": add_product_form,
         "category": product.categories.all()[0]
     }
-    templates = [u"shop/%s.html" % str(product.slug), template]
+    # templates = [u"shop/%s.html" % str(product.slug), template]
+    templates = []
+    # Check for a template matching the page's content model.
+    if product.content_model is not None:
+        templates.append(u"shop/products/%s.html" % product.content_model)
+        context["characteristics"] = product.get_content_model().get_characteristics()
+    templates.append(template)
+
     return render(request, templates, context)
 
 
@@ -417,3 +424,4 @@ def invoice_resend_email(request, order_id):
             else:
                 redirect_to = reverse("shop_order_history")
     return redirect(redirect_to)
+
