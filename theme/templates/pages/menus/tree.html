@@ -2,7 +2,6 @@
 
 {% spaceless %}
 {% if page_branch_in_menu %}
-<ul class="nav nav-list navlist-menu-level-{{ branch_level }}">
   {% for page in page_branch %}
       {% if page.is_current_or_ascendant and not page.has_children_in_menu %}
           <style>
@@ -24,6 +23,5 @@
           {% endif %}
       {% endif %}
   {% endfor %}
-</ul>
 {% endif %}
 {% endspaceless %}

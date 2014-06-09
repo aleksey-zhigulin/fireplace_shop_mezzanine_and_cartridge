@@ -14,6 +14,7 @@ from optparse import make_option
 
 from django.core.management.base import BaseCommand
 from django.core.management.base import CommandError
+from django.db.models.fields import FieldDoesNotExist
 from django.utils.translation import ugettext as _
 from django.db.utils import IntegrityError
 from mezzanine.conf import settings
@@ -22,66 +23,28 @@ from cartridge.shop.models import Product
 from cartridge.shop.models import ProductOption
 from cartridge.shop.models import ProductImage
 from cartridge.shop.models import ProductVariation
+from cartridge.shop.models import ProductTopka
 from cartridge.shop.models import Category
 from mezzanine.core.models import CONTENT_STATUS_PUBLISHED
 
 # images get copied from this directory
 LOCAL_IMAGE_DIR = settings.PROJECT_ROOT + "/img"
 # images get copied to this directory under STATIC_ROOT
-IMAGE_SUFFIXES = [".jpg", ".JPG", ".jpeg", ".JPEG", ".tif", ".gif", ".GIF"]
+IMAGE_SUFFIXES = [".jpg", ".JPG", ".jpeg", ".JPEG", ".tif", ".gif", ".GIF", ".png", ".PNG"]
 EMPTY_IMAGE_ENTRIES = ["Please add", "N/A", ""]
 DATE_FORMAT = "%Y-%m-%d"
 TIME_FORMAT = "%H:%M"
 
-# Here we define what column headings are used in the csv.
-TITLE = _("Title")
-CONTENT = _("Content")
-DESCRIPTION = _("Description")
-SKU = _("SKU")
-IMAGE = _("Image")
-CATEGORY = _("Category")
-NUM_IN_STOCK = _("Number in Stock")
-UNIT_PRICE = _("Unit Price")
-SALE_PRICE = _("Sale Price")
-SALE_START_DATE = _("Sale Start Date")
-SALE_START_TIME = _("Sale Start Time")
-SALE_END_DATE = _("Sale End Date")
-SALE_END_TIME = _("Sale End Time")
+PRODUCT_TYPE = "ProductTopka"
+IMAGE = "Изображения"
 
-DATETIME_FORMAT = "%s %s" % (DATE_FORMAT, TIME_FORMAT)
 SITE_MEDIA_IMAGE_DIR = _("product")
-PRODUCT_IMAGE_DIR = os.path.join(settings.STATIC_ROOT, SITE_MEDIA_IMAGE_DIR)
+PRODUCT_IMAGE_DIR = os.path.join(settings.MEDIA_ROOT, SITE_MEDIA_IMAGE_DIR)
 TYPE_CHOICES = {choice:id for id, choice in settings.SHOP_OPTION_TYPE_CHOICES}
 
 
-fieldnames = [TITLE, CONTENT, DESCRIPTION, CATEGORY,
-    SKU, IMAGE, NUM_IN_STOCK, UNIT_PRICE,
-    SALE_PRICE, SALE_START_DATE, SALE_START_TIME, SALE_END_DATE, SALE_END_TIME]
 # TODO: Make sure no options conflict with other fieldnames.
-fieldnames += TYPE_CHOICES.keys()
-
-COLUMN = {v: k for k, v in enumerate((
-    'Категория',
-    'Заголовок',
-    'Артикул',
-    'Содержимое',
-    'Изображение',
-    'Цена',
-    'Валюта',
-    'Масса',
-    'Размер',
-    'Мощность',
-    'Высота стекла',
-    'Рамка',
-    'Описание',
-    'Цена на распродаже',
-    'Начало распродажи',
-    'Время начала распродажи',
-    'Дата окончания распродажи',
-    'Время окончания распродажи',
-    'В наличии',
-))}
-
+fieldnames = TYPE_CHOICES.keys()
 
 class Command(BaseCommand):
     args = '--import/--export <csv_file>'
@@ -127,15 +90,20 @@ class Command(BaseCommand):
             export_xls(file)
 
 
-def _product_from_row(row):
-    product, created = Product.objects.get_or_create(title=row[TITLE])
-    product.content = row[CONTENT]
-    product.description = row[DESCRIPTION]
+def _product_from_row(row, value):
+    # TODO: title
+    product, created = eval("%s.objects.get_or_create(title='%s')" % (PRODUCT_TYPE, value('title')))
+    product.content = value('content')
+    # product.description = value('description')
     # TODO: set the 2 below from spreadsheet.
     product.status = CONTENT_STATUS_PUBLISHED
     product.available = True
-
-    for category in row[CATEGORY].split(","):
+    extra_fields = [(f.name, eval("%s._meta.get_field('%s').verbose_name.title()" % (PRODUCT_TYPE, f.name)))
+                    for f in product._meta.fields if f not in Product._meta.fields]
+    for name, verbose in extra_fields:
+        if name != 'product_ptr':
+            exec "product.%s = value('%s')" % (name, name)
+    for category in row['Категория'].split(","):
         parent_category, created = Category.objects.get_or_create(title=category.split(" / ")[0])
         for sub_category in category.split(" / ")[1:]:
             cat, created = Category.objects.get_or_create(title=sub_category, parent=parent_category)
@@ -151,7 +119,7 @@ def _make_image(image_str, product):
     # root, suffix = os.path.splitext(image_str)
     # if suffix not in IMAGE_SUFFIXES:
     #     raise CommandError("INCORRECT SUFFIX: %s" % image_str)
-    image_path = os.path.join(LOCAL_IMAGE_DIR, image_str)
+    # image_path = os.path.join(LOCAL_IMAGE_DIR, image_str)
     # if not os.path.exists(image_path):
     #     raise CommandError("NO FILE %s" % image_path)
     # shutil.copy(image_path, PRODUCT_IMAGE_DIR)
@@ -161,139 +129,136 @@ def _make_image(image_str, product):
         product=product)
     return image
 
-
-def _make_date(date_str, time_str):
-    date_string = '%s %s' % (date_str, time_str)
-    date = datetime.datetime.strptime(date_string, DATETIME_FORMAT)
-    return date
-
-
 def import_xls(xls_file):
-    Product.objects.all().delete()
+    if settings.DEBUG:
+        while Category.objects.count():
+            ids = Category.objects.values_list('pk', flat=True)[:100]
+            Category.objects.filter(pk__in = ids).delete()
+        while Product.objects.count():
+            ids = Product.objects.values_list('pk', flat=True)[:100]
+            Product.objects.filter(pk__in = ids).delete()
+        while ProductVariation.objects.count():
+            ids = ProductVariation.objects.values_list('pk', flat=True)[:100]
+            ProductVariation.objects.filter(pk__in = ids).delete()
+        while ProductImage.objects.count():
+            ids = ProductImage.objects.values_list('pk', flat=True)[:100]
+            ProductImage.objects.filter(pk__in = ids).delete()
+        while ProductOption.objects.count():
+            ids = ProductOption.objects.values_list('pk', flat=True)[:100]
+            ProductOption.objects.filter(pk__in = ids).delete()
+    eval("%s.objects.all().delete()" % PRODUCT_TYPE)
     print(_("Importing .."))
-    sheet = xlrd.open_workbook(xls_file,).sheet_by_index(0)
-    for row_index in range(1, sheet.nrows):
-        row = {k: v for k, v in zip(
-            (sheet.cell(0, col_index).value for col_index in xrange(sheet.ncols)),
-            (sheet.cell(row_index, col_index).value for col_index in xrange(sheet.ncols))
-        )}
-        product = _product_from_row(row)
-        while True:
-            try:
-                variation = ProductVariation.objects.create(
-                    # strip whitespace
-                    # sku=row[SKU].replace(" ", ""),
-                    sku=random.randint(100000, 199999),
-                    product=product,
+    for sheet in xlrd.open_workbook(xls_file).sheets():
+        for row_index in range(1, sheet.nrows):
+            row = {k: v for k, v in zip(
+                (sheet.cell(0, col_index).value for col_index in xrange(sheet.ncols)),
+                (sheet.cell(row_index, col_index).value for col_index in xrange(sheet.ncols))
+            )}
+            value = lambda s: row[eval("%s._meta.get_field('%s').verbose_name.title()" % (PRODUCT_TYPE, s))]
+            product = _product_from_row(row, value)
+            variation = ProductVariation.objects.create(
+                product=product,
                 )
-                break
-            except IntegrityError:
-                print("Product with SKU exists! sku: %s" % row[SKU])
-                # raise CommandError("Product with SKU exists! sku: %s" % row[SKU])
-        if row[NUM_IN_STOCK]:
-            variation.num_in_stock = row[NUM_IN_STOCK]
-        if row[UNIT_PRICE]:
-            variation.unit_price = row[UNIT_PRICE]
-        if row[SALE_PRICE]:
-            variation.sale_price = row[SALE_PRICE]
-        if row[SALE_START_DATE] and row[SALE_START_TIME]:
-            variation.sale_from = _make_date(row[SALE_START_DATE],
-                                             row[SALE_START_TIME])
-        if row[SALE_END_DATE] and row[SALE_END_TIME]:
-            variation.sale_to = _make_date(row[SALE_END_DATE],
-                                           row[SALE_END_TIME])
-        for option in TYPE_CHOICES:
-            if row[option]:
-                name = "option%s" % TYPE_CHOICES[option]
-                setattr(variation, name, row[option])
-                new_option, created = ProductOption.objects.get_or_create(
-                    type=TYPE_CHOICES[option], # TODO: set dynamically
-                    name=row[option]
-                )
-        variation.save()
-        image = ''
-        for img in row[IMAGE].split(','):
-            image = _make_image(img, product)
-        if image:
-            variation.image = image
+            variation.num_in_stock = 1000
+            if value('currency'):
+                variation.currency = value('currency')
+            if value('unit_price'):
+                variation.unit_price = value('unit_price')
+            for option in TYPE_CHOICES:
+                if row[option]:
+                    name = "option%s" % TYPE_CHOICES[option]
+                    setattr(variation, name, row[option])
+                    new_option, created = ProductOption.objects.get_or_create(
+                        type=TYPE_CHOICES[option],
+                        name=row[option]
+                    )
+            variation.save()
+            image = ''
+            for img in row[IMAGE].split(','):
+                try:
+                    image = _make_image(img.strip()+'.jpg', product)
+                except CommandError:
+                    print("CommandError: %s" % row[IMAGE])
+            if image:
+                variation.image = image
         try:
             product.variations.manage_empty()
             product.variations.set_default_images([])
             product.copy_default_variation()
             product.save()
         except IndexError:
-            print(row[TITLE])
+            print(value('title'))
 
     print("Variations: %s" % ProductVariation.objects.all().count())
-    print("Products: %s" % Product.objects.all().count())
+    print("Products: %s" % eval("%s.objects.all().count()" % PRODUCT_TYPE))
 
-def export_xls(xls_file):
-    print(_("Exporting .."))
-    xls = xlwt.Workbook(encoding='utf-8')
-    xls_sheet = xls.add_sheet('1')
-
-    for field in fieldnames:
-        xls_sheet.write(0, COLUMN[field], field)
-    for row_index, pv in enumerate(ProductVariation.objects.all(), start=1):
-        xls_sheet.write(row_index, COLUMN[TITLE], pv.product.title)
-        xls_sheet.write(row_index, COLUMN[CONTENT], pv.product.content.strip('<p>').strip('</p>'))
-        xls_sheet.write(row_index, COLUMN[DESCRIPTION], pv.product.description)
-        xls_sheet.write(row_index, COLUMN[SKU], pv.sku)
-        xls_sheet.write(row_index, COLUMN[IMAGE], unicode(pv.image))
-        xls_sheet.write(row_index, COLUMN[CATEGORY] , max([unicode(i) for i in pv.product.categories.all()]))
-
-        for option in TYPE_CHOICES:
-            xls_sheet.write(row_index, COLUMN[option], getattr(pv, "option%s" % TYPE_CHOICES[option]))
-
-        xls_sheet.write(row_index, COLUMN[NUM_IN_STOCK], pv.num_in_stock)
-        xls_sheet.write(row_index, COLUMN[UNIT_PRICE], pv.unit_price)
-        xls_sheet.write(row_index, COLUMN[SALE_PRICE], pv.sale_price)
-        try:
-            xls_sheet.write(row_index, COLUMN[SALE_START_DATE], pv.sale_from.strftime(DATE_FORMAT))
-            xls_sheet.write(row_index, COLUMN[SALE_START_TIME], pv.sale_from.strftime(TIME_FORMAT))
-        except AttributeError:
-            pass
-        try:
-            xls_sheet.write(row_index, COLUMN[SALE_END_DATE], pv.sale_to.strftime(DATE_FORMAT))
-            xls_sheet.write(row_index, COLUMN[SALE_END_TIME], pv.sale_to.strftime(TIME_FORMAT))
-        except AttributeError:
-            pass
-    xls.save(xls_file)
-
-def export_csv(csv_file):
-    print(_("Exporting .."))
-    filehandle = open(csv_file, 'w')
-    writer = csv.DictWriter(filehandle, delimiter=';', encoding='cp1251', fieldnames=fieldnames)
-    headers = dict()
-    for field in fieldnames:
-        headers[field] = field
-    writer.writerow(headers)
-    for pv in ProductVariation.objects.all():
-        row = dict()
-        row[TITLE] = pv.product.title
-        row[CONTENT] = pv.product.content.strip('<p>').strip('</p>')
-        row[DESCRIPTION] = pv.product.description
-        row[SKU] = pv.sku
-        row[IMAGE] = pv.image
-        row[CATEGORY]  = ','.join([unicode(i) for i in pv.product.categories.all()])
-
-        for option in TYPE_CHOICES:
-            row[option] = getattr(pv, "option%s" % TYPE_CHOICES[option])
-
-        row[NUM_IN_STOCK] = pv.num_in_stock
-        row[UNIT_PRICE] = pv.unit_price
-        row[SALE_PRICE] = pv.sale_price
-        try:
-            row[SALE_START_DATE] = pv.sale_from.strftime(DATE_FORMAT)
-            row[SALE_START_TIME] = pv.sale_from.strftime(TIME_FORMAT)
-        except AttributeError:
-            pass
-        try:
-            row[SALE_END_DATE] = pv.sale_to.strftime(DATE_FORMAT)
-            row[SALE_END_TIME] = pv.sale_to.strftime(TIME_FORMAT)
-        except AttributeError:
-            pass
-        writer.writerow(row)
-    filehandle.close()
-
+# def export_xls(xls_file):
+#     print(_("Exporting .."))
+#     xls = xlwt.Workbook(encoding='utf-8')
+#     xls_sheet = xls.add_sheet('1')
+#
+#     for field in fieldnames:
+#         xls_sheet.write(0, COLUMN[field], field)
+#     for row_index, pv in enumerate(ProductVariation.objects.all(), start=1):
+#         xls_sheet.write(row_index, COLUMN[TITLE], pv.product.title)
+#         xls_sheet.write(row_index, COLUMN[CONTENT], pv.product.content.strip('<p>').strip('</p>'))
+#         xls_sheet.write(row_index, COLUMN[DESCRIPTION], pv.product.description)
+#         xls_sheet.write(row_index, COLUMN[SKU], pv.sku)
+#         xls_sheet.write(row_index, COLUMN[IMAGE], unicode(pv.image))
+#         xls_sheet.write(row_index, COLUMN[CATEGORY] , max([unicode(i) for i in pv.product.categories.all()]))
+#
+#         for option in TYPE_CHOICES:
+#             xls_sheet.write(row_index, COLUMN[option], getattr(pv, "option%s" % TYPE_CHOICES[option]))
+#
+#         xls_sheet.write(row_index, COLUMN[NUM_IN_STOCK], pv.num_in_stock)
+#         xls_sheet.write(row_index, COLUMN[UNIT_PRICE], pv.unit_price)
+#         xls_sheet.write(row_index, COLUMN[SALE_PRICE], pv.sale_price)
+#         try:
+#             xls_sheet.write(row_index, COLUMN[SALE_START_DATE], pv.sale_from.strftime(DATE_FORMAT))
+#             xls_sheet.write(row_index, COLUMN[SALE_START_TIME], pv.sale_from.strftime(TIME_FORMAT))
+#         except AttributeError:
+#             pass
+#         try:
+#             xls_sheet.write(row_index, COLUMN[SALE_END_DATE], pv.sale_to.strftime(DATE_FORMAT))
+#             xls_sheet.write(row_index, COLUMN[SALE_END_TIME], pv.sale_to.strftime(TIME_FORMAT))
+#         except AttributeError:
+#             pass
+#     xls.save(xls_file)
+#
+# def export_csv(csv_file):
+#     print(_("Exporting .."))
+#     filehandle = open(csv_file, 'w')
+#     writer = csv.DictWriter(filehandle, delimiter=';', encoding='cp1251', fieldnames=fieldnames)
+#     headers = dict()
+#     for field in fieldnames:
+#         headers[field] = field
+#     writer.writerow(headers)
+#     for pv in ProductVariation.objects.all():
+#         row = dict()
+#         row[TITLE] = pv.product.title
+#         row[CONTENT] = pv.product.content.strip('<p>').strip('</p>')
+#         row[DESCRIPTION] = pv.product.description
+#         row[SKU] = pv.sku
+#         row[IMAGE] = pv.image
+#         row[CATEGORY]  = ','.join([unicode(i) for i in pv.product.categories.all()])
+#
+#         for option in TYPE_CHOICES:
+#             row[option] = getattr(pv, "option%s" % TYPE_CHOICES[option])
+#
+#         row[NUM_IN_STOCK] = pv.num_in_stock
+#         row[UNIT_PRICE] = pv.unit_price
+#         row[SALE_PRICE] = pv.sale_price
+#         try:
+#             row[SALE_START_DATE] = pv.sale_from.strftime(DATE_FORMAT)
+#             row[SALE_START_TIME] = pv.sale_from.strftime(TIME_FORMAT)
+#         except AttributeError:
+#             pass
+#         try:
+#             row[SALE_END_DATE] = pv.sale_to.strftime(DATE_FORMAT)
+#             row[SALE_END_TIME] = pv.sale_to.strftime(TIME_FORMAT)
+#         except AttributeError:
+#             pass
+#         writer.writerow(row)
+#     filehandle.close()
+#
 

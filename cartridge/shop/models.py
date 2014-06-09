@@ -52,7 +52,7 @@ class Priced(models.Model):
     ``Product`` and ``ProductVariation`` models.
     """
 
-    unit_price = fields.MoneyField(_("Unit price"))
+    unit_price = fields.MoneyField(_("Цена"))
     currency = fields.CharField(_("Валюта"), blank=False, max_length=3, default='EUR')
     sale_id = models.IntegerField(null=True)
     sale_price = fields.MoneyField(_("Sale price"))
@@ -882,19 +882,21 @@ class DiscountCode(Discount):
 
 class ProductTopka(Product):
 
-    power = models.IntegerField(_("Мощность, кВт"), blank=True, default=None)
-    mass = models.IntegerField(_("Масса, кг"), blank=True, default=None)
-    performance = models.IntegerField(_("КПД, %"), blank=True, default=None)
-    size = fields.CharField(_("Размер"), blank=True, max_length=20, default=None)
-    fuel = fields.CharField(_("Вид топлива"), blank=True, max_length=30, default=None)
+    power = models.PositiveSmallIntegerField(_("мощность, кВт"), blank=True, null=True, default=None)
+    mass = models.PositiveSmallIntegerField(_("масса, кг"), blank=True, null=True, default=None)
+    diam = models.PositiveSmallIntegerField(_("диаметр дымохода, мм"), blank=True,  null=True, default=None)
+    performance = models.FloatField(_("КПД, %"), blank=True, null=True, default=None)
+    size = fields.CharField(_("размер, мм"), blank=True, null=True, max_length=20, default=None)
+    fuel = fields.CharField(_("вид топлива"), blank=True, null=True, max_length=30, default=None)
 
     def get_characteristics(self):
         characteristics = {
             _("Мощность, кВт"): self.power,
             _("Масса, кг"): self.mass,
             _("КПД, %"): self.performance,
-            _("Размер"): self.size,
+            _("Размер, мм"): self.size,
             _("Вид топлива"): self.fuel,
+            _("Диаметр дымохода, мм"): self.diam,
         }
         return characteristics
     class Meta:

@@ -972,7 +972,7 @@ msgstr "Этот продукт недоступен в настоящее вр�
 
 #: templates/shop/product.html:108
 msgid "Related Products"
-msgstr "Связанные продукты"
+msgstr "Похожие товары"
 
 #: templates/shop/wishlist.html:4 templates/shop/wishlist.html.py:5
 #: templates/shop/wishlist.html:9

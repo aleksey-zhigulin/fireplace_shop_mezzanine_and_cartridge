@@ -77,11 +77,11 @@ SHOP_CURRENCY_LOCALE = "ru_RU.UTF-8"
 # Sequence of value/name pairs for types of product options,
 # eg Size, Colour.
 SHOP_OPTION_TYPE_CHOICES = (
-    (1, "Размер"),
-    (2, "Рамка"),
-    (3, "Мощность"),
-    (4, "Масса"),
-    (5, "Высота стекла"),
+    (1, "Количество стекол"),
+    # (2, "Наличие подъемника"),
+    # (3, ""),
+    # (4, ""),
+    # (5, ""),
 )
 
 # Sequence of indexes from the SHOP_OPTION_TYPE_CHOICES setting that

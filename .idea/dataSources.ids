@@ -579,34 +579,38 @@
       <primary-key columns="id"/>
       <index name="shop_productimage_c1b56944" unique="true" columns="product_id"/>
     </table>
-    <table name="shop_productkamin" schema="" catalog="" type="TABLE">
-      <column name="product_ptr_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
-      <column name="power" sqlType="VARCHAR(4)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
-      <primary-key columns="product_ptr_id"/>
-    </table>
     <table name="shop_productoption" schema="" catalog="" type="TABLE">
       <column name="type" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
       <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
       <column name="name" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <primary-key columns="id"/>
     </table>
+    <table name="shop_producttopka" schema="" catalog="" type="TABLE">
+      <column name="power" sqlType="SMALLINT UNSIGNED" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="product_ptr_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <column name="mass" sqlType="SMALLINT UNSIGNED" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="fuel" sqlType="VARCHAR(30)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="performance" sqlType="REAL" length="2000000000" precision="10" nullable="false" jdbcType="6"/>
+      <column name="size" sqlType="VARCHAR(20)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="product_ptr_id"/>
+    </table>
     <table name="shop_productvariation" schema="" catalog="" type="TABLE">
       <column name="sale_to" sqlType="DATETIME" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <column name="sku" sqlType="VARCHAR(20)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="option5" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <column name="product_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
       <column name="num_in_stock" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
       <column name="default" sqlType="BOOL" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
       <column name="sale_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
-      <column name="option1" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <column name="unit_price" sqlType="DECIMAL" length="2000000000" precision="10" nullable="true" jdbcType="6"/>
-      <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <column name="option3" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <column name="currency" sqlType="VARCHAR(3)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
       <column name="image_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
       <column name="sale_price" sqlType="DECIMAL" length="2000000000" precision="10" nullable="true" jdbcType="6"/>
       <column name="option4" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
-      <column name="option5" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="option1" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <column name="option2" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
-      <column name="option3" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
       <column name="sale_from" sqlType="DATETIME" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <primary-key columns="id"/>
       <index name="shop_productvariation_c1b56944" unique="true" columns="product_id"/>

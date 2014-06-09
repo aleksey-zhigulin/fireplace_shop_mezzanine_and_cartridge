@@ -212,12 +212,13 @@ footer {
 /*Panel*/
 
 .panel-my {
+    min-height: 150px;
     box-shadow: inset 0 0 10px rgba(0,0,0,.15);
     background-color: #F5F5F5;
 }
 
-.panel-my > ul > ul > li > a:hover,
-.panel-my > ul > ul > li > a:focus {
+.panel-my > ul > li > a:hover,
+.panel-my > ul > li > a:focus {
     box-shadow: inset 0 3px 10px rgba(0,0,0,.15);
     background-image:    -moz-linear-gradient(top, #b8b8b8 0%, #f5f5f5 50px); /* FF3.6+ */
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#b8b8b8), color-stop(100%,#f5f5f5)); /* Chrome,Safari4+ */
@@ -260,7 +261,7 @@ footer {
     padding: 0;
 }
 
-.home a:hover {
+.thumbnail:hover {
     box-shadow: 0 0 15px rgba(0,0,0,.5);
 }
 

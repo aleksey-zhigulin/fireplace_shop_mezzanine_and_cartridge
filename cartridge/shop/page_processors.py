@@ -10,6 +10,7 @@ from mezzanine.utils.views import paginate
 
 from cartridge.shop.models import Category, Product
 
+import operator
 
 @processor_for(Category)
 def category_processor(request, page):
@@ -22,10 +23,7 @@ def category_processor(request, page):
 
     sub_categories = page.category.children.published()
     child_categories = Category.objects.filter(id__in=sub_categories)
-
-    products = Product.objects.published(for_user=request.user).filter(category__in=child_categories).distinct()
-    if not products:
-        products = Product.objects.published(for_user=request.user).filter(page.category.filters()).distinct()
+    products = Product.objects.published(for_user=request.user).filter(products_from_subcategory(page)).distinct()
 
     sort_options = [(slugify(option[0]), option[1])
                     for option in settings.SHOP_PRODUCT_SORT_OPTIONS]
@@ -37,3 +35,9 @@ def category_processor(request, page):
     products.sort_by = sort_by
 
     return {"products": products, "child_categories": child_categories}
+
+def products_from_subcategory(page):
+        products = page.category.filters()
+        for child_category in page.category.children.published():
+            products = operator.or_(products, products_from_subcategory(child_category))
+        return products

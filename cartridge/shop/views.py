@@ -94,7 +94,7 @@ def product(request, slug, template="shop/product.html",
     # templates = [u"shop/%s.html" % str(product.slug), template]
     templates = []
     # Check for a template matching the page's content model.
-    if product.content_model is not None:
+    if product.content_model is not None and product.content_model != 'product':
         templates.append(u"shop/products/%s.html" % product.content_model)
         context["characteristics"] = product.get_content_model().get_characteristics()
     templates.append(template)
