@@ -11,7 +11,14 @@
                     </div>
                     {% if page.category.featured_image %}
                     <div class="wrapper">
-                        <img class="center-block" src="{{ MEDIA_URL }}{{ page.category.featured_image }}"/>
+                        <img class="center-block" src="{{ MEDIA_URL }}{% thumbnail page.category.featured_image 150 150 padding=True %}"/>
+                    </div>
+                    {% else %}
+                    <div class="placeholder"></div>
+                    {% endif %}
+                    {% if page.richtextpage.featured_image %}
+                    <div class="wrapper">
+                        <img class="center-block" src="{{ MEDIA_URL }}{% thumbnail page.richtextpage.featured_image 150 150 padding=True %}"/>
                     </div>
                     {% else %}
                     <div class="placeholder"></div>

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-import os
 
 # Make these unique, and don't share it with anybody.
 SECRET_KEY = "7cb81402-d283-4100-96e6-6bb2e27a836aeff48417-1f5d-4266-955c-00fd52f3fb8d6b54bcd2-bc0a-4118-823f-06f4cc8180ee"
@@ -93,6 +92,11 @@ SHOP_OPTION_TYPE_CHOICES = (
 # MEZZANINE SETTINGS #
 ######################
 
+RICHTEXT_FILTER_LEVEL = 3
+
+
+RICHTEXT_FILTERS = ()
+
 # The following settings are already defined with default values in
 # the ``defaults.py`` module within each of Mezzanine's apps, but are
 # common enough to be put here, commented out, for convenient
@@ -170,6 +174,22 @@ PAGE_MENU_TEMPLATES_DEFAULT = (1, 2)
 #     ),
 # )
 
+EXTRA_MODEL_FIELDS = (
+    (
+        "mezzanine.pages.models.RichTextPage.featured_image",
+        "mezzanine.core.fields.FileField",
+        (),
+        {
+            "verbose_name": "Featured Image",
+            "upload_to": "shop",
+            "format": "Image",
+            "max_length": 255,
+            "null": True,
+            "blank": True
+        },
+    ),
+)
+
 # Setting to turn on featured images for blog posts. Defaults to False.
 #
 # BLOG_USE_FEATURED_IMAGE = True
@@ -208,7 +228,7 @@ ALLOWED_HOSTS = ['9252095267.myjino.ru',
 TIME_ZONE = 'Europe/Moscow'
 
 # If you set this to True, Django will use timezone-aware datetimes.
-USE_TZ = True
+USE_TZ = False
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
