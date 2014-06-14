@@ -400,5 +400,4 @@ admin.site.register(Order, OrderAdmin)
 admin.site.register(Sale, SaleAdmin)
 admin.site.register(DiscountCode, DiscountCodeAdmin)
 
-
 admin.site.register(ProductTopka, ProductAdmin)

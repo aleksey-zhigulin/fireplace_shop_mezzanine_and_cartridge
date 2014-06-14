@@ -332,5 +332,13 @@ register_setting(
     label=_("Текущий курс евро"),
     description="Устанавливает курс евро для вычисления цены",
     editable=True,
-    default=40,
+    default='',
+)
+
+register_setting(
+    name="SHOP_USD_EXCHANGE_RATE",
+    label=_("Текущий курс доллара"),
+    description="Устанавливает курс доллара для вычисления цены",
+    editable=True,
+    default='',
 )

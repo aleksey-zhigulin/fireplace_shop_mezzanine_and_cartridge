@@ -52,15 +52,20 @@ class Priced(models.Model):
     ``Product`` and ``ProductVariation`` models.
     """
 
+    CURRENCY = (
+        ('E', _('Евро')),
+        ('R', _('Рубль')),
+        ('U', _('Доллар'))
+    )
+
     unit_price = fields.MoneyField(_("Цена"))
-    currency = fields.CharField(_("Валюта"), blank=False, max_length=3, default='EUR')
+    currency = fields.CharField(_("Валюта"), blank=False, max_length=1, default='EUR', choices=CURRENCY)
     sale_id = models.IntegerField(null=True)
     sale_price = fields.MoneyField(_("Sale price"))
     sale_from = models.DateTimeField(_("Sale start"), blank=True, null=True)
     sale_to = models.DateTimeField(_("Sale end"), blank=True, null=True)
     sku = fields.SKUField(unique=True, blank=True, null=True)
-    num_in_stock = models.IntegerField(_("Number in stock"), blank=True,
-                                       null=True)
+    num_in_stock = models.IntegerField(_("Number in stock"), blank=True, null=True)
 
     class Meta:
         abstract = True
@@ -85,10 +90,16 @@ class Priced(models.Model):
         Returns the actual price - sale price if applicable otherwise
         the unit price.
         """
+        settings.use_editable()
+        rate = {
+            'R': 1,
+            'E': Decimal(settings.SHOP_EURO_EXCHANGE_RATE),
+            'U': Decimal(settings.SHOP_USD_EXCHANGE_RATE)
+        }
         if self.on_sale():
-            return self.sale_price * (settings.SHOP_EURO_EXCHANGE_RATE if self.currency == 'EUR' else 1)
+            return self.sale_price * rate[self.currency]
         elif self.has_price():
-            return self.unit_price * (settings.SHOP_EURO_EXCHANGE_RATE if self.currency == 'EUR' else 1)
+            return self.unit_price * rate[self.currency]
         return Decimal("0")
 
     def copy_price_fields_to(self, obj_to):
@@ -160,8 +171,7 @@ class Product(BaseProduct, Priced, RichText, AdminThumbMixin):
         Provides a generic method of retrieving the instance of the custom
         product's model, if there is one.
         """
-
-        return getattr(self, self.content_model, None) if self.content_model else None
+        return getattr(self, self.content_model, None)
 
     def save(self, *args, **kwargs):
         """
@@ -203,7 +213,7 @@ class ProductImage(Orderable):
     """
 
     file = models.ImageField(_("Image"),
-        upload_to=upload_to("shop.ProductImage.file", "product"))
+        upload_to=upload_to("shop.ProductImage.file", "uploads/shop/products"))
     description = CharField(_("Description"), blank=True, max_length=100)
     product = models.ForeignKey("Product", related_name="images")
 
@@ -363,7 +373,7 @@ class Category(Page, RichText):
     """
 
     featured_image = FileField(verbose_name=_("Featured Image"),
-        upload_to=upload_to("shop.Category.featured_image", "shop"),
+        upload_to=upload_to("shop.Category.featured_image", "shop/featured_images"),
         format="Image", max_length=255, null=True, blank=True)
     products = models.ManyToManyField("Product", blank=True,
                                      verbose_name=_("Products"),
@@ -882,21 +892,42 @@ class DiscountCode(Discount):
 
 class ProductTopka(Product):
 
+    AVAILABILITY = (
+        ('Y', _('есть')),
+        ('N', _('нет')),
+    )
+    GLASSES = (
+        ('A', _('панорманое')),
+        ('B', _('призматическое')),
+        ('C', _('прямое')),
+        ('D', _('сквозное')),
+        ('E', _('угловое')),
+    )
     power = models.PositiveSmallIntegerField(_("мощность, кВт"), blank=True, null=True, default=None)
     mass = models.PositiveSmallIntegerField(_("масса, кг"), blank=True, null=True, default=None)
     diam = models.PositiveSmallIntegerField(_("диаметр дымохода, мм"), blank=True,  null=True, default=None)
+    length = models.PositiveSmallIntegerField(_("длина, мм"), blank=True,  null=True, default=None)
+    width = models.PositiveSmallIntegerField(_("ширина, мм"), blank=True,  null=True, default=None)
+    height = models.PositiveSmallIntegerField(_("высота, мм"), blank=True,  null=True, default=None)
     performance = models.FloatField(_("КПД, %"), blank=True, null=True, default=None)
     size = fields.CharField(_("размер, мм"), blank=True, null=True, max_length=20, default=None)
     fuel = fields.CharField(_("вид топлива"), blank=True, null=True, max_length=30, default=None)
+    lift = fields.CharField(_("подъемник"), blank=True, null=True, max_length=4, default=None, choices=AVAILABILITY)
+    shutter = fields.CharField(_("заслонка"), blank=True, null=True, max_length=1, default=None, choices=AVAILABILITY)
+    glass = fields.CharField(_("стекло"), blank=True, null=True, max_length=1, default=None, choices=GLASSES)
 
     def get_characteristics(self):
+        dimensions = (self.length, self.width, self.height,)
         characteristics = {
             _("Мощность, кВт"): self.power,
             _("Масса, кг"): self.mass,
             _("КПД, %"): self.performance,
-            _("Размер, мм"): self.size,
+            _("Размер, мм"): '×'.join(map(str, dimensions)) if all(dimensions) else None,
             _("Вид топлива"): self.fuel,
             _("Диаметр дымохода, мм"): self.diam,
+            _("Подъемник"): self.get_lift_display(),
+            _("Pаслонка"): self.get_shutter_display(),
+            _("Cтекло"): self.get_glass_display(),
         }
         return characteristics
     class Meta:

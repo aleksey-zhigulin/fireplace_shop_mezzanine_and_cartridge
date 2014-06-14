@@ -181,7 +181,7 @@ EXTRA_MODEL_FIELDS = (
         (),
         {
             "verbose_name": "Featured Image",
-            "upload_to": "shop",
+            "upload_to": "uploads/shop/featured_images",
             "format": "Image",
             "max_length": 255,
             "null": True,
@@ -443,7 +443,6 @@ OPTIONAL_APPS = (
 )
 
 DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
-
 
 #########
 # EMAIL #

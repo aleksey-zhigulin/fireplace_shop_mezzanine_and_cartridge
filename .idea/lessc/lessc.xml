@@ -16,7 +16,7 @@
                 </list>
               </option>
               <option name="id" value="0" />
-              <option name="includePattern" value="bootstrap.less" />
+              <option name="includePattern" value="bootstrap-theme.less" />
               <option name="lessDirPath" value="E:\work\fireplace_shop\theme\static\css\src" />
               <option name="name" value="theme" />
             </LessProfile>

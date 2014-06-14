@@ -4,7 +4,7 @@
 {% if page_branch_in_menu %}
   {% for page in page_branch %}
       {% if page.in_menu %}
-           <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+           <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6 nopadding">
                 <a href="{{ page.get_absolute_url }}" class="thumbnail">
                     <div class="caption">
                         <h4>{{ page.title }}</h4>
