@@ -17,32 +17,16 @@
                 {% page_menu "pages/menus/help.html" %}
             </ul>
             {% search_form "all" %}
-            <div class="hidden-xs hidden-sm dropdown nav navbar-nav navbar-left">
-                <p class="navbar-text" style="font-weight: bold">
+            <div class="nav navbar-nav navbar-left">
+                <p class="navbar-text text-center">
                     <span class="glyphicon glyphicon-earphone"></span>
-                    +7(499)390-21-86
-                    <div class="navbar-text dropdown" id="more">
-                        <a data-toggle="dropdown" href="#">ещё<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                        <strong>+7(4967)64-05-69</strong><br>
-                        Пн-Сб с 10:00 до 19:00<br>
-                        Вс с 10:00 до 17:00
-                        </ul>
-                    </div>
-                </p>
-            </div>
-            <div class="visible-xs dropdown nav navbar-nav navbar-left">
-                <p class="navbar-text" style="font-weight: bold">
-                    <span class="glyphicon glyphicon-earphone"></span>
-                    +7(499)390-21-86,&nbsp+7(4967)64-05-69<br>
-                    Пн-Сб с 10:00 до 19:00<br>
-                    Вс с 10:00 до 17:00
+                    <abbr style="font-weight: bold" title="Магазин-салон на Большой Серпуховской (Пн-cб 10-19, Вс 10-17)">+7(499)390-21-86</abbr>
+                    <a href="/помощь/контакты">ещё</a>
                 </p>
             </div>
             {% ifinstalled mezzanine.accounts %}
             {% include "accounts/includes/user_panel.html" %}
             {% endifinstalled %}
-
         </div>
     </div>
 </div>

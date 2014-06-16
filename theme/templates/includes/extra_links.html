@@ -1,0 +1,27 @@
+{% load i18n future pages_tags mezzanine_tags %}
+
+{% spaceless %}
+{% for page in extra_links %}
+<div class="col-lg-2 col-md-2 col-sm-4 col-xs-6 nopadding">
+    <a href="{{ page.get_absolute_url }}" class="thumbnail">
+        <div class="caption">
+            <h4>{{ page.title }}</h4>
+        </div>
+        {% if page.category.featured_image %}
+        <div class="wrapper">
+            <img class="center-block" src="{{ MEDIA_URL }}{% thumbnail page.category.featured_image 150 150 padding=True %}"/>
+        </div>
+        {% else %}
+        <div class="placeholder"></div>
+        {% endif %}
+        {% if page.richtextpage.featured_image %}
+        <div class="wrapper">
+            <img class="center-block" src="{{ MEDIA_URL }}{% thumbnail page.richtextpage.featured_image 150 150 padding=True %}"/>
+        </div>
+        {% else %}
+        <div class="placeholder"></div>
+        {% endif %}
+    </a>
+</div>
+{% endfor %}
+{% endspaceless %}

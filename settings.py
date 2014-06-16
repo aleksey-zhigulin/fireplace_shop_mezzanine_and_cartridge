@@ -136,11 +136,6 @@ PAGE_MENU_TEMPLATES = (
     (2, "Левое меню", "pages/menus/tree.html"),
     (3, "Подвал", "pages/menus/footer.html"),
     (4, "Верхняя панель", "pages/menus/help.html"),
-    (5, "Популярные категории 1", "pages/menus/first_col.html"),
-    (6, "Слайды на главной", "pages/menus/carousel.html"),
-    (7, "Популярные категории 2", "pages/menus/second_col.html"),
-    (8, "Популярные категории 3", "pages/menus/third_col.html"),
-    (9, "Дополнительные ссылки на главной", "pages/menus/home_extra.html"),
 )
 
 PAGE_MENU_TEMPLATES_DEFAULT = (1, 2)

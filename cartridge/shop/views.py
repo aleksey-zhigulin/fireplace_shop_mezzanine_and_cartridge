@@ -89,7 +89,6 @@ def product(request, slug, template="shop/product.html",
         "has_available_variations": any([v.has_price() for v in variations]),
         "related_products": related,
         "add_product_form": add_product_form,
-        "category": product.categories.all()[0]
     }
     # templates = [u"shop/%s.html" % str(product.slug), template]
     templates = []

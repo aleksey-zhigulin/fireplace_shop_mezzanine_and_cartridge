@@ -332,7 +332,7 @@ register_setting(
     label=_("Текущий курс евро"),
     description="Устанавливает курс евро для вычисления цены",
     editable=True,
-    default='',
+    default='0',
 )
 
 register_setting(
@@ -340,5 +340,5 @@ register_setting(
     label=_("Текущий курс доллара"),
     description="Устанавливает курс доллара для вычисления цены",
     editable=True,
-    default='',
+    default='0',
 )

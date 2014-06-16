@@ -8,7 +8,7 @@ from mezzanine.conf import settings
 from mezzanine.pages.page_processors import processor_for
 from mezzanine.utils.views import paginate
 
-from cartridge.shop.models import Category, Product
+from cartridge.shop.models import Category, Product, HomePage
 
 import operator
 
@@ -41,3 +41,18 @@ def products_from_subcategory(page):
         for child_category in page.category.children.published():
             products = operator.or_(products, products_from_subcategory(child_category))
         return products
+
+@processor_for(HomePage)
+def homepage_processor(request, page):
+
+    return {
+        "left_top": page.homepage.left_top,
+        "left_bottom": page.homepage.left_bottom,
+        "middle_top": page.homepage.middle_top,
+        "middle_bottom": page.homepage.middle_bottom,
+        "right_top": page.homepage.right_top,
+        "right_bottom": page.homepage.right_bottom,
+        "slides_category": page.homepage.slides_category,
+        "extra_links": page.homepage.extra_links.all(),
+        "slides": page.homepage.slides.all()
+    }

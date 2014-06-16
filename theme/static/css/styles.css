@@ -18,13 +18,13 @@
 
 @media (min-width: 768px) {
     .navbar-form {
-       width: 240px;
+       width: 200px;
     }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 991px) {
     .navbar-form {
-       width: 300px;
+       width: 350px;
     }
 }
 
@@ -321,3 +321,5 @@ footer {
 #pagination {
     text-align: center;
 }
+
+

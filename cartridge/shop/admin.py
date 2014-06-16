@@ -43,7 +43,7 @@ from cartridge.shop.fields import MoneyField
 from cartridge.shop.forms import ProductAdminForm, ProductVariationAdminForm
 from cartridge.shop.forms import ProductVariationAdminFormset
 from cartridge.shop.forms import DiscountAdminForm, ImageWidget, MoneyWidget
-from cartridge.shop.models import Category, Product, ProductImage
+from cartridge.shop.models import Category, Product, ProductImage, HomePage, HomePageSlides
 from cartridge.shop.models import ProductVariation, ProductOption, Order
 from cartridge.shop.models import OrderItem, Sale, DiscountCode
 from cartridge.shop.models import ProductTopka
@@ -62,7 +62,7 @@ shipping_fields = _flds("shipping_detail")
 # Categories fieldsets are extended from Page fieldsets, since
 # categories are a Mezzanine Page type.
 category_fieldsets = deepcopy(PageAdmin.fieldsets)
-category_fieldsets[0][1]["fields"][3:3] = ["content", "products"]
+category_fieldsets[0][1]["fields"][3:3] = ["products"]
 category_fieldsets += ((_("Product filters"), {
     "fields": ("sale", ("price_min", "price_max"), "combined"),
     "classes": ("collapse-closed",)},),)
@@ -121,6 +121,7 @@ class ProductImageAdmin(TabularDynamicInlineAdmin):
 
 product_fieldsets = deepcopy(DisplayableAdmin.fieldsets)
 product_fieldsets[0][1]["fields"].insert(2, "available")
+product_fieldsets[0][1]["fields"].insert(3, "manufacturer")
 product_fieldsets[0][1]["fields"].extend(["content", "categories"])
 product_fieldsets = list(product_fieldsets)
 
@@ -159,7 +160,7 @@ class ProductAdmin(DisplayableAdmin):
     list_display = product_list_display
     list_display_links = ("admin_thumb", "title")
     list_editable = product_list_editable
-    list_filter = ("status", "available", "categories")
+    list_filter = ("status", "available", "categories", "content_model", "manufacturer")
     filter_horizontal = ("categories",) + tuple(other_product_fields)
     search_fields = ("title", "content", "categories__title",
                      "variations__sku")
@@ -401,3 +402,25 @@ admin.site.register(Sale, SaleAdmin)
 admin.site.register(DiscountCode, DiscountCodeAdmin)
 
 admin.site.register(ProductTopka, ProductAdmin)
+
+
+
+
+home_fieldsets = deepcopy(PageAdmin.fieldsets)
+home_fieldsets[0][1]["fields"][3:3] = ["left_top", "left_bottom",
+                                       "slides_category",
+                                       "middle_top", "middle_bottom",
+                                       "right_top", "right_bottom",
+                                       "extra_links"]
+home_fieldsets = list(home_fieldsets)
+
+class HomePageSlidesAdmin(TabularDynamicInlineAdmin):
+    model = HomePageSlides
+    formfield_overrides = {ImageField: {"widget": ImageWidget}}
+
+class HomePageAdmin(PageAdmin):
+
+    inlines = (HomePageSlidesAdmin,)
+    fieldsets = home_fieldsets
+
+admin.site.register(HomePage, HomePageAdmin)

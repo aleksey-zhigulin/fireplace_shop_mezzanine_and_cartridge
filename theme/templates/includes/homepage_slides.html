@@ -1,0 +1,25 @@
+{% load i18n future pages_tags shop_tags mezzanine_tags %}
+
+{% spaceless %}
+  <a href="{{ category.get_absolute_url }}" class="thumbnail">
+    <div class="caption">
+        <h4>{{ category.title }}</h4>
+    </div>
+    <div id="carousel" class="carousel slide" data-ride="carousel">
+      <ol class="carousel-indicators">
+        {% for slide in slides %}
+            <li data-target="#carousel" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
+        {% endfor %}
+      </ol>
+      <div class="carousel-inner">
+        {% for slide in slides %}
+            <div class="item {% if forloop.first %}active{% endif %}">
+                <div class="wrapper">
+                    <img class="center-block" src="{{ MEDIA_URL }}{{ slide }}">
+                </div>
+            </div>
+       {% endfor %}
+      </div>
+    </div>
+  </a>
+{% endspaceless %}

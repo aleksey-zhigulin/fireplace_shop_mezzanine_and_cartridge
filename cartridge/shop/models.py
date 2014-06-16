@@ -133,12 +133,18 @@ class Product(BaseProduct, Priced, RichText, AdminThumbMixin):
     all of its variations such as the product's title and description.
     """
 
-    content_model = models.CharField(editable=False, max_length=50, null=True)
+    MANUFACTURERS = (
+        ('Piaz', _('Piazzetta')),
+        ('Invi', _('Invicta')),
+    )
+    manufacturer = CharField(_("Производитель"), editable=True, blank=True, null=True, max_length=4, default=None, choices=MANUFACTURERS)
+
+    content_model = models.CharField(_("Тип товара"), editable=False, max_length=50, null=True)
 
     available = models.BooleanField(_("Available for purchase"),
-                                    default=False)
+                                    default=True)
     image = CharField(_("Image"), max_length=100, blank=True, null=True)
-    categories = models.ManyToManyField("Category", blank=True,
+    categories = models.ManyToManyField("Category", blank=False,
                                         verbose_name=_("Product categories"))
     date_added = models.DateTimeField(_("Date added"), auto_now_add=True,
                                       null=True)
@@ -171,6 +177,7 @@ class Product(BaseProduct, Priced, RichText, AdminThumbMixin):
         Provides a generic method of retrieving the instance of the custom
         product's model, if there is one.
         """
+        print self.content_model
         return getattr(self, self.content_model, None)
 
     def save(self, *args, **kwargs):
@@ -179,13 +186,13 @@ class Product(BaseProduct, Priced, RichText, AdminThumbMixin):
         ``SHOP_USE_VARIATIONS`` is False, and the product is
         updated via the admin change list.
         """
+        if self.id is None:
+            self.content_model = self._meta.object_name.lower()
         updating = self.id is not None
         super(Product, self).save(*args, **kwargs)
         if updating and not settings.SHOP_USE_VARIATIONS:
             default = self.variations.get(default=True)
             self.copy_price_fields_to(default)
-        else:
-            self.content_model = self._meta.object_name.lower()
 
     @models.permalink
     def get_absolute_url(self):
@@ -367,7 +374,7 @@ class ProductVariation(with_metaclass(ProductVariationMetaclass, Priced)):
                 self.product.save()
 
 
-class Category(Page, RichText):
+class Category(Page):
     """
     A category of products on the website.
     """
@@ -903,21 +910,21 @@ class ProductTopka(Product):
         ('D', _('сквозное')),
         ('E', _('угловое')),
     )
+
     power = models.PositiveSmallIntegerField(_("мощность, кВт"), blank=True, null=True, default=None)
     mass = models.PositiveSmallIntegerField(_("масса, кг"), blank=True, null=True, default=None)
     diam = models.PositiveSmallIntegerField(_("диаметр дымохода, мм"), blank=True,  null=True, default=None)
-    length = models.PositiveSmallIntegerField(_("длина, мм"), blank=True,  null=True, default=None)
     width = models.PositiveSmallIntegerField(_("ширина, мм"), blank=True,  null=True, default=None)
     height = models.PositiveSmallIntegerField(_("высота, мм"), blank=True,  null=True, default=None)
+    depth = models.PositiveSmallIntegerField(_("глубина, мм"), blank=True,  null=True, default=None)
     performance = models.FloatField(_("КПД, %"), blank=True, null=True, default=None)
-    size = fields.CharField(_("размер, мм"), blank=True, null=True, max_length=20, default=None)
     fuel = fields.CharField(_("вид топлива"), blank=True, null=True, max_length=30, default=None)
     lift = fields.CharField(_("подъемник"), blank=True, null=True, max_length=4, default=None, choices=AVAILABILITY)
     shutter = fields.CharField(_("заслонка"), blank=True, null=True, max_length=1, default=None, choices=AVAILABILITY)
     glass = fields.CharField(_("стекло"), blank=True, null=True, max_length=1, default=None, choices=GLASSES)
 
     def get_characteristics(self):
-        dimensions = (self.length, self.width, self.height,)
+        dimensions = (self.width, self.height, self.depth,)
         characteristics = {
             _("Мощность, кВт"): self.power,
             _("Масса, кг"): self.mass,
@@ -933,3 +940,48 @@ class ProductTopka(Product):
     class Meta:
         verbose_name = _("Топка")
         verbose_name_plural = _("Топки")
+
+
+
+class HomePage(Page):
+
+    left_top = models.ForeignKey("Category", blank=False, related_name='+',
+                                verbose_name=_("Левая верхняя категория"))
+    left_bottom = models.ForeignKey("Category", blank=False, related_name='+',
+                                verbose_name=_("Левая нижняя категория"))
+    middle_top = models.ForeignKey("Category", blank=False, related_name='+',
+                                verbose_name=_("Средняя верхняя категория"))
+    middle_bottom = models.ForeignKey("Category", blank=False, related_name='+',
+                                verbose_name=_("Средняя нижняя категория"))
+    right_top = models.ForeignKey("Category", blank=False, related_name='+',
+                                verbose_name=_("Правая верхняя категория"))
+    right_bottom = models.ForeignKey("Category", blank=False, related_name='+',
+                                verbose_name=_("Правая нижняя категория"))
+    slides_category = models.ForeignKey("Category", blank=False,
+                                        verbose_name=_("Категория для слайдов"),
+                                        related_name='+')
+    extra_links = models.ManyToManyField(Page, blank=False,
+                                        verbose_name=_("Дополнительные ссылки"),
+                                        related_name='+')
+    class Meta:
+        verbose_name = _("Главная страница")
+        verbose_name_plural = _("Главные страницы")
+
+class HomePageSlides(Orderable):
+
+    file = models.ImageField(_("Image"), upload_to="uploads/home")
+    description = CharField(_("Description"), blank=True, max_length=100)
+    home_page = models.ForeignKey("HomePage", related_name="slides")
+
+    class Meta:
+        verbose_name = _("Слайд")
+        verbose_name_plural = _("Слайды")
+        order_with_respect_to = "home_page"
+
+    def __unicode__(self):
+        value = self.description
+        if not value:
+            value = self.file.name
+        if not value:
+            value = ""
+        return value

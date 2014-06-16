@@ -5,7 +5,8 @@
 {% block body_id %}category{% endblock %}
 
 {% block meta_keywords %}{% metablock %}
-{% for keyword in product.keywords.all %}
+{% keywords_for product as keywords %}
+{% for keyword in keywords%}
     {% if not forloop.first %}, {% endif %}
     {{ keyword }}
 {% endfor %}

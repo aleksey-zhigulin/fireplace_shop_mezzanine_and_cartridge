@@ -21,69 +21,36 @@
 {% block content %}
     <div class="row home">
         <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
-            {% page_menu "pages/menus/first_col.html" %}
+            {% with left_top as category %}
+            {% include "includes/popular_category.html" %}
+            {% endwith %}
+            {% with left_bottom as category %}
+            {% include "includes/popular_category.html" %}
+            {% endwith %}
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            {% page_menu "pages/menus/carousel.html" %}
+            {% with slides_category as category %}
+            {% include "includes/homepage_slides.html" %}
+            {% endwith %}
         </div>
         <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
-            {% page_menu "pages/menus/second_col.html" %}
+            {% with middle_top as category %}
+            {% include "includes/popular_category.html" %}
+            {% endwith %}
+            {% with middle_bottom as category %}
+            {% include "includes/popular_category.html" %}
+            {% endwith %}
         </div>
         <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
-            {% page_menu "pages/menus/third_col.html" %}
+            {% with right_top as category %}
+            {% include "includes/popular_category.html" %}
+            {% endwith %}
+            {% with right_bottom as category %}
+            {% include "includes/popular_category.html" %}
+            {% endwith %}
         </div>
     </div>
     <div class="row home">
-        {% page_menu "pages/menus/home_extra.html" %}
+        {% include "includes/extra_links.html" %}
     </div>
 {% endblock %}
-
-
-<div class="row">
-<div class="col-md-6">
-<div class="panel panel-default">
-<div class="panel-heading">
-<h3>Магазин-салон на Большой Серпуховской</h3>
-</div>
-<div class="panel-body">
-<address>
-<strong>Адрес</strong><br>
-город Подольск<br>
-улица Большая Серпуховская дом 30<br>
-<abbr title="Телефон">Тел:</abbr> +7 (499) 390-21-86
-</address>
-<address>
-<strong>Электронная почта</strong><br>
-<a href="mailto:#">help@azbuka-kamnya.ru</a>
-</address>
-<address>
-<strong>Магазин на карте</strong><br>
-<script type="text/javascript" charset="utf-8" src="//api-maps.yandex.ru/services/constructor/1.0/js/?sid=9D-wHs6C4hHraJYU41rURFEfNIvkeUt6&amp;width=auto&amp;height=320"></script>
-</address>
-</div>
-</div>
-</div>
-<div class="col-md-6">
-<div class="panel panel-default">
-<div class="panel-heading">
-<h3>Магазин на Кирова</h3>
-</div>
-<div class="panel-body">
-<address>
-<strong>Адрес</strong><br>
-город Подольск<br>
-улица Кирова дом 76 корпус 2<br>
-<abbr title="Телефон">Тел:</abbr> +7 (4967) 64-05-69
-</address>
-<address>
-<strong>Электронная почта</strong><br>
-<a href="mailto:#">help@azbuka-kamnya.ru</a>
-</address>
-<address>
-<strong>Магазин на карте</strong><br>
-<script type="text/javascript" charset="utf-8" src="//api-maps.yandex.ru/services/constructor/1.0/js/?sid=4o79l2K_sCnHBAOMc5K-ut_Z7eEm7Noo&amp;width=auto&amp;height=320"></script>
-</address>
-</div>
-</div>
-</div>
-</div>
