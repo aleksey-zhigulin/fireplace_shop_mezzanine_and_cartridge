@@ -136,6 +136,7 @@ class Product(BaseProduct, Priced, RichText, AdminThumbMixin):
     MANUFACTURERS = (
         ('Piaz', _('Piazzetta')),
         ('Invi', _('Invicta')),
+        ('InDe', _('Invicta Decor')),
     )
     manufacturer = CharField(_("Производитель"), editable=True, blank=True, null=True, max_length=4, default=None, choices=MANUFACTURERS)
 
@@ -374,11 +375,12 @@ class ProductVariation(with_metaclass(ProductVariationMetaclass, Priced)):
                 self.product.save()
 
 
-class Category(Page):
+class Category(Page, RichText):
     """
     A category of products on the website.
     """
 
+    show_content = models.BooleanField(_("Показывать содержимое"), default=False)
     featured_image = FileField(verbose_name=_("Featured Image"),
         upload_to=upload_to("shop.Category.featured_image", "shop/featured_images"),
         format="Image", max_length=255, null=True, blank=True)
@@ -933,7 +935,7 @@ class ProductTopka(Product):
             _("Вид топлива"): self.fuel,
             _("Диаметр дымохода, мм"): self.diam,
             _("Подъемник"): self.get_lift_display(),
-            _("Pаслонка"): self.get_shutter_display(),
+            _("Заслонка"): self.get_shutter_display(),
             _("Cтекло"): self.get_glass_display(),
         }
         return characteristics

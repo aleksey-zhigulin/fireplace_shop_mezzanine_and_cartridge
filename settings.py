@@ -25,7 +25,15 @@ ROBOTS_SITEMAP_URLS = [
 
 SHOP_USE_WISHLIST = False
 SHOP_PAYMENT_STEP_ENABLED = False
-SHOP_USE_RATINGS = False
+SHOP_USE_RATINGS = True
+
+SHOP_PRODUCT_SORT_OPTIONS = (
+    ('Популярные сверху', '-rating_average'),
+    ('Недавно добавленные', '-date_added'),
+    ('Дешевые сверху', 'unit_price'),
+    ('Дорогие сверху', '-unit_price')
+)
+
 
 # Sequence of available credit card types for payment.
 # SHOP_CARD_TYPES = ("Mastercard", "Visa", "Diners", "Amex")
@@ -93,7 +101,6 @@ SHOP_OPTION_TYPE_CHOICES = (
 ######################
 
 RICHTEXT_FILTER_LEVEL = 3
-
 
 RICHTEXT_FILTERS = ()
 

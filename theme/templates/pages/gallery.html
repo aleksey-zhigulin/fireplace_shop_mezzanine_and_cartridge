@@ -22,7 +22,7 @@ $(document).ready(function() {
 </script>
 {% endblock %}
 
-{% block main %}
+{% block main_2col %}
 {{ block.super }}
 
 {% editable page.gallery.content %}
@@ -32,9 +32,12 @@ $(document).ready(function() {
 <div class="gallery row">
 {% with page.gallery.images.all as images %}
 {% for image in images %}
-<div class="col-xs-4 col-sm-3">
+<div class="col-xs-3 col-sm-2">
     <a class="thumbnail" rel="#image-{{ image.id }}" title="{{ image.description }}" href="{{ image.file.url }}">
-        <img class="img-responsive" src="{{ MEDIA_URL }}{% thumbnail image.file 131 75 %}">
+        <img class="img-responsive" src="{{ MEDIA_URL }}{% thumbnail image.file 131 131 %}">
+        <div class="caption" style="white-space:nowrap;overflow: hidden;text-overflow: ellipsis">
+            {{ image.description }}
+        </div>
     </a>
 </div>
 {% endfor %}

@@ -69,13 +69,36 @@ _gaq.unshift(['_setAccount', '{{ settings.GOOGLE_ANALYTICS_ID }}']);
 {#  Cart panel affix helper    #}
 
 <script>
-    $(function() {
-{#        $('#cart-wrapper').height($("#cart").height());#}
+    $(document).ready(
+        $(function() {
+            $('#bottom_cart').removeClass("hidden");
+            $('#bottom_cart').affix({
+                offset: { bottom: $('#bottom_cart').offset().bottom }
+            });
+        })
+    )
+</script>
 
-        $('#bottom_cart').affix({
-            offset: { bottom: $('#bottom_cart').offset().bottom }
+{#  Home page images positioning #}
+
+<script>
+    resizeImg = function() {
+        $(".thumbnail-home-slides").each(function(){
+            var refW = $(this).width();
+            var refH = $(this).height();
+
+            if ($(window).width() < 768) {
+                $(this).css("height", refW / 2);
+                $(this).find("img").css("height", refW / 2);
+            } else {
+                $(this).css("height", '');
+                $(this).find("img").css("height", refH);
+            }
+            $(this).find("img").css("width", refW);
         });
-    });
+    }
+    $(window).resize(resizeImg);
+    $(document).ready(resizeImg);
 </script>
 
 <script src="{% static "js/ajax-forms.js" %}"></script>

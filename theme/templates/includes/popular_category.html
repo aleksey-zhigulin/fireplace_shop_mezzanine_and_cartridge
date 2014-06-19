@@ -1,18 +1,10 @@
 {% load i18n future mezzanine_tags %}
 
 {% spaceless %}
-<div class="col-lg-12 col-md-12 col-sm-6 col-xs-6 nopadding">
-    <a href="{{ category.get_absolute_url }}" class="thumbnail">
-        <div class="caption">
-            <h5><strong>{{ category.title }}</strong></h5>
+    <a href="{{ category.get_absolute_url }}" class="thumbnail-home">
+        <div class="caption thumbnail-home-caption">
+            <h4>{{ category.title }}</h4>
         </div>
-        {% if category.featured_image %}
-            <div class="wrapper">
-                <img class="center-block" src="{{ MEDIA_URL }}{% thumbnail category.featured_image 150 150 padding=True %}"/>
-            </div>
-        {% else %}
-        <div class="placeholder"></div>
-        {% endif %}
+        <img src='{{ MEDIA_URL }}{% thumbnail category.featured_image 187 150  %}'/>
     </a>
-</div>
 {% endspaceless %}

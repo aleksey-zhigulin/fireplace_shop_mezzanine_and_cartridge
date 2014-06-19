@@ -20,34 +20,46 @@
 
 {% block content %}
     <div class="row home">
-        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
-            {% with left_top as category %}
-            {% include "includes/popular_category.html" %}
-            {% endwith %}
-            {% with left_bottom as category %}
-            {% include "includes/popular_category.html" %}
-            {% endwith %}
+        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12 nopadding">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-6 popular-category">
+                {% with left_top as category %}
+                {% include "includes/popular_category.html" %}
+                {% endwith %}
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-6 popular-category">
+                {% with left_bottom as category %}
+                {% include "includes/popular_category.html" %}
+                {% endwith %}
+            </div>
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="col-lg-6 col-md-6 col-sm-9 col-xs-12 nopadding popular-category">
             {% with slides_category as category %}
             {% include "includes/homepage_slides.html" %}
             {% endwith %}
         </div>
-        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
-            {% with middle_top as category %}
-            {% include "includes/popular_category.html" %}
-            {% endwith %}
-            {% with middle_bottom as category %}
-            {% include "includes/popular_category.html" %}
-            {% endwith %}
+        <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 nopadding">
+            <div class="col-lg-12 col-md-6 col-sm-6 col-xs-6 popular-category">
+                {% with middle_top as category %}
+                {% include "includes/popular_category.html" %}
+                {% endwith %}
+            </div>
+            <div class="col-lg-12 col-md-6 col-sm-6 col-xs-6 popular-category">
+                {% with middle_bottom as category %}
+                {% include "includes/popular_category.html" %}
+                {% endwith %}
+            </div>
         </div>
-        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
-            {% with right_top as category %}
-            {% include "includes/popular_category.html" %}
-            {% endwith %}
-            {% with right_bottom as category %}
-            {% include "includes/popular_category.html" %}
-            {% endwith %}
+        <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 nopadding">
+            <div class="col-lg-12 col-md-6 col-sm-6 col-xs-6 popular-category">
+                {% with right_top as category %}
+                {% include "includes/popular_category.html" %}
+                {% endwith %}
+            </div>
+            <div class="col-lg-12 col-md-6 col-sm-6 col-xs-6 popular-category">
+                {% with right_bottom as category %}
+                {% include "includes/popular_category.html" %}
+                {% endwith %}
+            </div>
         </div>
     </div>
     <div class="row home">

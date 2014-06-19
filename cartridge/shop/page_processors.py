@@ -9,7 +9,7 @@ from mezzanine.pages.page_processors import processor_for
 from mezzanine.utils.views import paginate
 
 from cartridge.shop.models import Category, Product, HomePage
-
+from django.db.models.query_utils import Q
 import operator
 
 @processor_for(Category)
@@ -39,7 +39,11 @@ def category_processor(request, page):
 def products_from_subcategory(page):
         products = page.category.filters()
         for child_category in page.category.children.published():
-            products = operator.or_(products, products_from_subcategory(child_category))
+            try:
+                child_category.category # try downcast to category model
+                products = operator.or_(products, products_from_subcategory(child_category))
+            except Category.DoesNotExist:
+                pass
         return products
 
 @processor_for(HomePage)

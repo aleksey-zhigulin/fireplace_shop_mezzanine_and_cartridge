@@ -62,7 +62,7 @@ shipping_fields = _flds("shipping_detail")
 # Categories fieldsets are extended from Page fieldsets, since
 # categories are a Mezzanine Page type.
 category_fieldsets = deepcopy(PageAdmin.fieldsets)
-category_fieldsets[0][1]["fields"][3:3] = ["products"]
+category_fieldsets[0][1]["fields"][3:3] = ["content", "show_content", "products"]
 category_fieldsets += ((_("Product filters"), {
     "fields": ("sale", ("price_min", "price_max"), "combined"),
     "classes": ("collapse-closed",)},),)
