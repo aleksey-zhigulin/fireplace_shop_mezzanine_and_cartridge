@@ -89,10 +89,10 @@ _gaq.unshift(['_setAccount', '{{ settings.GOOGLE_ANALYTICS_ID }}']);
 
             if ($(window).width() < 768) {
                 $(this).css("height", refW / 2);
-                $(this).find("img").css("height", refW / 2);
+                $(this).find("img").css("height", refW / 2 + 2);
             } else {
                 $(this).css("height", '');
-                $(this).find("img").css("height", refH);
+                $(this).find("img").css("height", refH + 2);
             }
             $(this).find("img").css("width", refW);
         });

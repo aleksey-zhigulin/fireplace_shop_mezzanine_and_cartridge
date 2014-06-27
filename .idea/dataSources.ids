@@ -417,9 +417,11 @@
     </table>
     <table name="shop_category" schema="" catalog="" type="TABLE">
       <column name="price_max" sqlType="DECIMAL" length="2000000000" precision="10" nullable="true" jdbcType="6"/>
+      <column name="show_content" sqlType="BOOL" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
       <column name="page_ptr_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
       <column name="sale_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
       <column name="price_min" sqlType="DECIMAL" length="2000000000" precision="10" nullable="true" jdbcType="6"/>
+      <column name="content" sqlType="TEXT" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
       <column name="combined" sqlType="BOOL" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
       <column name="featured_image" sqlType="VARCHAR(255)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <primary-key columns="page_ptr_id"/>

@@ -137,8 +137,10 @@ $(document).ready(function() {
         </div>
 
         {% if settings.SHOP_USE_RATINGS %}
-            <div class="panel panel-default rating" style="display: inline-block;">
-                <div class="panel-body">{% rating_for product %}</div>
+            <div style="text-align: center">
+                <div class="panel panel-default rating" style="display: inline-block; text-align: center;">
+                    <div class="panel-body">{% rating_for product %}</div>
+                </div>
             </div>
         {% endif %}
 

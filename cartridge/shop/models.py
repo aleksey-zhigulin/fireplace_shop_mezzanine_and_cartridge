@@ -93,13 +93,14 @@ class Priced(models.Model):
         settings.use_editable()
         rate = {
             'R': 1,
-            'E': Decimal(settings.SHOP_EURO_EXCHANGE_RATE),
-            'U': Decimal(settings.SHOP_USD_EXCHANGE_RATE)
+            'E': Decimal(settings.SHOP_EURO_EXCHANGE_RATE)* Decimal(1.02),
+            'U': Decimal(settings.SHOP_USD_EXCHANGE_RATE) * Decimal(1.02),
         }
+        round_50 = lambda x: (int(x / 50) + (x % 50 > 24)) * 50
         if self.on_sale():
-            return self.sale_price * rate[self.currency]
+            return round_50(self.sale_price * rate[self.currency] )
         elif self.has_price():
-            return self.unit_price * rate[self.currency]
+            return round_50(self.unit_price * rate[self.currency] )
         return Decimal("0")
 
     def copy_price_fields_to(self, obj_to):
@@ -137,8 +138,11 @@ class Product(BaseProduct, Priced, RichText, AdminThumbMixin):
         ('Piaz', _('Piazzetta')),
         ('Invi', _('Invicta')),
         ('InDe', _('Invicta Decor')),
+        ('Krat', _('Kratki')),
+        ('Tote', _('Totem')),
     )
-    manufacturer = CharField(_("Производитель"), editable=True, blank=True, null=True, max_length=4, default=None, choices=MANUFACTURERS)
+    manufacturer = CharField(
+        _("Производитель"), editable=True, blank=True, null=True, max_length=4, default=None, choices=MANUFACTURERS)
 
     content_model = models.CharField(_("Тип товара"), editable=False, max_length=50, null=True)
 
@@ -178,7 +182,6 @@ class Product(BaseProduct, Priced, RichText, AdminThumbMixin):
         Provides a generic method of retrieving the instance of the custom
         product's model, if there is one.
         """
-        print self.content_model
         return getattr(self, self.content_model, None)
 
     def save(self, *args, **kwargs):
