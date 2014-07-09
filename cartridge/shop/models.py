@@ -59,7 +59,7 @@ class Priced(models.Model):
     )
 
     unit_price = fields.MoneyField(_("Цена"))
-    currency = fields.CharField(_("Валюта"), blank=False, max_length=1, default='EUR', choices=CURRENCY)
+    currency = fields.CharField(_("Валюта"), blank=False, max_length=1, default='E', choices=CURRENCY)
     sale_id = models.IntegerField(null=True)
     sale_price = fields.MoneyField(_("Sale price"))
     sale_from = models.DateTimeField(_("Sale start"), blank=True, null=True)

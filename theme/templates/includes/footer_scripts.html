@@ -3,6 +3,8 @@
 {% editable_loader %}
 
 <!-- Yandex.Metrika counter -->
+{% if not request.user.is_staff %}
+{% block yaParams %}{% endblock %}
 <script type="text/javascript">
 (function (d, w, c) {
     (w[c] = w[c] || []).push(function() {
@@ -11,7 +13,9 @@
                     webvisor:true,
                     clickmap:true,
                     trackLinks:true,
-                    accurateTrackBounce:true});
+                    accurateTrackBounce:true,
+                    params:window.yaParams||{ }
+            });
         } catch(e) { }
     });
 
@@ -28,6 +32,7 @@
 })(document, window, "yandex_metrika_callbacks");
 </script>
 <noscript><div><img src="//mc.yandex.ru/watch/25193285" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+{% endif %}
 <!-- /Yandex.Metrika counter -->
 
 <script>

@@ -7,6 +7,26 @@
 
 {% block extra_head %}
 {{ block.super }}
+<script type="text/javascript">
+var yaParams = {
+    order_id: "{{ order.id }}",
+    order_price: {{ order.item_total }}{% if order.discount_total %} - {{ order.discount_total }}{% endif %},
+    currency: "RUR",
+    exchange_rate: 1,
+    goods:
+    {% for item in items %}
+        [
+            {
+                id: '{{ item.sku }}',
+                name: '{{ item.name|escapejs }}',
+                price: {{ item.unit_price }},
+                quantity: {{ item.quantity }}
+            }
+        ]
+    {% endfor %}
+};
+</script>
+
 {% if settings.GOOGLE_ANALYTICS_ID %}
 <script>
 
@@ -82,3 +102,6 @@ _gaq.push(['_trackTrans']);
     <input type="submit" class="btn btn-default" value="{% trans "Отправить письмо еще раз" %}">
 </form>
 {% endblock %}
+
+
+
