@@ -1,5 +1,6 @@
 {% load i18n future pages_tags %}
 
+
 {% for page in page_branch %}
     {% if not page.is_current and page.is_current_or_ascendant %}
         <li id="breadcrumb-menu-{{ page.html_id }}">

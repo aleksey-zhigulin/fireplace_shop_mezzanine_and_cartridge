@@ -43,13 +43,11 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block breadcrumb_menu %}
-    {% with product.categories.all as categories %}
-        {% for cat in categories|slice:':' %}
-            <li id="breadcrumb-menu-{{ page.html_id }}">
-            <a href="{{ cat.get_absolute_url }}">{{ cat.title }}</a>
-            </li>
-        {% endfor %}
-    {% endwith %}
+    {% for category in categories %}
+        <li id="breadcrumb-menu-{{ page.html_id }}">
+        <a href="{{ category.get_absolute_url }}">{{ category.title }}</a>
+        </li>
+    {% endfor %}
 {% endblock %}
 
 {% block title %}
