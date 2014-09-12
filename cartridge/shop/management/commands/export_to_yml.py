@@ -112,7 +112,8 @@ def generate_xml():
     tree = ElementTree.ElementTree(root).getroot()
     doctype = """<?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE yml_catalog SYSTEM "shops.dtd">"""
-    xml_string = prettify(tree).replace('<?xml version="1.0" ?>', doctype)
+    # xml_string = prettify(tree).replace('<?xml version="1.0" ?>', doctype)
+    xml_string = '\n'.join([doctype, tostring(tree, 'utf-8')])
     if settings.DEBUG:
         open('products.xml', 'w').write(xml_string)
     else:

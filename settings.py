@@ -85,10 +85,11 @@ SHOP_CURRENCY_LOCALE = "ru_RU.UTF-8"
 # eg Size, Colour.
 SHOP_OPTION_TYPE_CHOICES = (
     (1, "Количество стекол"),
-    # (2, "Наличие подъемника"),
-    # (3, ""),
-    # (4, ""),
-    # (5, ""),
+    (2, "Цвет"),
+    (3, "Версия"),
+    (4, "Расположение стекол"),
+    (5, "Цвет портала"),
+    (6, "Цвет экрана/камня"),
 )
 
 # Sequence of indexes from the SHOP_OPTION_TYPE_CHOICES setting that

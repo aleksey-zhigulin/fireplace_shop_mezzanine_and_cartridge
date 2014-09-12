@@ -96,7 +96,7 @@ class Priced(models.Model):
             'E': Decimal(settings.SHOP_EURO_EXCHANGE_RATE)* Decimal(1.02),
             'U': Decimal(settings.SHOP_USD_EXCHANGE_RATE) * Decimal(1.02),
         }
-        round_50 = lambda x: (int(x / 50) + (x % 50 > 24)) * 50
+        round_50 = lambda x: x if self.currency == 'R' else (int(x / 50) + (x % 50 > 24)) * 50
         if self.on_sale():
             return round_50(self.sale_price * rate[self.currency] )
         elif self.has_price():
@@ -140,6 +140,12 @@ class Product(BaseProduct, Priced, RichText, AdminThumbMixin):
         ('InDe', _('Invicta Decor')),
         ('Krat', _('Kratki')),
         ('Tote', _('Totem')),
+        ('Spar', _('Spartherm')),
+        ('Dimp', _('Dimplex')),
+        ('Экок', _('Экокамин')),
+        ('Laud', _('Laudel')),
+        ('Dovr', _('Dovre')),
+        ('Bell', _('Bella Italia')),
     )
     manufacturer = CharField(
         _("Производитель"), editable=True, blank=True, null=True, max_length=4, default=None, choices=MANUFACTURERS)
@@ -924,9 +930,14 @@ class ProductTopka(Product):
     depth = models.PositiveSmallIntegerField(_("глубина, мм"), blank=True,  null=True, default=None)
     performance = models.FloatField(_("КПД, %"), blank=True, null=True, default=None)
     fuel = fields.CharField(_("вид топлива"), blank=True, null=True, max_length=30, default=None)
-    lift = fields.CharField(_("подъемник"), blank=True, null=True, max_length=4, default=None, choices=AVAILABILITY)
+    water = fields.CharField(_("водяной контур"), blank=True, null=True, max_length=1, default=None, choices=AVAILABILITY)
+    lift = fields.CharField(_("подъемник"), blank=True, null=True, max_length=1, default=None, choices=AVAILABILITY)
     shutter = fields.CharField(_("заслонка"), blank=True, null=True, max_length=1, default=None, choices=AVAILABILITY)
     glass = fields.CharField(_("стекло"), blank=True, null=True, max_length=1, default=None, choices=GLASSES)
+    suitable_portals = models.ManyToManyField("ProductPortal", verbose_name=_("совместимые порталы"), blank=True)
+    suitable_faces = models.ManyToManyField("ProductFacing", verbose_name=_("совместимые облицовки"), blank=True)
+
+
 
     def get_characteristics(self):
         dimensions = (self.width, self.height, self.depth,)
@@ -937,6 +948,7 @@ class ProductTopka(Product):
             _("Размер, мм"): '×'.join(map(str, dimensions)) if all(dimensions) else None,
             _("Вид топлива"): self.fuel,
             _("Диаметр дымохода, мм"): self.diam,
+            _("Водяной контур"): self.get_water_display(),
             _("Подъемник"): self.get_lift_display(),
             _("Заслонка"): self.get_shutter_display(),
             _("Cтекло"): self.get_glass_display(),
@@ -946,6 +958,119 @@ class ProductTopka(Product):
         verbose_name = _("Топка")
         verbose_name_plural = _("Топки")
 
+
+class ProductPortal(Product):
+
+    AVAILABILITY = (
+        ('Y', _('есть')),
+        ('N', _('нет')),
+    )
+
+    overall_height = models.PositiveSmallIntegerField(_("габаритная высота, мм"), blank=True,  null=True, default=None)
+    overall_width = models.PositiveSmallIntegerField(_("габаритная ширина, мм"), blank=True,  null=True, default=None)
+    overall_depth = models.PositiveSmallIntegerField(_("габаритная глубина, мм"), blank=True,  null=True, default=None)
+
+    materials = fields.CharField(_("материалы"), blank=True, null=True, max_length=100, default=None)
+    suitable_topka = models.ManyToManyField("ProductTopka", verbose_name=_("совместим с топками"), blank=True,
+                                            through=ProductTopka.suitable_portals.through)
+    suitable_hearth = models.ManyToManyField("ProductHearth", verbose_name=_("совместим с очагами"), blank=True)
+
+    def get_characteristics(self):
+        overall_dim = (self.overall_height, self.overall_width, self.overall_depth,)
+        characteristics = {
+            _("Габаритный размер (В×Ш×Г), мм"): '×'.join(map(str, overall_dim)) if all(overall_dim) else None,
+            _("Материалы"): self.materials,
+        }
+        return characteristics
+
+    class Meta:
+        verbose_name = _("Портал")
+        verbose_name_plural = _("Порталы")
+
+class ProductFacing(Product):
+
+    AVAILABILITY = (
+        ('Y', _('есть')),
+        ('N', _('нет')),
+    )
+
+    TYPES = (
+        ('A', _('пристенный')),
+        ('B', _('угловой')),
+    )
+
+    overall_height = models.PositiveSmallIntegerField(_("высота, мм"), blank=True,  null=True, default=None)
+    overall_width = models.PositiveSmallIntegerField(_("ширина, мм"), blank=True,  null=True, default=None)
+    overall_depth = models.PositiveSmallIntegerField(_("глубина, мм"), blank=True,  null=True, default=None)
+
+    materials = fields.CharField(_("материалы"), blank=True, null=True, max_length=100, default=None)
+    suitable_hearth = models.ManyToManyField("ProductHearth", verbose_name=_("совместимые очаги"), blank=True)
+    suitable_topka = models.ManyToManyField("ProductTopka", verbose_name=_("совместимые топки"), blank=True,
+                                            through=ProductTopka.suitable_faces.through)
+    type = fields.CharField(_("тип"), blank=True, null=True, max_length=1, default=None, choices=TYPES)
+    mass = models.PositiveSmallIntegerField(_("масса, кг"), blank=True, null=True, default=None)
+
+    def get_characteristics(self):
+        overall_dim = (self.overall_height, self.overall_width, self.overall_depth,)
+        characteristics = {
+            _("Размер (В×Ш×Г), мм"): '×'.join(map(str, overall_dim)) if all(overall_dim) else None,
+            _("Тип"): self.get_type_display(),
+            _("Масса, кг"): self.mass,
+            _("Материалы"): self.materials,
+        }
+        return characteristics
+
+    class Meta:
+        verbose_name = _("Облицовка")
+        verbose_name_plural = _("Облицовки")
+
+
+class ProductHearth(Product):
+
+    AVAILABILITY = (
+        ('Y', _('есть')),
+        ('N', _('нет')),
+    )
+    TYPES = (
+        ('A', _('встраиваемый')),
+        ('B', _('напольный')),
+        ('C', _('настенный')),
+        ('D', _('вставка')),
+    )
+
+    power = models.PositiveSmallIntegerField(_("мощность, кВт"), blank=True, null=True, default=None)
+
+    overall_height = models.PositiveSmallIntegerField(_("габаритная высота, мм"), blank=True,  null=True, default=None)
+    overall_width = models.PositiveSmallIntegerField(_("габаритная ширина, мм"), blank=True,  null=True, default=None)
+    overall_depth = models.PositiveSmallIntegerField(_("габаритная глубина, мм"), blank=True,  null=True, default=None)
+
+    inst_height = models.PositiveSmallIntegerField(_("установочная высота, мм"), blank=True,  null=True, default=None)
+    inst_width = models.PositiveSmallIntegerField(_("установочная ширина, мм"), blank=True,  null=True, default=None)
+    inst_depth = models.PositiveSmallIntegerField(_("установочная глубина, мм"), blank=True,  null=True, default=None)
+
+    type = fields.CharField(_("тип"), blank=True, null=True, max_length=1, default=None, choices=TYPES)
+    rc = fields.CharField(_("пульт ДУ"), blank=True, null=True, max_length=1, default=None, choices=AVAILABILITY)
+    heating = fields.CharField(_("обогрев"), blank=True, null=True, max_length=1, default=None, choices=AVAILABILITY)
+    suitable_faces = models.ManyToManyField("ProductFacing", verbose_name=_("совместимые облицовки"), blank=True,
+                                            through=ProductFacing.suitable_hearth.through)
+    suitable_portals = models.ManyToManyField("ProductPortal", verbose_name=_("совместимые порталы"), blank=True,
+                                            through=ProductPortal.suitable_hearth.through)
+
+    def get_characteristics(self):
+        overall_dim = (self.overall_height, self.overall_width, self.overall_depth,)
+        inst_dim = (self.inst_height, self.inst_width, self.inst_depth,)
+        characteristics = {
+            _("Мощность обогрева, кВт"): self.power,
+            _("Габаритный размер (В×Ш×Г), мм"): '×'.join(map(str, overall_dim)) if all(overall_dim) else None,
+            _("Установочный размер (В×Ш×Г), мм"): '×'.join(map(str, inst_dim)) if all(inst_dim) else None,
+            _("Тип"): self.get_type_display(),
+            _("Пульт ДУ"): self.get_rc_display(),
+            _("Обогрев"): self.get_heating_display(),
+        }
+        return characteristics
+    class Meta:
+        verbose_name = _("Очаг")
+        verbose_name_plural = _("Очаг")
 
 
 class HomePage(Page):

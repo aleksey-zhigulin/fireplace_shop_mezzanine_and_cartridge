@@ -119,6 +119,25 @@
       <index name="blog_blogpost_related_posts_69f74308" unique="true" columns="from_blogpost_id"/>
       <index name="blog_blogpost_related_posts_from_blogpost_id__to_blogpost_id" unique="true" columns="from_blogpost_id,to_blogpost_id"/>
     </table>
+    <table name="celery_taskmeta" schema="" catalog="" type="TABLE">
+      <column name="status" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="task_id" sqlType="VARCHAR(255)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="date_done" sqlType="DATETIME" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="traceback" sqlType="TEXT" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="meta" sqlType="TEXT" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="result" sqlType="TEXT" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="hidden" sqlType="BOOL" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <primary-key columns="id"/>
+    </table>
+    <table name="celery_tasksetmeta" schema="" catalog="" type="TABLE">
+      <column name="taskset_id" sqlType="VARCHAR(255)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="hidden" sqlType="BOOL" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <column name="date_done" sqlType="DATETIME" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="result" sqlType="TEXT" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="id"/>
+    </table>
     <table name="conf_setting" schema="" catalog="" type="TABLE">
       <column name="site_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
       <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
@@ -222,6 +241,77 @@
       <column name="name" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
       <primary-key columns="id"/>
       <exported-key name="#FAKE_django_comments_2" table="django_comments" schema="" catalog="" columns="site_id"/>
+    </table>
+    <table name="djcelery_crontabschedule" schema="" catalog="" type="TABLE">
+      <column name="hour" sqlType="VARCHAR(64)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="day_of_month" sqlType="VARCHAR(64)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="day_of_week" sqlType="VARCHAR(64)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="month_of_year" sqlType="VARCHAR(64)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <column name="minute" sqlType="VARCHAR(64)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="id"/>
+    </table>
+    <table name="djcelery_intervalschedule" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="every" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="period" sqlType="VARCHAR(24)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="id"/>
+    </table>
+    <table name="djcelery_periodictask" schema="" catalog="" type="TABLE">
+      <column name="crontab_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <column name="task" sqlType="VARCHAR(200)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="name" sqlType="VARCHAR(200)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="exchange" sqlType="VARCHAR(200)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="args" sqlType="TEXT" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="enabled" sqlType="BOOL" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="routing_key" sqlType="VARCHAR(200)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="interval_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <column name="last_run_at" sqlType="DATETIME" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="queue" sqlType="VARCHAR(200)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="total_run_count" sqlType="INTEGER UNSIGNED" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="expires" sqlType="DATETIME" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="kwargs" sqlType="TEXT" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="date_changed" sqlType="DATETIME" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <column name="description" sqlType="TEXT" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="id"/>
+      <index name="djcelery_periodictask_8905f60d" unique="true" columns="interval_id"/>
+      <index name="djcelery_periodictask_7280124f" unique="true" columns="crontab_id"/>
+    </table>
+    <table name="djcelery_periodictasks" schema="" catalog="" type="TABLE">
+      <column name="ident" sqlType="SMALLINT" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="last_update" sqlType="DATETIME" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="ident"/>
+    </table>
+    <table name="djcelery_taskstate" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="state" sqlType="VARCHAR(64)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="task_id" sqlType="VARCHAR(36)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="name" sqlType="VARCHAR(200)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="tstamp" sqlType="DATETIME" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="args" sqlType="TEXT" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="kwargs" sqlType="TEXT" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="eta" sqlType="DATETIME" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="expires" sqlType="DATETIME" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="result" sqlType="TEXT" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="traceback" sqlType="TEXT" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="runtime" sqlType="REAL" length="2000000000" precision="10" nullable="true" jdbcType="6"/>
+      <column name="retries" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="worker_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <column name="hidden" sqlType="BOOL" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <index name="djcelery_taskstate_2ff6b945" unique="true" columns="hidden"/>
+      <index name="djcelery_taskstate_cac6a03d" unique="true" columns="worker_id"/>
+      <index name="djcelery_taskstate_abaacd02" unique="true" columns="tstamp"/>
+      <index name="djcelery_taskstate_4da47e07" unique="true" columns="name"/>
+      <index name="djcelery_taskstate_5654bf12" unique="true" columns="state"/>
+    </table>
+    <table name="djcelery_workerstate" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="hostname" sqlType="VARCHAR(255)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="last_heartbeat" sqlType="DATETIME" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <primary-key columns="id"/>
+      <index name="djcelery_workerstate_11e400ef" unique="true" columns="last_heartbeat"/>
     </table>
     <table name="forms_field" schema="" catalog="" type="TABLE">
       <column name="field_type" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
@@ -593,6 +683,27 @@
       <primary-key columns="id"/>
       <index name="shop_productaction_product_id__timestamp" unique="true" columns="product_id,timestamp"/>
     </table>
+    <table name="shop_producthearth" schema="" catalog="" type="TABLE">
+      <column name="product_ptr_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="power" sqlType="SMALLINT UNSIGNED" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <column name="overall_height" sqlType="SMALLINT UNSIGNED" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <column name="overall_width" sqlType="SMALLINT UNSIGNED" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <column name="overall_depth" sqlType="SMALLINT UNSIGNED" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <column name="inst_height" sqlType="SMALLINT UNSIGNED" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <column name="inst_width" sqlType="SMALLINT UNSIGNED" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <column name="inst_depth" sqlType="SMALLINT UNSIGNED" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <column name="type" sqlType="VARCHAR(1)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="rc" sqlType="VARCHAR(1)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="heating" sqlType="VARCHAR(1)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <primary-key columns="product_ptr_id"/>
+    </table>
+    <table name="shop_producthearth_suitable_portals" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="producthearth_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="productportal_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <index name="shop_producthearth_suitable_portals_producthearth_id__productportal_id" unique="true" columns="producthearth_id,productportal_id"/>
+    </table>
     <table name="shop_productimage" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
       <column name="_order" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
@@ -607,16 +718,32 @@
       <column name="name" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <primary-key columns="id"/>
     </table>
+    <table name="shop_productportal" schema="" catalog="" type="TABLE">
+      <column name="product_ptr_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="overall_height" sqlType="SMALLINT UNSIGNED" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <column name="overall_width" sqlType="SMALLINT UNSIGNED" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <column name="overall_depth" sqlType="SMALLINT UNSIGNED" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <column name="materials" sqlType="VARCHAR(100)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <primary-key columns="product_ptr_id"/>
+    </table>
+    <table name="shop_productportal_suitable_products" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="productportal_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="producthearth_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <index name="shop_productportal_suitable_products_productportal_id__producthearth_id" unique="true" columns="productportal_id,producthearth_id"/>
+    </table>
     <table name="shop_producttopka" schema="" catalog="" type="TABLE">
+      <column name="shutter" sqlType="VARCHAR(1)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <column name="diam" sqlType="SMALLINT UNSIGNED" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
       <column name="power" sqlType="SMALLINT UNSIGNED" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
       <column name="width" sqlType="SMALLINT UNSIGNED" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
       <column name="product_ptr_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
       <column name="height" sqlType="SMALLINT UNSIGNED" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
-      <column name="shutter" sqlType="VARCHAR(1)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="water" sqlType="VARCHAR(1)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <column name="glass" sqlType="VARCHAR(1)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <column name="depth" sqlType="SMALLINT UNSIGNED" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
-      <column name="lift" sqlType="VARCHAR(4)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="lift" sqlType="VARCHAR(1)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <column name="mass" sqlType="SMALLINT UNSIGNED" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
       <column name="fuel" sqlType="VARCHAR(30)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <column name="performance" sqlType="REAL" length="2000000000" precision="10" nullable="true" jdbcType="6"/>
@@ -626,16 +753,21 @@
       <column name="sale_to" sqlType="DATETIME" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <column name="sku" sqlType="VARCHAR(20)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <column name="sale_from" sqlType="DATETIME" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
-      <column name="num_in_stock" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
-      <column name="default" sqlType="BOOL" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
       <column name="image_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <column name="default" sqlType="BOOL" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
       <column name="sale_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
       <column name="unit_price" sqlType="DECIMAL" length="2000000000" precision="10" nullable="true" jdbcType="6"/>
-      <column name="currency" sqlType="VARCHAR(1)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
-      <column name="sale_price" sqlType="DECIMAL" length="2000000000" precision="10" nullable="true" jdbcType="6"/>
-      <column name="option1" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <column name="id" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
+      <column name="currency" sqlType="VARCHAR(1)" length="2000000000" precision="10" nullable="false" jdbcType="12"/>
+      <column name="num_in_stock" sqlType="INTEGER" length="2000000000" precision="10" nullable="true" jdbcType="4"/>
       <column name="product_id" sqlType="INTEGER" length="2000000000" precision="10" nullable="false" jdbcType="4"/>
+      <column name="option6" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="sale_price" sqlType="DECIMAL" length="2000000000" precision="10" nullable="true" jdbcType="6"/>
+      <column name="option4" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="option5" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="option2" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="option3" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
+      <column name="option1" sqlType="VARCHAR(50)" length="2000000000" precision="10" nullable="true" jdbcType="12"/>
       <primary-key columns="id"/>
     </table>
     <table name="shop_sale" schema="" catalog="" type="TABLE">

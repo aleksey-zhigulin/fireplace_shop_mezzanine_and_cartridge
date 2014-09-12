@@ -1,5 +1,5 @@
 {% extends "shop/product.html" %}
-{% load shop_tags mezzanine_tags %}
+{% load shop_tags mezzanine_tags i18n %}
 {% block characteristics %}
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -21,12 +21,12 @@
 {% endblock %}
 
 {% block suitable_prod %}
-    {% if suitable_portals %}
-    <h2>Подходящие порталы</h2>
-    {% include "shop/includes/suitable_prods.html" with suitable_products=suitable_portals %}
+    {% if suitable_topka %}
+    <h2>Подходящие топки</h2>
+    {% include "shop/includes/suitable_prods.html" with suitable_products=suitable_topka %}
     {% endif %}
-    {% if suitable_faces %}
-    <h2>Подходящие облицовки</h2>
-    {% include "shop/includes/suitable_prods.html" with suitable_products=suitable_faces %}
+    {% if suitable_hearth %}
+    <h2>Подходящие очаги</h2>
+    {% include "shop/includes/suitable_prods.html" with suitable_products=suitable_hearth %}
     {% endif %}
 {% endblock %}

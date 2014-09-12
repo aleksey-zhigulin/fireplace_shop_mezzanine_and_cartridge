@@ -96,6 +96,12 @@ def product(request, slug, template="shop/product.html",
     if product.content_model is not None and product.content_model != 'product':
         templates.append(u"shop/products/%s.html" % product.content_model)
         context["characteristics"] = product.get_content_model().get_characteristics()
+        if product.content_model in ('productportal', 'productfacing'):
+            context["suitable_hearth"] = product.get_content_model().suitable_hearth.published(for_user=request.user)
+            context["suitable_topka"] = product.get_content_model().suitable_topka.published(for_user=request.user)
+        if product.content_model in ('producthearth', 'producttopka'):
+            context["suitable_faces"] = product.get_content_model().suitable_faces.published(for_user=request.user)
+            context["suitable_portals"] = product.get_content_model().suitable_portals.published(for_user=request.user)
     templates.append(template)
 
     return render(request, templates, context)

@@ -46,7 +46,7 @@ from cartridge.shop.forms import DiscountAdminForm, ImageWidget, MoneyWidget
 from cartridge.shop.models import Category, Product, ProductImage, HomePage, HomePageSlides
 from cartridge.shop.models import ProductVariation, ProductOption, Order
 from cartridge.shop.models import OrderItem, Sale, DiscountCode
-from cartridge.shop.models import ProductTopka
+from cartridge.shop.models import ProductTopka, ProductHearth, ProductPortal, ProductFacing
 
 # Lists of field names.
 option_fields = [f.name for f in ProductVariation.option_fields()]
@@ -392,18 +392,65 @@ class DiscountCodeAdmin(admin.ModelAdmin):
             {"fields": (("valid_from", "valid_to", "uses_remaining"),)}),
     )
 
+portal_fieldsets = deepcopy(ProductAdmin.fieldsets)
+portal_fieldsets[0][1]["fields"][3:3] = ["overall_height",
+                                         "overall_width",
+                                         "overall_depth",
+                                         "materials",
+                                         "suitable_topka",
+                                         "suitable_hearth"]
 
-admin.site.register(Category, CategoryAdmin)
-admin.site.register(Product, ProductAdmin)
-if settings.SHOP_USE_VARIATIONS:
-    admin.site.register(ProductOption, ProductOptionAdmin)
-admin.site.register(Order, OrderAdmin)
-admin.site.register(Sale, SaleAdmin)
-admin.site.register(DiscountCode, DiscountCodeAdmin)
+class ProductPortalAdmin(ProductAdmin):
+    fieldsets = portal_fieldsets
+    filter_horizontal = tuple(deepcopy(ProductAdmin.filter_horizontal)) + ("suitable_topka", "suitable_hearth",)
 
-admin.site.register(ProductTopka, ProductAdmin)
+facing_fieldsets = deepcopy(ProductAdmin.fieldsets)
+facing_fieldsets[0][1]["fields"][3:3] = ["overall_height",
+                                         "overall_width",
+                                         "overall_depth",
+                                         "materials",
+                                         "mass",
+                                         "type",
+                                         "suitable_hearth",
+                                         "suitable_topka"]
+
+class ProductFacingAdmin(ProductAdmin):
+    fieldsets = facing_fieldsets
+    filter_horizontal = tuple(deepcopy(ProductAdmin.filter_horizontal)) + ("suitable_hearth", "suitable_topka")
 
 
+hearth_fieldsets = deepcopy(ProductAdmin.fieldsets)
+hearth_fieldsets[0][1]["fields"][3:3] = ["power",
+                                         "overall_height", "overall_width", "overall_depth",
+                                         "inst_height", "inst_width", "inst_depth",
+                                         "type",
+                                         "rc",
+                                         "heating",
+                                         "suitable_portals",
+                                         "suitable_faces"]
+
+class ProductHearthAdmin(ProductAdmin):
+    fieldsets = hearth_fieldsets
+    filter_horizontal = tuple(deepcopy(ProductAdmin.filter_horizontal)) + ("suitable_portals", "suitable_faces",)
+
+
+topka_fieldsets = deepcopy(ProductAdmin.fieldsets)
+topka_fieldsets[0][1]["fields"][3:3] = ["power",
+                                        "mass",
+                                        "diam",
+                                        "height", "width", "depth",
+                                        "performance",
+                                        "fuel",
+                                        "water",
+                                        "lift",
+                                        "shutter",
+                                        "glass",
+                                        "suitable_portals",
+                                        "suitable_faces"]
+
+class ProductTopkaAdmin(ProductAdmin):
+    fieldsets = topka_fieldsets
+    filter_horizontal = tuple(deepcopy(ProductAdmin.filter_horizontal)) + ("suitable_portals", "suitable_faces")
 
 
 home_fieldsets = deepcopy(PageAdmin.fieldsets)
@@ -423,4 +470,16 @@ class HomePageAdmin(PageAdmin):
     inlines = (HomePageSlidesAdmin,)
     fieldsets = home_fieldsets
 
+admin.site.register(Category, CategoryAdmin)
+admin.site.register(Product, ProductAdmin)
+if settings.SHOP_USE_VARIATIONS:
+    admin.site.register(ProductOption, ProductOptionAdmin)
+admin.site.register(Order, OrderAdmin)
+admin.site.register(Sale, SaleAdmin)
+admin.site.register(DiscountCode, DiscountCodeAdmin)
+
+admin.site.register(ProductTopka, ProductTopkaAdmin)
+admin.site.register(ProductHearth, ProductHearthAdmin)
+admin.site.register(ProductPortal, ProductPortalAdmin)
+admin.site.register(ProductFacing, ProductFacingAdmin)
 admin.site.register(HomePage, HomePageAdmin)

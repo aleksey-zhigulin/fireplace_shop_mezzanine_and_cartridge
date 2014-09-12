@@ -30,7 +30,7 @@ $(document).ready(function() {
         delegate: 'a',
         type: 'image',
         gallery: {
-            enabled: true,
+            enabled: true
         }
     });
 });
@@ -144,6 +144,7 @@ $(document).ready(function() {
             </div>
         {% endif %}
 
+        {% if product.content %}
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4>Описание</h4>
@@ -154,6 +155,7 @@ $(document).ready(function() {
                 {% endeditable %}
             </div>
         </div>
+        {% endif %}
 
         {% if settings.SHOP_USE_RELATED_PRODUCTS and related_products %}
         <h2>Похожие товары</h2>
@@ -183,5 +185,8 @@ $(document).ready(function() {
             {% endfor %}
         </div>
         {% endif %}
+
+        {% block suitable_prod %}
+        {% endblock %}
 
 {% endblock %}
