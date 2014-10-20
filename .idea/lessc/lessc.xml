@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="LessManager">
-    <option name="deleteCssFiles" value="false" />
     <option name="moveCssFiles" value="false" />
     <option name="lessProfileMap">
       <map>
@@ -16,8 +15,8 @@
                 </list>
               </option>
               <option name="id" value="0" />
-              <option name="includePattern" value="bootstrap-theme.less" />
-              <option name="lessDirPath" value="E:\work\fireplace_shop\theme\static\css\src" />
+              <option name="includePattern" value="bootstrap\bootstrap.less;styles.less" />
+              <option name="lessDirPath" value="E:\work\fireplace_shop\theme\static\css\less" />
               <option name="name" value="theme" />
             </LessProfile>
           </value>
@@ -25,7 +24,6 @@
       </map>
     </option>
     <option name="moveCssFiles" value="false" />
-    <option name="deleteCssFiles" value="false" />
   </component>
 </project>
 

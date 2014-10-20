@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from future.builtins import str
 
@@ -14,7 +14,7 @@ from mezzanine.utils.urls import admin_url
 
 from cartridge.shop.models import Product
 from cartridge.shop.utils import set_locale
-
+from django.template.defaultfilters import stringfilter
 
 register = template.Library()
 
@@ -43,7 +43,7 @@ def currency(value):
         if not conv["p_cs_precedes"]:
             value.reverse()
         value = "".join(value)
-    return value
+    return value.replace('.00 руб'.encode('utf8'), ' \u20bd'.encode('utf8'))
 
 
 def _order_totals(context):
@@ -106,4 +106,20 @@ def models_for_products(*args):
             setattr(model, "add_url", admin_add_url)
             product_models.append(model)
     return product_models
+
+
+@register.filter
+@stringfilter
+def numeral(number, words):
+    mod_number = int(number) % 100
+    words = words.split(',')
+    if 10 < mod_number < 20:
+        word = words[2]
+    else:
+        mod_number %= 10
+        if mod_number == 1: word = words[0]
+        elif mod_number in (2, 3, 4): word = words[1]
+        else: word = words[2]
+    return ' '.join([number, word])
+
 

@@ -2,14 +2,7 @@
 
 {% load mezzanine_tags %}
 
-{% block extra_js %}
-{{ block.super }}
-<script>
-$(function() {$('.mezzanine-form :input:visible:enabled:first').focus();});
-</script>
-{% endblock %}
-
-{% block main_2col %}
+{% block main %}
 {{ block.super }}
 {% if request.GET.sent %}
     {% editable page.form.response %}
@@ -34,3 +27,10 @@ $(function() {$('.mezzanine-form :input:visible:enabled:first').focus();});
 
 {% endblock %}
 
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+$(function() {$('.mezzanine-form :input:visible:enabled:first').focus();});
+</script>
+{% endblock %}

@@ -1,0 +1,20 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title">
+            {{ panel_title }}
+        </div>
+    </div>
+    <table class="table table-bordered table-hover table-condensed">
+        <thead></thead>
+        <tbody>
+            {% for name, value in characteristics %}
+                {% if value %}
+                    <tr>
+                        <td>{{ name }}</td>
+                        <td>{{ value}}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

@@ -1,8 +1,6 @@
 {% extends "accounts/account_form.html" %}
 {% load i18n %}
 
-{% block action %}{{ request.path }}{% endblock %}
-
 {% block main %}
 
 {% if request.user.is_authenticated %}

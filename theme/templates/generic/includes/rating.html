@@ -13,7 +13,7 @@
     {% nevercache %}
     {% csrf_token %}
     {% endnevercache %}
-    <ul class="my-rating">{{ rating_form.as_ul }}</ul>
+    <ul class="radio radio-inline">{{ rating_form.as_ul }}</ul>
     <input type="submit" class="btn btn-default btn-sm" value="{% trans "Rate" %}"
         onclick="return $(this.form).find('input:checked').length == 1;">
 </form>

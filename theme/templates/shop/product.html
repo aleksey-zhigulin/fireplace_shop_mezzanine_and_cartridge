@@ -1,12 +1,11 @@
 {% extends "shop/base.html" %}
-{% load staticfiles mezzanine_tags shop_tags keyword_tags rating_tags i18n %}
+{% load staticfiles mezzanine_tags shop_tags rating_tags i18n pages_tags %}
 
 {% block meta_title %}{{ product.meta_title }}{% endblock %}
 {% block body_id %}category{% endblock %}
 
 {% block meta_keywords %}{% metablock %}
-{% keywords_for product as keywords %}
-{% for keyword in keywords%}
+{% for keyword in product.keywords.all %}
     {% if not forloop.first %}, {% endif %}
     {{ keyword }}
 {% endfor %}
@@ -30,7 +29,7 @@ $(document).ready(function() {
         delegate: 'a',
         type: 'image',
         gallery: {
-            enabled: true
+            enabled: true,
         }
     });
 });
@@ -43,11 +42,13 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block breadcrumb_menu %}
-    {% for category in categories %}
-        <li id="breadcrumb-menu-{{ page.html_id }}">
-        <a href="{{ category.get_absolute_url }}">{{ category.title }}</a>
-        </li>
-    {% endfor %}
+{{ block.super }}
+{% for category in categories %}
+    <li id="breadcrumb-menu-{{ page.html_id }}">
+    <a href="{{ category.get_absolute_url }}">{{ category.title }}</a>
+    </li>
+{% endfor %}
+<li>{{ product.title }}</li>
 {% endblock %}
 
 {% block title %}
@@ -56,135 +57,125 @@ $(document).ready(function() {
 
 {% block main %}
 
-        <div class="row">
-            <div class="col-md-5">
-                {% if images %}
-                {% spaceless %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+            {% if images %}
+            {% spaceless %}
+            <ul id="product-images-large" class="list-unstyled list-inline">
+                {% for image in images %}
+                <li id="image-{{ image.id }}-large"{% if not forloop.first %}style="display:none;"{% endif %}>
+                    <a class="product-image-large" href="{{ MEDIA_URL }}{{ image.file }}">
+                        <img alt="{{ image.description }}" src="{{ MEDIA_URL }}{% thumbnail image.file 0 350 %}" class="img-thumbnail img-responsive col-xs-12">
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
 
-                <ul id="product-images-large" class="list-unstyled list-inline">
-                    {% for image in images %}
-                    <li id="image-{{ image.id }}-large"{% if not forloop.first %}style="display:none;"{% endif %}>
-                        <a class="product-image-large" href="{{ MEDIA_URL }}{{ image.file }}">
-                            <img alt="{{ image.description }}" src="{{ MEDIA_URL }}{% thumbnail image.file 0 300 %}" class="img-thumbnail img-responsive col-xs-12">
-                        </a>
-                    </li>
-                    {% endfor %}
-                </ul>
+            {% if images|length != 1 %}
+            <ul id="product-images-thumb" class="list-unstyled list-inline">
+                {% for image in images %}
+                <li>
+                    <a class="thumbnail" id="image-{{ image.id }}" href="{{ MEDIA_URL }}{{ image.file }}">
+                        <img alt="{{ image.description }}" src="{{ MEDIA_URL }}{% thumbnail image.file 75 75 %}">
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
 
-                {% if images|length != 1 %}
-                <ul id="product-images-thumb" class="list-unstyled list-inline">
-                    {% for image in images %}
-                    <li>
-                        <a class="thumbnail" id="image-{{ image.id }}" href="{{ MEDIA_URL }}{{ image.file }}">
-                            <img alt="{{ image.description }}" src="{{ MEDIA_URL }}{% thumbnail image.file 75 75 %}">
-                        </a>
-                    </li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-
-                {% endspaceless %}
-                {% endif %}
-            </div>
-            <div class="col-md-4">
-                {% block characteristics %}{% endblock %}
-            </div>
-            <div class="col-md-3">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        {% if product.available and has_available_variations %}
-                        <ul id="variations" class="list-unstyled">
-                            {% for variation in variations %}
-                            <li id="variation-{{ variation.sku }}"
-                                {% if not variation.default %}style="display:none;"{% endif %}>
-                                {% if variation.has_price %}
-                                    {% if variation.on_sale %}
-                                        <span class="old-price">{{ variation.unit_price|currency }}</span>
-                                        {% trans "On sale:" %}
-                                    {% endif %}
-                                    <h3 class="price">{{ variation.price|currency }}</h3>
-                                {% else %}
-                                    {% if has_available_variations %}
-                                    <span class="error-msg">
-                                    {% trans "The selected options are currently unavailable." %}
-                                    </span>
-                                    {% endif %}
-                                {% endif %}
-                            </li>
-                            {% endfor %}
-                        </ul>
-
-                        {% errors_for add_product_form %}
-
-                        <form method="post" id="add-cart" class="shop-form">
-                            {% fields_for add_product_form %}
-                            <div class="form-actions">
-                                <input type="submit" class="btn btn-primary btn-lg center-block" name="add_cart" value="{% trans "Buy" %}">
-                                {% if settings.SHOP_USE_WISHLIST %}
-                                <input type="submit" class="btn btn-default btn-lg pull-left" name="add_wishlist" value="{% trans "Save for later" %}">
-                                {% endif %}
-                            </div>
-                        </form>
+            {% endspaceless %}
+            {% endif %}
+        </div>
+        <div class="col-md-5">
+            {% block characteristics %}{% endblock %}
+        </div>
+        <div class="col-md-3">
+            {% if product.available and has_available_variations %}
+                <ul id="variations" class="list-unstyled">
+                    {% for variation in variations %}
+                    <li id="variation-{{ variation.sku }}"
+                        {% if not variation.default %}style="display:none;"{% endif %}>
+                        {% if variation.has_price %}
+                            {% if variation.on_sale %}
+                                <span class="old-price">{{ variation.unit_price|currency }}</span>
+                                {% trans "On sale:" %}
+                            {% endif %}
+                            <h1 class="price text-center">
+                                {% if product.max_price != product.min_price %}от{% endif %}
+                                {{ variation.price|currency }}
+                                {% if product.content_model == "productstone" %}за м&sup2;{% endif %}
+                            </h1>
                         {% else %}
-                            <p class="error-msg">{% trans "This product is currently unavailable." %}</p>
+                            {% if has_available_variations %}
+                            <span class="error-msg">
+                            {% trans "The selected options are currently unavailable." %}
+                            </span>
+                            {% endif %}
                         {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
 
-                    </div>
-                </div>
-            </div>
-        </div>
+                {% block add_product_form %}
+                {% errors_for add_product_form %}
 
-        {% if settings.SHOP_USE_RATINGS %}
-            <div style="text-align: center">
-                <div class="panel panel-default rating" style="display: inline-block; text-align: center;">
-                    <div class="panel-body">{% rating_for product %}</div>
-                </div>
-            </div>
-        {% endif %}
-
-        {% if product.content %}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4>Описание</h4>
-            </div>
-            <div class="panel-body">
-                {% editable product.content %}
-                {{ product.content|richtext_filters|safe }}
-                {% endeditable %}
-            </div>
-        </div>
-        {% endif %}
-
-        {% if settings.SHOP_USE_RELATED_PRODUCTS and related_products %}
-        <h2>Похожие товары</h2>
-        <div class="row related-products">
-            {% for product in related_products %}
-            <div class="col-xs-6 col-sm-4 col-md-3 product-thumb">
-                <a class="thumbnail" href="{{ product.get_absolute_url }}">
-                    {% if product.image %}
-                    <img src="{{ MEDIA_URL }}{% thumbnail product.image 90 90 %}">
-                    {% endif %}
-                    <div class="caption">
-                    <h6>{{ product }}</h6>
-                    <div class="price-info">
-                    {% if product.has_price %}
-                        {% if product.on_sale %}
-                        <span class="old-price">{{ product.unit_price|currency }}</span>
-                        {% trans "On sale:" %}
+                <form method="post" id="add-cart" class="shop-form">
+                    {% fields_for add_product_form %}
+                    <div class="form-actions">
+                        <input type="submit" class="btn btn-success btn-lg pull-right" name="add_cart" value="{% trans "Buy" %}">
+                        {% if settings.SHOP_USE_WISHLIST %}
+                        <input type="submit" class="btn btn-default btn-lg pull-left" name="add_wishlist" value="{% trans "Save for later" %}">
                         {% endif %}
-                        <span class="price">{{ product.price|currency }}</span>
-                    {% else %}
-                        <span class="coming-soon">{% trans "Coming soon" %}</span>
-                    {% endif %}
                     </div>
-                    </div>
-                </a>
-            </div>
-            {% endfor %}
+                </form>
+                {% endblock %}
+                {% else %}
+                <p class="error-msg">{% trans "This product is currently unavailable." %}</p>
+                {% endif %}
         </div>
-        {% endif %}
+    </div>
+</div>
 
-        {% block suitable_prod %}
-        {% endblock %}
+{% if settings.SHOP_USE_RATINGS %}
+    <div class="panel panel-default rating">
+        <div class="panel-body text-center">{% rating_for product %}</div>
+    </div>
+{% endif %}
+
+{% editable product.content %}
+{{ product.content|richtext_filters|safe }}
+{% endeditable %}
+
+{% if settings.SHOP_USE_RELATED_PRODUCTS and related_products %}
+<h2>{% trans "Related Products" %}</h2>
+<div class="row related-products">
+    {% for product in related_products %}
+    <div class="col-xs-6 col-sm-4 col-md-3 product-thumb">
+        <a class="thumbnail" href="{{ product.get_absolute_url }}">
+            {% if product.image %}
+            <img src="{{ MEDIA_URL }}{% thumbnail product.image 90 90 %}">
+            {% endif %}
+            <div class="caption">
+            <h6>{{ product }}</h6>
+            <div class="price-info">
+            {% if product.has_price %}
+                {% if product.on_sale %}
+                <span class="old-price">{{ product.unit_price|currency }}</span>
+                {% trans "On sale:" %}
+                {% endif %}
+                <span class="price">{{ product.price|currency }}</span>
+            {% else %}
+                <span class="coming-soon">{% trans "Coming soon" %}</span>
+            {% endif %}
+            </div>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% block suitable_prod %}{% endblock %}
 
 {% endblock %}

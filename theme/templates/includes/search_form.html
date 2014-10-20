@@ -1,14 +1,7 @@
-{% load mezzanine_tags i18n future %}
-<form class="navbar-form navbar-left" action="{% url "search" %}" role="search">
+{% load i18n %}
 
-    <div class="input-group">
-        <input class="form-control" placeholder="поиск в товарах" type="text" name="q" value="{{ request.REQUEST.q }}">
-        <span class="input-group-btn">
-            <button class="btn btn-default" type="submit">
-                <span class="glyphicon glyphicon-search"></span>
-            </button>
-        </span>
-    </div>
+<form class="search" method="get" action="{% url "search" %}" role="search">
+    <input type="text" class="form-control" name="q" value="{{ request.REQUEST.q }}" placeholder="{% trans "Поиск товаров" %}">
     <input type="hidden" name="type" value="{{ search_model_choices.0.1 }}">
-
+    <button class="fa fa-search"></button>
 </form>

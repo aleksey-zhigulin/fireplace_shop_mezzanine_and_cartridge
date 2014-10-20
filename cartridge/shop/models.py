@@ -11,7 +11,7 @@ from operator import iand, ior
 from django.core.urlresolvers import reverse
 from django.db import models, connection
 from django.db.models.signals import m2m_changed
-from django.db.models import CharField, F, Q
+from django.db.models import TextField, CharField, F, Q, Min
 from django.db.models.base import ModelBase
 from django.dispatch import receiver
 from django.utils.timezone import now
@@ -31,9 +31,108 @@ from mezzanine.generic.fields import RatingField
 from mezzanine.pages.models import Page
 from mezzanine.utils.models import AdminThumbMixin, upload_to
 
-
 from cartridge.shop import fields, managers
 from cartridge.shop.utils import clear_session
+
+
+STONE_TYPES = (
+    ('Мрам', _('Мрамор')),
+    ('Гран', _('Гранит')),
+    ('Оник', _('Оникс')),
+    ('Трав', _('Травертин')),
+    ('Полу', _('Полудрагоценный камень')),
+    ('Изве', _('Известняк')),
+)
+
+COLORS = (
+    ('Беже', _('Бежевый')),
+    ('Белы', _('Белый')),
+    ('Желт', _('Желтый')),
+    ('Зеле', _('Зеленый')),
+    ('Кори', _('Коричневый')),
+    ('Крас', _('Красный')),
+    ('Розо', _('Розовый')),
+    ('Серы', _('Серый')),
+    ('Голу', _('Голубой')),
+    ('Черн', _('Черный')),
+    ('Муль', _('Мультиколор')),
+)
+
+REGIONS = (
+    ('Алжи', _('Алжир')),
+    ('Анго', _('Ангола')),
+    ('Боли', _('Боливия')),
+    ('Браз', _('Бразилия')),
+    ('Герм', _('Германия')),
+    ('Грец', _('Греция')),
+    ('Егип', _('Египет')),
+    ('Зимб', _('Зимбабве')),
+    ('Инди', _('Индия')),
+    ('Ирла', _('Ирландия')),
+    ('Испа', _('Испания')),
+    ('Итал', _('Италия')),
+    ('Кана', _('Канада')),
+    ('Кита', _('Китай')),
+    ('Мада', _('Мадагаскар')),
+    ('Маро', _('Марокко')),
+    ('Нами', _('Намибия')),
+    ('Норв', _('Норвегия')),
+    ('Паки', _('Пакистан')),
+    ('Порт', _('Португалия')),
+    ('Росс', _('Россия')),
+    ('Турц', _('Турция')),
+    ('Укра', _('Украина')),
+    ('Фран', _('Франция')),
+    ('Югос', _('Югославия')),
+    ('Южна', _('Южная Африка')),
+    ('Иран', _('Иран')),
+)
+
+TREATMENTS = (
+    ('Поли', _('Полировка')),
+    ('Анти', _('Антика')),
+)
+
+MANUFACTURERS = (
+    ('Fire', _('FireBird')),
+    ('Sile', _('Silestone')),
+    ('Piaz', _('Piazzetta')),
+    ('Invi', _('Invicta')),
+    ('InDe', _('Invicta Decor')),
+    ('Krat', _('Kratki')),
+    ('Tote', _('Totem')),
+    ('Spar', _('Spartherm')),
+    ('Dimp', _('Dimplex')),
+    ('Экок', _('Экокамин')),
+    ('Laud', _('Laudel')),
+    ('Dovr', _('Dovre')),
+    ('Bell', _('Bella Italia')),
+)
+
+AVAILABILITY = (
+    ('Y', _('есть')),
+    ('N', _('нет')),
+)
+
+GLASSES = (
+    ('A', _('панорманое')),
+    ('B', _('призматическое')),
+    ('C', _('прямое')),
+    ('D', _('сквозное')),
+    ('E', _('угловое')),
+)
+
+TYPES = (
+    ('A', _('встраиваемый')),
+    ('B', _('напольный')),
+    ('C', _('настенный')),
+    ('D', _('вставка')),
+)
+
+FACING_TYPES = (
+    ('A', _('пристенный')),
+    ('B', _('угловой')),
+)
 
 
 class F(models.F):
@@ -100,7 +199,10 @@ class Priced(models.Model):
         if self.on_sale():
             return round_50(self.sale_price * rate[self.currency] )
         elif self.has_price():
-            return round_50(self.unit_price * rate[self.currency] )
+            price = self.unit_price
+            if isinstance(self, Product):
+                price = self.variations.aggregate(Min('unit_price'))['unit_price__min']
+            return round_50(price * rate[self.currency] )
         return Decimal("0")
 
     def copy_price_fields_to(self, obj_to):
@@ -134,19 +236,6 @@ class Product(BaseProduct, Priced, RichText, AdminThumbMixin):
     all of its variations such as the product's title and description.
     """
 
-    MANUFACTURERS = (
-        ('Piaz', _('Piazzetta')),
-        ('Invi', _('Invicta')),
-        ('InDe', _('Invicta Decor')),
-        ('Krat', _('Kratki')),
-        ('Tote', _('Totem')),
-        ('Spar', _('Spartherm')),
-        ('Dimp', _('Dimplex')),
-        ('Экок', _('Экокамин')),
-        ('Laud', _('Laudel')),
-        ('Dovr', _('Dovre')),
-        ('Bell', _('Bella Italia')),
-    )
     manufacturer = CharField(
         _("Производитель"), editable=True, blank=True, null=True, max_length=4, default=None, choices=MANUFACTURERS)
 
@@ -407,6 +496,7 @@ class Category(Page, RichText):
         help_text=_("If checked, "
         "products must match all specified filters, otherwise products "
         "can match any specified filter."))
+    use_grouped_products = models.BooleanField(_("Группировать продукты по категориям"), default=False)
 
     class Meta:
         verbose_name = _("Product category")
@@ -910,18 +1000,6 @@ class DiscountCode(Discount):
 
 class ProductTopka(Product):
 
-    AVAILABILITY = (
-        ('Y', _('есть')),
-        ('N', _('нет')),
-    )
-    GLASSES = (
-        ('A', _('панорманое')),
-        ('B', _('призматическое')),
-        ('C', _('прямое')),
-        ('D', _('сквозное')),
-        ('E', _('угловое')),
-    )
-
     power = models.PositiveSmallIntegerField(_("мощность, кВт"), blank=True, null=True, default=None)
     mass = models.PositiveSmallIntegerField(_("масса, кг"), blank=True, null=True, default=None)
     diam = models.PositiveSmallIntegerField(_("диаметр дымохода, мм"), blank=True,  null=True, default=None)
@@ -936,8 +1014,6 @@ class ProductTopka(Product):
     glass = fields.CharField(_("стекло"), blank=True, null=True, max_length=1, default=None, choices=GLASSES)
     suitable_portals = models.ManyToManyField("ProductPortal", verbose_name=_("совместимые порталы"), blank=True)
     suitable_faces = models.ManyToManyField("ProductFacing", verbose_name=_("совместимые облицовки"), blank=True)
-
-
 
     def get_characteristics(self):
         dimensions = (self.width, self.height, self.depth,)
@@ -960,11 +1036,6 @@ class ProductTopka(Product):
 
 
 class ProductPortal(Product):
-
-    AVAILABILITY = (
-        ('Y', _('есть')),
-        ('N', _('нет')),
-    )
 
     overall_height = models.PositiveSmallIntegerField(_("габаритная высота, мм"), blank=True,  null=True, default=None)
     overall_width = models.PositiveSmallIntegerField(_("габаритная ширина, мм"), blank=True,  null=True, default=None)
@@ -989,16 +1060,6 @@ class ProductPortal(Product):
 
 class ProductFacing(Product):
 
-    AVAILABILITY = (
-        ('Y', _('есть')),
-        ('N', _('нет')),
-    )
-
-    TYPES = (
-        ('A', _('пристенный')),
-        ('B', _('угловой')),
-    )
-
     overall_height = models.PositiveSmallIntegerField(_("высота, мм"), blank=True,  null=True, default=None)
     overall_width = models.PositiveSmallIntegerField(_("ширина, мм"), blank=True,  null=True, default=None)
     overall_depth = models.PositiveSmallIntegerField(_("глубина, мм"), blank=True,  null=True, default=None)
@@ -1007,7 +1068,7 @@ class ProductFacing(Product):
     suitable_hearth = models.ManyToManyField("ProductHearth", verbose_name=_("совместимые очаги"), blank=True)
     suitable_topka = models.ManyToManyField("ProductTopka", verbose_name=_("совместимые топки"), blank=True,
                                             through=ProductTopka.suitable_faces.through)
-    type = fields.CharField(_("тип"), blank=True, null=True, max_length=1, default=None, choices=TYPES)
+    type = fields.CharField(_("тип"), blank=True, null=True, max_length=1, default=None, choices=FACING_TYPES)
     mass = models.PositiveSmallIntegerField(_("масса, кг"), blank=True, null=True, default=None)
 
     def get_characteristics(self):
@@ -1026,17 +1087,6 @@ class ProductFacing(Product):
 
 
 class ProductHearth(Product):
-
-    AVAILABILITY = (
-        ('Y', _('есть')),
-        ('N', _('нет')),
-    )
-    TYPES = (
-        ('A', _('встраиваемый')),
-        ('B', _('напольный')),
-        ('C', _('настенный')),
-        ('D', _('вставка')),
-    )
 
     power = models.PositiveSmallIntegerField(_("мощность, кВт"), blank=True, null=True, default=None)
 
@@ -1073,45 +1123,27 @@ class ProductHearth(Product):
         verbose_name_plural = _("Очаг")
 
 
-class HomePage(Page):
+class ProductStone(Product):
 
-    left_top = models.ForeignKey("Category", blank=False, related_name='+',
-                                verbose_name=_("Левая верхняя категория"))
-    left_bottom = models.ForeignKey("Category", blank=False, related_name='+',
-                                verbose_name=_("Левая нижняя категория"))
-    middle_top = models.ForeignKey("Category", blank=False, related_name='+',
-                                verbose_name=_("Средняя верхняя категория"))
-    middle_bottom = models.ForeignKey("Category", blank=False, related_name='+',
-                                verbose_name=_("Средняя нижняя категория"))
-    right_top = models.ForeignKey("Category", blank=False, related_name='+',
-                                verbose_name=_("Правая верхняя категория"))
-    right_bottom = models.ForeignKey("Category", blank=False, related_name='+',
-                                verbose_name=_("Правая нижняя категория"))
-    slides_category = models.ForeignKey("Category", blank=False,
-                                        verbose_name=_("Категория для слайдов"),
-                                        related_name='+')
-    extra_links = models.ManyToManyField(Page, blank=False,
-                                        verbose_name=_("Дополнительные ссылки"),
-                                        related_name='+')
-    class Meta:
-        verbose_name = _("Главная страница")
-        verbose_name_plural = _("Главные страницы")
+    region = CharField(
+        _("Страна"), editable=True, blank=False, null=True, max_length=4, default=None, choices=REGIONS)
+    color = CharField(
+        _("Цвет"), editable=True, blank=False, null=True, max_length=4, default=None, choices=COLORS)
+    treatment = CharField(
+        _("Обработка"), editable=True, blank=False, null=True, max_length=4, default=None, choices=TREATMENTS)
+    stone_type = CharField(
+        _("Вид камня"), editable=True, blank=False, null=True, max_length=4, default=None, choices=STONE_TYPES)
 
-class HomePageSlides(Orderable):
-
-    file = models.ImageField(_("Image"), upload_to="uploads/home")
-    description = CharField(_("Description"), blank=True, max_length=100)
-    home_page = models.ForeignKey("HomePage", related_name="slides")
+    def get_characteristics(self):
+        characteristics = {
+            _("Вид камня"): self.get_stone_type_display(),
+            _("Страна"): self.get_region_display(),
+            _("Цвет"): self.get_color_display(),
+            _("Тип обработки"): self.get_treatment_display(),
+        }
+        return characteristics
 
     class Meta:
-        verbose_name = _("Слайд")
-        verbose_name_plural = _("Слайды")
-        order_with_respect_to = "home_page"
+        verbose_name = _("Камень")
+        verbose_name_plural = _("Камни")
 
-    def __unicode__(self):
-        value = self.description
-        if not value:
-            value = self.file.name
-        if not value:
-            value = ""
-        return value

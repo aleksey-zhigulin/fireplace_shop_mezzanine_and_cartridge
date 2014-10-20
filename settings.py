@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+from django.utils.translation import ugettext, ugettext_lazy as _
 
 # Make these unique, and don't share it with anybody.
 SECRET_KEY = "7cb81402-d283-4100-96e6-6bb2e27a836aeff48417-1f5d-4266-955c-00fd52f3fb8d6b54bcd2-bc0a-4118-823f-06f4cc8180ee"
@@ -39,7 +40,7 @@ SHOP_PRODUCT_SORT_OPTIONS = (
 # SHOP_CARD_TYPES = ("Mastercard", "Visa", "Diners", "Amex")
 
 # Setting to turn on featured images for shop categories. Defaults to False.
-SHOP_CATEGORY_USE_FEATURED_IMAGE = True
+SHOP_CATEGORY_USE_FEATURED_IMAGE = False
 
 # Set an alternative OrderForm class for the checkout process.
 # SHOP_CHECKOUT_FORM_CLASS = 'cartridge.shop.forms.OrderForm'
@@ -90,6 +91,11 @@ SHOP_OPTION_TYPE_CHOICES = (
     (4, "Расположение стекол"),
     (5, "Цвет портала"),
     (6, "Цвет экрана/камня"),
+    (7, "Мрамор"),
+    (8, "Толщина, мм"),
+    (9, "Материал балки"),
+    (10, "Для топки"),
+    (11, "Комплектация"),
 )
 
 # Sequence of indexes from the SHOP_OPTION_TYPE_CHOICES setting that
@@ -143,10 +149,11 @@ RICHTEXT_FILTERS = ()
 # that doesn't appear in this setting, all pages will appear in it.
 
 PAGE_MENU_TEMPLATES = (
-    (1, "Основной каталог", "pages/menus/dropdown.html"),
+    (1, "Навигация", "pages/menus/dropdown.html"),
     (2, "Левое меню", "pages/menus/tree.html"),
     (3, "Подвал", "pages/menus/footer.html"),
-    (4, "Верхняя панель", "pages/menus/help.html"),
+    (4, "Блок статей", "pages/menus/articles.html"),
+    (5, "Блок новостей", "pages/menus/news.html"),
 )
 
 PAGE_MENU_TEMPLATES_DEFAULT = (1, 2)
@@ -179,31 +186,45 @@ PAGE_MENU_TEMPLATES_DEFAULT = (1, 2)
 #         {"blank": True, "default": 1},
 #     ),
 # )
-
 EXTRA_MODEL_FIELDS = (
     (
-        "mezzanine.pages.models.RichTextPage.featured_image",
-        "mezzanine.core.fields.FileField",
-        (),
-        {
-            "verbose_name": "Featured Image",
-            "upload_to": "uploads/shop/featured_images",
-            "format": "Image",
-            "max_length": 255,
-            "null": True,
-            "blank": True
-        },
+        "mezzanine.pages.models.Page.subtitle",
+        "CharField",
+        (_("подзаголовок"),),
+        {"blank": True, "max_length": 20, "null": True},
     ),
+    # (
+    #     "mezzanine.pages.models.Page.shortcodes",
+    #     "ManyToManyField",
+    #     ("shop.Shortcode",),
+    #     {"blank": False, "verbose_name": _("Cтраницы элемента")},
+    # ),
 )
 
 # Setting to turn on featured images for blog posts. Defaults to False.
 #
-# BLOG_USE_FEATURED_IMAGE = True
+BLOG_USE_FEATURED_IMAGE = True
+BLOG_SLUG = "Блог"
 
 # If True, the south application will be automatically added to the
 # INSTALLED_APPS setting.
 USE_SOUTH = True
 PAGES_MENU_SHOW_ALL = False
+
+###########
+# TWITTER #
+###########
+
+
+TWITTER_ACCESS_TOKEN_KEY = '2797431178-CKSW1KJblrjuK9eNjaVKSaG4Kg0bLEshRcyujKB'
+TWITTER_ACCESS_TOKEN_SECRET = 'KmhH1WZ1kPYGUpEOWrs7hqPKo52K4vJmnNun5P6Psx5TX'
+TWITTER_CONSUMER_KEY = 'xavYAe0tf7VKEMq7jNh2EXEox'
+TWITTER_CONSUMER_SECRET = 'v4G10rWukoDcogdHtPAT6yWKbF1Gwr8LgSFPjroRlli4ko6G80'
+TWITTER_DEFAULT_NUM_TWEETS = 5
+TWITTER_DEFAULT_QUERY = 'azbuka_kamnya'
+TWITTER_DEFAULT_QUERY_TYPE = 'user'
+
+SEARCH_MODEL_CHOICES = ('shop.Product',)
 
 ########################
 # MAIN DJANGO SETTINGS #
@@ -234,7 +255,7 @@ ALLOWED_HOSTS = ['9252095267.myjino.ru',
 TIME_ZONE = 'Europe/Moscow'
 
 # If you set this to True, Django will use timezone-aware datetimes.
-USE_TZ = False
+USE_TZ = True
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -255,7 +276,8 @@ DEBUG = False
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 SITE_ID = 1
-
+SITE_TITLE = 'Азбука Камня'
+SITE_TAGLINE = 'Интернет магазин каминов'
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True
@@ -301,7 +323,7 @@ DATABASES = {
         # Not used with sqlite3.
         "PASSWORD": "kBcwGP",
         # Set to empty string for localhost. Not used with sqlite3.
-        "HOST": "localhost",
+        "HOST": "127.0.0.1",
         # Set to empty string for default. Not used with sqlite3.
         "PORT": "3306",
     }
@@ -364,7 +386,7 @@ ROOT_URLCONF = "urls"
 # or "C:/www/django/templates".
 # Always use forward slashes, even on Windows.
 # Don't forget to use absolute paths, not relative paths.
-# TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "templates"),)
+TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, "theme/templates"),)
 
 
 ################
@@ -373,6 +395,8 @@ ROOT_URLCONF = "urls"
 
 INSTALLED_APPS = (
     "theme",
+    "epona.pages_templates",
+    "epona.shortcodes",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -387,7 +411,9 @@ INSTALLED_APPS = (
     "mezzanine.core",
     "mezzanine.generic",
     "mezzanine.forms",
+    "mezzanine.blog",
     "mezzanine.pages",
+    "mezzanine.twitter",
     "mezzanine.galleries",
     "mezzanine.accounts",
 )

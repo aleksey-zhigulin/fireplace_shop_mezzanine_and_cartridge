@@ -1,13 +1,21 @@
-{% load blog_tags keyword_tags i18n future %}
+{% load blog_tags keyword_tags mezzanine_tags i18n future %}
 
 {% block blog_recent_posts %}
 {% blog_recent_posts 5 as recent_posts %}
 {% if recent_posts %}
-<h3>{% trans "Recent Posts" %}</h3>
+<h4>{% trans "Recent Posts" %}</h4>
 <ul class="list-unstyled recent-posts">
 {% for recent_post in recent_posts %}
-<li><a href="{{ recent_post.get_absolute_url }}"
-    >{{ recent_post.title }}</a></li>
+<li>
+    {% spaceless %}
+    <a href="{{ recent_post.get_absolute_url }}">
+        {% if settings.BLOG_USE_FEATURED_IMAGE and recent_post.featured_image %}
+        <img src="{{ MEDIA_URL }}{% thumbnail recent_post.featured_image 24 24 %}">
+        {% endif %}
+    {{ recent_post.title }}
+    </a>
+    {% endspaceless %}
+</li>
 {% endfor %}
 </ul>
 {% endif %}
@@ -16,7 +24,7 @@
 {% block blog_months %}
 {% blog_months as months %}
 {% if months %}
-<h3>{% trans "Archive" %}</h3>
+<h4>{% trans "Archive" %}</h4>
 {% for month in months %}
     {% ifchanged month.date.year %}
         {% if not forloop.first %}</ul>{% endif %}
@@ -32,7 +40,7 @@
 {% block blog_categories %}
 {% blog_categories as categories %}
 {% if categories %}
-<h3>{% trans "Categories" %}</h3>
+<h4>{% trans "Categories" %}</h4>
 <ul class="list-unstyled">
 {% for category in categories %}
 <li><a href="{% url "blog_post_list_category" category.slug %}"
@@ -45,7 +53,7 @@
 {% block blog_keywords %}
 {% keywords_for blog.blogpost as tags %}
 {% if tags %}
-<h3>{% trans "Tags" %}</h3>
+<h4>{% trans "Tags" %}</h4>
 <ul class="list-inline tag-cloud">
 {% for tag in tags %}
 <li>
@@ -61,7 +69,7 @@
 {% block blog_authors %}
 {% blog_authors as authors %}
 {% if authors %}
-<h3>{% trans "Authors" %}</h3>
+<h4>{% trans "Authors" %}</h4>
 <ul class="list-unstyled">
 {% for author in authors %}
     <li><a href="{% url "blog_post_list_author" author.username %}"
@@ -73,7 +81,7 @@
 {% endblock %}
 
 {% block blog_feeds %}
-<h3>{% trans "Feeds" %}</h3>
+<h4>{% trans "Feeds" %}</h4>
 {% if tag %}
     <a href="{% url "blog_post_feed_tag" tag.slug "rss" %}">{% trans "RSS" %}</a> /
     <a href="{% url "blog_post_feed_tag" tag.slug "atom" %}">{% trans "Atom" %}</a>

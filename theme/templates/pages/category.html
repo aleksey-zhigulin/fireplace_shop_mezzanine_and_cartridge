@@ -1,65 +1,83 @@
 {% extends "pages/page.html" %}
 
-{% load mezzanine_tags pages_tags shop_tags i18n %}
-{% block body_id %}category{% endblock %}
+{% load pages_tags mezzanine_tags shop_tags i18n %}
 
-{% block main_2col %}
+{% block breadcrumb_menu %}{% endblock %}
 
-    {% if page.category.show_content %}
-    {% editable page.category.content %}
-    {{ page.category.content|safe }}
-    {% endeditable %}
-    {% endif %}
+{% block main %}{{ block.super }}
 
-    {% if products.paginator.count != 0 %}
+<!-- CONTENT -->
+<section>
+    <div class="container">
 
-    <form class="product-sorting" role="form">
-        <div class="form-group">
-        <label class="control-label" for="sorting-select">{% trans "Sort by" %}</label>
-            <select onchange="location.href = this[this.selectedIndex].value;" class="form-control" id="sorting-select">
-            {% for name, option in settings.SHOP_PRODUCT_SORT_OPTIONS %}
-                {% if "rating" not in option or settings.SHOP_USE_RATINGS %}
-                <option{% if option == products.sort_by %} selected{% endif %}
-                    value="{{ category.get_absolute_url }}?sort={{ option }}{{ querystring }}">
-                    {{ name }}
-                </option>
-                {% endif %}
-            {% endfor %}
-            </select>
-        </div>
-    </form>
+        <!-- options -->
+        <div class="row shop-top-options">
 
-    <div class="row product-list">
-    {% for product in products.object_list %}
-        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3 product-thumb">
-        <a href="{{ product.get_absolute_url }}" class="thumbnail">
-            {% if product.image %}
-            <img src="{{ MEDIA_URL }}{% thumbnail product.image 200 200 padding=True %}">
-            {% else %}
-            <div class="placeholder"></div>
-            {% endif %}
-            <div class="caption">
-            <h6>{{ product }}</h6>
-            <div class="price-info">
-            {% if product.has_price %}
-                {% if product.on_sale %}
-                <span class="old-price">{{ product.unit_price|currency }}</span>
-                {% trans "On sale:" %}
-                {% endif %}
-                <span class="price">{{ product.price|currency }}</span>
-            {% else %}
-                <span class="coming-soon">{% trans "Coming soon" %}</span>
-            {% endif %}
+            <div class="col-sm-9 col-md-9">
+
+                <h2>{{ page.title }}</h2>
+
+                <ul class="breadcrumb"><!-- breadcrumb -->
+                    {% spaceless %}
+                    {% page_menu "pages/menus/breadcrumb.html" %}
+                    {% endspaceless %}
+                </ul><!-- /breadcrumb -->
+
             </div>
+
+            <div class=" col-sm-3 col-md-3">
+                <form class="product-sorting" role="form">
+                    <div class="form-group">
+                        <select onchange="location.href = this[this.selectedIndex].value;"
+                                class="form-control pointer fsize13 pull-right"
+                                name="orderby" id="sorting-select">
+                        {% for name, option in settings.SHOP_PRODUCT_SORT_OPTIONS %}
+                        {% if "rating" not in option or settings.SHOP_USE_RATINGS %}
+                        <option{% if option == products.sort_by %} selected{% endif %}
+                            value="{{ category.get_absolute_url }}?sort={{ option }}{{ querystring }}">
+                            {{ name }}
+                        </option>
+                        {% endif %}
+                        {% endfor %}
+                        </select>
+                    </div>
+                </form>
             </div>
-        </a>
         </div>
-    {% endfor %}
+        <!-- /options -->
+
+        <div class="row">
+
+            <div class="col-md-3 hidden-sm">
+
+                <!-- SIDE NAV -->
+                    {% page_menu "pages/menus/tree.html" %}
+                <!-- /SIDE NAV -->
+
+            </div>
+
+            <div class="col-md-9">
+
+                {% if products.paginator.count != 0 %}
+
+                <!-- PRODUCT LIST -->
+                <div class="row">
+                    {% include "pages/includes/product_list.html" with products=products.object_list  %}
+                </div>
+                <!-- /PRODUCT LIST -->
+
+                <!-- PAGINATION -->
+                {% pagination_for products %}
+                <!-- /PAGINATION -->
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
     </div>
-
-    {% pagination_for products %}
-
-    {% endif %}
+</section>
+<!-- /CONTENT -->
 
 {% endblock %}
-</div>

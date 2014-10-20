@@ -40,7 +40,7 @@ jQuery(function($) {
             accessibility_warnings : false,
             object_resizing: false,
             //cleanup: false, // SETTING THIS TO FALSE WILL BREAK EMBEDDING YOUTUBE VIDEOS
-            forced_root_block: "p",
+            forced_root_block: "",
             remove_trailing_nbsp: true,
 
             external_link_list_url: '/displayable_links.js',

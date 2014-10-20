@@ -42,7 +42,7 @@ tinyMCE.init({
     accessibility_warnings : false,
     object_resizing: false,
     cleanup_on_startup: true,
-    //forced_root_block: "p",
+    forced_root_block: "",
     remove_trailing_nbsp: true,
     
     // callbackss

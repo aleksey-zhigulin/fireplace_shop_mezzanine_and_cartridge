@@ -1,0 +1,8 @@
+<div class="row text-center countTo">
+    {% for counter in counters %}
+        <div class="col-md-3">
+            <strong data-to="{{ counter.data_to }}">0</strong>
+            <label>{{ counter.label }}</label>
+        </div>
+    {% endfor %}
+</div>

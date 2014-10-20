@@ -1,122 +1,284 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}"{% if LANGUAGE_BIDI %} dir="rtl"{% endif %}>
-{% load pages_tags mezzanine_tags i18n future staticfiles compress keyword_tags %}
+{% load blog_tags pages_tags mezzanine_tags i18n future staticfiles %}
 
+<!--[if IE 8]>			<html class="ie ie8"> <![endif]-->
+<!--[if IE 9]>			<html class="ie ie9"> <![endif]-->
+<!--[if gt IE 9]><!-->
+<html> <!--<![endif]-->
 <head>
-<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
-<meta name="description" content="{% block meta_description %}{% endblock %}">
-<title>{% block meta_title %}{% endblock %}{% if settings.SITE_TITLE %} | {{ settings.SITE_TITLE }}{% endif %}</title>
-<link rel="shortcut icon" href="{% static "img/favicon.ico" %}">
+    <meta charset="utf-8"/>
+    <title>
+        {% block meta_title %}{% endblock %}{% if settings.SITE_TITLE %} | {{ settings.SITE_TITLE }}{% endif %}</title>
+    <meta name="keywords" content="{% block meta_keywords %}{% endblock %}"/>
+    <meta name="description" content="{% block meta_description %}{% endblock %}"/>
 
-{% ifinstalled mezzanine.blog %}
-<link rel="alternate" type="application/rss+xml" title="RSS" href="{% url "blog_post_feed" "rss" %}">
-<link rel="alternate" type="application/atom+xml" title="Atom" href="{% url "blog_post_feed" "atom" %}">
-{% endifinstalled %}
+    <!-- mobile settings -->
+    <meta name="viewport" content="width=device-width, maximum-scale=1, initial-scale=1, user-scalable=0"/>
 
-{% compress css %}
-<link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
-<link rel="stylesheet" href="{% static "css/mezzanine.css" %}">
-<link rel="stylesheet" href="{% static "css/styles.css" %}">
-{% ifinstalled cartridge.shop %}
-<link rel="stylesheet" href="{% static "css/cartridge.css" %}">
-{% endifinstalled %}
-{% block extra_css %}
-{% endblock %}
-{% endcompress %}
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{% static "img/favicon.ico" %}"/>
 
+    <!-- WEB FONTS -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800&amp;subset=cyrillic,cyrillic-ext,latin,latin-ext"
+          rel="stylesheet" type="text/css"/>
 
-<!--[if lt IE 9]>
-<script src="{% static "js/html5shiv.js" %}"></script>
-<script src="{% static "js/respond.min.js" %}"></script>
-<![endif]-->
+    <!-- CORE CSS -->
+    <link href="{% static "plugins/bootstrap/css/bootstrap.min.css" %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static "css/font-awesome.css" %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static "css/sky-forms.css" %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static "css/weather-icons.min.css" %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static "css/line-icons.css" %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static "plugins/owl-carousel/owl.pack.css" %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static "plugins/magnific-popup/magnific-popup.css" %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static "css/animate.css" %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static "css/flexslider.css" %}" rel="stylesheet" type="text/css"/>
 
-{% block extra_head %}{% endblock %}
+    <!-- REVOLUTION SLIDER -->
+    <link href="{% static "css/revolution-slider.css" %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static "css/layerslider.css" %}" rel="stylesheet" type="text/css"/>
+
+    <!-- SHOP -->
+    <link href="{% static "css/layout-shop.css" %}" rel="stylesheet" type="text/css"/>
+
+    <!-- THEME CSS -->
+    <link href="{% static "css/essentials.css" %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static "css/layout.css" %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static "css/header-default.css" %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static "css/footer-default.css" %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static "css/color_scheme/red.css" %}" rel="stylesheet" type="text/css" id="color_scheme"/>
+    <!--<link href="{% static "css/layout-dark.css" %}" rel="stylesheet" type="text/css"  />-->
+
+    <!-- Morenizr -->
+    <script type="text/javascript" src="{% static "plugins/modernizr.min.js" %}"></script>
+
+    <!--[if lte IE 8]>
+    <![endif]-->
 </head>
 
-<body id="{% block body_id %}body{% endblock %}">
+<!--
+		Available body classes: 
+			smoothscroll			= enable chrome browser smooth scroll
+			grey 					= grey content background
+			boxed 					= boxed style
+			pattern1 ... pattern10 	= background pattern
 
-{% include "includes/top_menu.html" %}
+		Background Image - add to body: 
+			data-background="{% static "images/boxed_background/1.jpg" %}"
 
-<div class="container">
+		Examples: 
+			<body class="smoothscroll grey boxed pattern3">
+			<body class="smoothscroll boxed" data-background="{% static "images/boxed_background/1.jpg" %}">
+	-->
+<body class="smoothscroll">
 
-    <div class="container logo-wrapper">
-        <div class="logo">
-            <a href="/"><img src="{% static "img/logo1.png" %}"></a>
-        </div>
+<div id="wrapper">
+
+    <div id="header"><!-- class="sticky" for sticky menu -->
+
+        <!-- Top Bar -->
+        <header id="topBar">
+            <div class="container">
+
+                <div class="pull-right fsize13 margin-top10 hide_mobile">
+
+                    <!-- mail , phone -->
+                    <a href="mailto:info@azbuka-kamnya.ru">info@azbuka-kamnya.ru</a> &bull; +7 (499) 390-21-86
+
+                    <div class="block text-right"><!-- social -->
+                        <a href="#" class="social fa fa-vk"></a>
+                        <a href="#" class="social fa fa-facebook"></a>
+                        <a href="https://twitter.com/azbuka_kamnya" class="social fa fa-twitter"></a>
+                        {#                              <a href="#" class="social fa fa-google-plus"></a>#}
+                        {#								<a href="#" class="social fa fa-linkedin"></a>#}
+                        {#								<a href="#" class="social fa fa-pinterest"></a>#}
+                    </div>
+                    <!-- /social -->
+
+                </div>
+
+                <!-- Logo -->
+                <a class="logo" href="/">
+                    <img src="{% static "img/logo_min.png" %}" height="50" alt=""/>
+                </a>
+
+            </div>
+            <!-- /.container -->
+        </header>
+        <!-- /Top Bar -->
+
+
+        <!-- Top Nav -->
+        <header id="topNav">
+            <div class="container">
+
+                <!-- Mobile Menu Button -->
+                <button class="btn btn-mobile" data-toggle="collapse" data-target=".nav-main-collapse">
+                    <i class="fa fa-bars"></i>
+                </button>
+
+                <!-- Search -->
+                {% search_form "all" %}
+                <!-- /Search -->
+
+                <!-- Top Nav -->
+                {% page_menu "pages/menus/dropdown.html" %}
+                <!-- /Top Nav -->
+
+            </div>
+            <!-- /.container -->
+        </header>
+        <!-- /Top Nav -->
+
     </div>
 
-    {% include "includes/catalog.html" %}
+    {% block breadcrumb_menu %}
+        <section class="page-title">
+            <div class="container">
+                <header>
+                    <ul class="breadcrumb"><!-- breadcrumb -->
+                        {% spaceless %}
+                            {% page_menu "pages/menus/breadcrumb.html" %}
+                        {% endspaceless %}
+                    </ul>
+                    <!-- /breadcrumb -->
+                    <h2><!-- Page Title -->
+                        {% block title %}{% endblock %}
+                    </h2><!-- /Page Title -->
+                </header>
+            </div>
+        </section>
+    {% endblock %}
 
-    <div class="container">
+    <!-- CONTENT-->
+    {% block main %}{% endblock %}
+    <!-- /CONTENT -->
 
-{% comment %}
-        {% nevercache %}
-        {% if messages %}
-        <div class="messages">
-        {% for message in messages %}
-        <div class="alert alert-dismissable alert-{{ message.tags }}" data-alert="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            {{ message }}
+    <!-- FOOTER -->
+    <footer id="footer">
+        <div class="container">
+
+            <div class="row">
+
+                <!-- col #1 -->
+                <div class="logo_footer dark col-md-3">
+
+                    <img alt="" src="{% static "img/logo_min.png" %}" height="50" class="logo"/>
+
+                    <p class="block">
+                        город Подольск<br/>
+                        улица Большая Серпуховская дом 30<br/>
+                        Время работы: Пн-сб 10-19, Вс 10-17<br/>
+                        Тел: +7 (499) 390-21-86<br/>
+                        Email: info@azbuka-kamnya.ru<br/>
+                    </p>
+
+                    <p class="block"><!-- social -->
+                        <a href="#" class="social fa fa-vk"></a>
+                        <a href="#" class="social fa fa-facebook"></a>
+                        <a href="https://twitter.com/azbuka_kamnya" class="social fa fa-twitter"></a>
+                    </p><!-- /social -->
+                </div>
+                <!-- /col #1 -->
+
+                <!-- col #2 -->
+                <div class="spaced col-md-3 col-sm-4 hidden-xs">
+                    <h4>Последние <strong>Статьи</strong></h4>
+                    <ul class="list-unstyled">
+                        {% blog_recent_posts 5 as recent_posts %}
+                        {% for recent_post in recent_posts %}
+                            <li>
+                                {% spaceless %}
+                                    <a class="block" href="{{ recent_post.get_absolute_url }}">
+                                        {% if settings.BLOG_USE_FEATURED_IMAGE and recent_post.featured_image %}
+                                            <img src="{{ MEDIA_URL }}{% thumbnail recent_post.featured_image 24 24 %}">
+                                        {% endif %}
+                                        {{ recent_post.title }}
+                                    </a>
+                                    <small>{{ recent_post.publish_date_since }}</small>
+                                {% endspaceless %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <!-- /col #2 -->
+
+                <!-- col #3 -->
+                <div class="spaced col-md-3 col-sm-4 hidden-xs">
+                    {% ifinstalled mezzanine.twitter %}
+                        {% include "twitter/tweets.html" %}
+                    {% endifinstalled %}
+                </div>
+                <!-- /col #3 -->
+
+                <!-- col #4 -->
+                <div class="spaced col-md-3 col-sm-4">
+                    <h4>About <strong>Us</strong></h4>
+
+                    <p>
+                        Incredibly beautiful responsive Bootstrap Template for Corporate and Creative Professionals.
+                    </p>
+
+                    <h4>
+                        <small><strong>Subscribe to our Newsletter</strong></small>
+                    </h4>
+                    <form id="newsletterSubscribe" method="post" action="php/newsletter.php" class="input-group">
+                        <input required type="email" class="form-control" name="newsletter_email" id="newsletter_email"
+                               value="" placeholder="E-mail Address">
+								<span class="input-group-btn">
+									<button class="btn btn-primary">SUBMIT</button>
+								</span>
+                    </form>
+
+                </div>
+                <!-- /col #4 -->
+
+            </div>
+
         </div>
-        {% endfor %}
-        </div>
-        {% endif %}
-        {% endnevercache %}
-{% endcomment %}
 
-        <ul class="breadcrumb">
-        {% spaceless %}
-        {% block breadcrumb_menu %}{% page_menu "pages/menus/breadcrumb.html" %}{% endblock %}
-        {% endspaceless %}
-        </ul>
+        <hr/>
 
-        <h1 id="h1_category">{% block title %}{% endblock %}</h1>
-    </div>
-
-    <div class="container" id="main">
-
-        {% block content %}
-        <div class="panel panel-default panel-my">
-            <div class="panel-body">
-                {% block main %}{% endblock %}
+        <div class="copyright">
+            <div class="container text-center fsize12">
+                &copy; <a href="/" target="_blank" class="copyright">Азбука Камня</a> 2014
             </div>
         </div>
-        {% endblock %}
+    </footer>
+    <!-- /FOOTER -->
 
-    </div>
+    <a href="#" id="toTop"></a>
 
 </div>
+<!-- /#wrapper -->
 
-{% nevercache %}
-    {% include "includes/cart_panel.html" %}
-{% endnevercache %}
-
-<footer>
-    <div class="container">
-        {% page_menu "pages/menus/footer.html" %}
-        <p class="text-center text-muted">
-            &copy; Азбука Камня 2014&nbsp;
-            <!-- Yandex.Metrika informer -->
-            <a style="vertical-align: bottom" href="https://metrika.yandex.ru/stat/?id=25193285&amp;from=informer"
-            target="_blank" rel="nofollow"><img src="//bs.yandex.ru/informer/25193285/3_0_FFFFFFFF_FFFFFFFF_0_pageviews"
-            style="width:88px; height:31px; border:0;" alt="Яндекс.Метрика" title="Яндекс.Метрика: данные за сегодня (просмотры, визиты и уникальные посетители)" onclick="try{Ya.Metrika.informer({i:this,id:25193285,lang:'ru'});return false}catch(e){}"/></a>
-            <!-- /Yandex.Metrika informer -->
-        </p>
-    </div>
-</footer>
-
+<!-- JAVASCRIPT FILES -->
 {% compress js %}
-<script src="{% static "mezzanine/js/"|add:settings.JQUERY_FILENAME %}"></script>
-<script src="{% static "js/bootstrap.js" %}"></script>
-<script src="{% static "js/bootstrap-extras.js" %}"></script>
-<script src="{% static "js/ajax-forms.js" %}"></script>
-<script src="{% static "js/product_variation.js" %}"></script>
-{% block extra_js %}{% endblock %}
-{% endcompress %}
+    <script type="text/javascript" src="{% static "plugins/jquery-2.1.1.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "plugins/jquery.isotope.js" %}"></script>
+    <script type="text/javascript" src="{% static "plugins/masonry.js" %}"></script>
 
-{% include "includes/footer_scripts.html" %}
+    <script type="text/javascript" src="{% static "plugins/bootstrap/js/bootstrap.min.js" %}"></script>
+    <script type="text/javascript"
+            src="{% static "plugins/magnific-popup/jquery.magnific-popup.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "plugins/owl-carousel/owl.carousel.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "plugins/knob/js/jquery.knob.js" %}"></script>
+    <script type="text/javascript" src="{% static "plugins/flexslider/jquery.flexslider-min.js" %}"></script>
+
+    <!-- REVOLUTION SLIDER -->
+    <script type="text/javascript"
+            src="{% static "plugins/revolution-slider/js/jquery.themepunch.plugins.min.js" %}"></script>
+    <script type="text/javascript"
+            src="{% static "plugins/revolution-slider/js/jquery.themepunch.revolution.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/revolution_slider.js" %}"></script>
+
+
+    <script type="text/javascript" src="{% static "js/scripts.js" %}"></script>
+    {#		<script type="text/javascript" src="{% static "plugins/styleswitcher/styleswitcher.js" %}"></script>#}
+    {% editable_loader %}
+    {% block extra_js %}{% endblock %}
+
+{% endcompress %}
 
 </body>
 </html>

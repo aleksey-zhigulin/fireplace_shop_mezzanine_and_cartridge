@@ -6,6 +6,26 @@
 <link rel="stylesheet" href="{% static "mezzanine/css/magnific-popup.css" %}">
 {% endblock extra_css %}
 
+{% block main %}
+{{ block.super }}
+
+{% editable page.gallery.content %}
+{{ page.gallery.content|richtext_filters|safe }}
+{% endeditable %}
+
+<div class="gallery row">
+{% with page.gallery.images.all as images %}
+{% for image in images %}
+<div class="col-xs-4 col-sm-3">
+    <a class="thumbnail" rel="#image-{{ image.id }}" title="{{ image.description }}" href="{{ image.file.url }}">
+        <img class="img-responsive" src="{{ MEDIA_URL }}{% thumbnail image.file 131 75 %}">
+    </a>
+</div>
+{% endfor %}
+{% endwith %}
+</div>
+{% endblock %}
+
 {% block extra_js %}
 {{ block.super }}
 <script src="{% static "mezzanine/js/magnific-popup.js" %}"></script>
@@ -21,27 +41,3 @@ $(document).ready(function() {
 });
 </script>
 {% endblock %}
-
-{% block main_2col %}
-{{ block.super }}
-
-{% editable page.gallery.content %}
-{{ page.gallery.content|richtext_filters|safe }}
-{% endeditable %}
-
-<div class="gallery row">
-{% with page.gallery.images.all as images %}
-{% for image in images %}
-<div class="col-xs-3 col-sm-2">
-    <a class="thumbnail" rel="#image-{{ image.id }}" title="{{ image.description }}" href="{{ image.file.url }}">
-        <img class="img-responsive" src="{{ MEDIA_URL }}{% thumbnail image.file 131 131 %}">
-        <div class="caption" style="white-space:nowrap;overflow: hidden;text-overflow: ellipsis">
-            {{ image.description }}
-        </div>
-    </a>
-</div>
-{% endfor %}
-{% endwith %}
-</div>
-{% endblock %}
-

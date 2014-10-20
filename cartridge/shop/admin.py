@@ -29,13 +29,14 @@ are then pushed back onto the one variation for the product.
 from copy import deepcopy
 
 from django.contrib import admin
-from django.db.models import ImageField
+from django.db.models import ImageField, ForeignKey
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
 from mezzanine.conf import settings
 from mezzanine.core.admin import DisplayableAdmin, TabularDynamicInlineAdmin
+from mezzanine.core.forms import OrderWidget
 from mezzanine.pages.admin import PageAdmin
 from mezzanine.utils.urls import admin_url
 
@@ -43,10 +44,10 @@ from cartridge.shop.fields import MoneyField
 from cartridge.shop.forms import ProductAdminForm, ProductVariationAdminForm
 from cartridge.shop.forms import ProductVariationAdminFormset
 from cartridge.shop.forms import DiscountAdminForm, ImageWidget, MoneyWidget
-from cartridge.shop.models import Category, Product, ProductImage, HomePage, HomePageSlides
+from cartridge.shop.models import Category, Product, ProductImage
 from cartridge.shop.models import ProductVariation, ProductOption, Order
 from cartridge.shop.models import OrderItem, Sale, DiscountCode
-from cartridge.shop.models import ProductTopka, ProductHearth, ProductPortal, ProductFacing
+from cartridge.shop.models import ProductTopka, ProductHearth, ProductPortal, ProductFacing, ProductStone
 
 # Lists of field names.
 option_fields = [f.name for f in ProductVariation.option_fields()]
@@ -62,7 +63,7 @@ shipping_fields = _flds("shipping_detail")
 # Categories fieldsets are extended from Page fieldsets, since
 # categories are a Mezzanine Page type.
 category_fieldsets = deepcopy(PageAdmin.fieldsets)
-category_fieldsets[0][1]["fields"][3:3] = ["content", "show_content", "products"]
+category_fieldsets[0][1]["fields"][3:3] = ["content", "show_content", "products", "use_grouped_products"]
 category_fieldsets += ((_("Product filters"), {
     "fields": ("sale", ("price_min", "price_max"), "combined"),
     "classes": ("collapse-closed",)},),)
@@ -73,7 +74,7 @@ if settings.SHOP_CATEGORY_USE_FEATURED_IMAGE:
 # them as filters for dynamic categories when this is the case.
 if settings.SHOP_USE_VARIATIONS:
     category_fieldsets[-1][1]["fields"] = (("options",) +
-                                        category_fieldsets[-1][1]["fields"])
+                                           category_fieldsets[-1][1]["fields"])
 
 
 class CategoryAdmin(PageAdmin):
@@ -144,7 +145,7 @@ product_list_editable = ["status", "available"]
 # in the change list view.
 if settings.SHOP_USE_VARIATIONS:
     product_fieldsets.insert(1, (_("Create new variations"),
-        {"classes": ("create-variations",), "fields": option_fields}))
+                                 {"classes": ("create-variations",), "fields": option_fields}))
 else:
     extra_list_fields = ["sku", "unit_price", "sale_price", "num_in_stock"]
     product_list_display[4:4] = extra_list_fields
@@ -152,7 +153,6 @@ else:
 
 
 class ProductAdmin(DisplayableAdmin):
-
     class Media:
         js = ("cartridge/js/admin/product_variations.js",)
         css = {"all": ("cartridge/css/admin/product.css",)}
@@ -181,7 +181,7 @@ class ProductAdmin(DisplayableAdmin):
 
         # Test that the fieldsets don't differ from ProductAdmin's.
         if (self.model is not Product and
-                self.fieldsets == ProductAdmin.fieldsets):
+                    self.fieldsets == ProductAdmin.fieldsets):
 
             # Make a copy so that we aren't modifying other Admin
             # classes' fieldsets.
@@ -253,14 +253,13 @@ class ProductAdmin(DisplayableAdmin):
         # Run each of the variation manager methods if we're saving
         # the variations formset.
         if formset.model == ProductVariation:
-
             # Build up selected options for new variations.
             options = dict([(f, request.POST.getlist(f)) for f in option_fields
-                             if request.POST.getlist(f)])
+                            if request.POST.getlist(f)])
             # Create a list of image IDs that have been marked to delete.
             deleted_images = [request.POST.get(f.replace("-DELETE", "-id"))
                               for f in request.POST if f.startswith("images-")
-                              and f.endswith("-DELETE")]
+                and f.endswith("-DELETE")]
 
             # Create new variations for selected options.
             self._product.variations.create_from_options(options)
@@ -273,7 +272,7 @@ class ProductAdmin(DisplayableAdmin):
 
             # Save the images formset stored previously.
             super(ProductAdmin, self).save_formset(request, form,
-                                                 self._images_formset, change)
+                                                   self._images_formset, change)
 
             # Run again to allow for no images existing previously, with
             # new images added which can be used as defaults for variations.
@@ -296,7 +295,7 @@ class ProductAdmin(DisplayableAdmin):
                                        content_model.id)
                 return HttpResponseRedirect(change_url)
         return super(ProductAdmin, self).change_view(request, object_id,
-            extra_context=extra_context)
+                                                     extra_context=extra_context)
 
 
 class ProductOptionAdmin(admin.ModelAdmin):
@@ -328,7 +327,6 @@ def address_pairs(fields):
 
 
 class OrderAdmin(admin.ModelAdmin):
-
     class Media:
         css = {"all": ("cartridge/css/admin/order.css",)}
 
@@ -345,52 +343,53 @@ class OrderAdmin(admin.ModelAdmin):
     formfield_overrides = {MoneyField: {"widget": MoneyWidget}}
     fieldsets = (
         (_("Billing details"), {"fields": address_pairs(billing_fields)}),
-         (_("Shipping details"), {"fields": address_pairs(shipping_fields)}),
+        (_("Shipping details"), {"fields": address_pairs(shipping_fields)}),
         (None, {"fields": ("additional_instructions", ("shipping_total",
-            "shipping_type"),
-             ("discount_total", "discount_code"), "item_total",
-            ("total", "status"))}),
+                                                       "shipping_type"),
+                           ("discount_total", "discount_code"), "item_total",
+                           ("total", "status"))}),
     )
 
 
 class SaleAdmin(admin.ModelAdmin):
     list_display = ("title", "active", "discount_deduct", "discount_percent",
-        "discount_exact", "valid_from", "valid_to")
+                    "discount_exact", "valid_from", "valid_to")
     list_editable = ("active", "discount_deduct", "discount_percent",
-        "discount_exact", "valid_from", "valid_to")
+                     "discount_exact", "valid_from", "valid_to")
     filter_horizontal = ("categories", "products")
     formfield_overrides = {MoneyField: {"widget": MoneyWidget}}
     form = DiscountAdminForm
     fieldsets = (
         (None, {"fields": ("title", "active")}),
         (_("Apply to product and/or products in categories"),
-            {"fields": ("products", "categories")}),
+         {"fields": ("products", "categories")}),
         (_("Reduce unit price by"),
-            {"fields": (("discount_deduct", "discount_percent",
-            "discount_exact"),)}),
+         {"fields": (("discount_deduct", "discount_percent",
+                      "discount_exact"),)}),
         (_("Sale period"), {"fields": (("valid_from", "valid_to"),)}),
     )
 
 
 class DiscountCodeAdmin(admin.ModelAdmin):
     list_display = ("title", "active", "code", "discount_deduct",
-        "discount_percent", "min_purchase", "free_shipping", "valid_from",
-        "valid_to")
+                    "discount_percent", "min_purchase", "free_shipping", "valid_from",
+                    "valid_to")
     list_editable = ("active", "code", "discount_deduct", "discount_percent",
-        "min_purchase", "free_shipping", "valid_from", "valid_to")
+                     "min_purchase", "free_shipping", "valid_from", "valid_to")
     filter_horizontal = ("categories", "products")
     formfield_overrides = {MoneyField: {"widget": MoneyWidget}}
     form = DiscountAdminForm
     fieldsets = (
         (None, {"fields": ("title", "active", "code")}),
         (_("Apply to product and/or products in categories"),
-            {"fields": ("products", "categories")}),
+         {"fields": ("products", "categories")}),
         (_("Reduce unit price by"),
-            {"fields": (("discount_deduct", "discount_percent"),)}),
+         {"fields": (("discount_deduct", "discount_percent"),)}),
         (None, {"fields": (("min_purchase", "free_shipping"),)}),
         (_("Valid for"),
-            {"fields": (("valid_from", "valid_to", "uses_remaining"),)}),
+         {"fields": (("valid_from", "valid_to", "uses_remaining"),)}),
     )
+
 
 portal_fieldsets = deepcopy(ProductAdmin.fieldsets)
 portal_fieldsets[0][1]["fields"][3:3] = ["overall_height",
@@ -400,9 +399,11 @@ portal_fieldsets[0][1]["fields"][3:3] = ["overall_height",
                                          "suitable_topka",
                                          "suitable_hearth"]
 
+
 class ProductPortalAdmin(ProductAdmin):
     fieldsets = portal_fieldsets
     filter_horizontal = tuple(deepcopy(ProductAdmin.filter_horizontal)) + ("suitable_topka", "suitable_hearth",)
+
 
 facing_fieldsets = deepcopy(ProductAdmin.fieldsets)
 facing_fieldsets[0][1]["fields"][3:3] = ["overall_height",
@@ -413,6 +414,7 @@ facing_fieldsets[0][1]["fields"][3:3] = ["overall_height",
                                          "type",
                                          "suitable_hearth",
                                          "suitable_topka"]
+
 
 class ProductFacingAdmin(ProductAdmin):
     fieldsets = facing_fieldsets
@@ -428,6 +430,7 @@ hearth_fieldsets[0][1]["fields"][3:3] = ["power",
                                          "heating",
                                          "suitable_portals",
                                          "suitable_faces"]
+
 
 class ProductHearthAdmin(ProductAdmin):
     fieldsets = hearth_fieldsets
@@ -448,27 +451,11 @@ topka_fieldsets[0][1]["fields"][3:3] = ["power",
                                         "suitable_portals",
                                         "suitable_faces"]
 
+
 class ProductTopkaAdmin(ProductAdmin):
     fieldsets = topka_fieldsets
     filter_horizontal = tuple(deepcopy(ProductAdmin.filter_horizontal)) + ("suitable_portals", "suitable_faces")
 
-
-home_fieldsets = deepcopy(PageAdmin.fieldsets)
-home_fieldsets[0][1]["fields"][3:3] = ["left_top", "left_bottom",
-                                       "slides_category",
-                                       "middle_top", "middle_bottom",
-                                       "right_top", "right_bottom",
-                                       "extra_links"]
-home_fieldsets = list(home_fieldsets)
-
-class HomePageSlidesAdmin(TabularDynamicInlineAdmin):
-    model = HomePageSlides
-    formfield_overrides = {ImageField: {"widget": ImageWidget}}
-
-class HomePageAdmin(PageAdmin):
-
-    inlines = (HomePageSlidesAdmin,)
-    fieldsets = home_fieldsets
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
@@ -482,4 +469,5 @@ admin.site.register(ProductTopka, ProductTopkaAdmin)
 admin.site.register(ProductHearth, ProductHearthAdmin)
 admin.site.register(ProductPortal, ProductPortalAdmin)
 admin.site.register(ProductFacing, ProductFacingAdmin)
-admin.site.register(HomePage, HomePageAdmin)
+admin.site.register(ProductStone, ProductAdmin)
+

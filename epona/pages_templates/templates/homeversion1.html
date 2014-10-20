@@ -1,0 +1,136 @@
+{% load shortcodes_tags mezzanine_tags %}
+
+<!-- REVOLUTION SLIDER -->
+{% slider_shortcode slider %}
+<!-- /REVOLUTION SLIDER -->
+
+
+<!-- CALLOUT -->
+{% default_callout_shortcode callout_top 'dark' 'True' %}
+<!-- /CALLOUT -->
+
+<!-- WELCOME -->
+<section>
+    <div class="container">
+        <header>
+            <h2>
+                {{ welcome.header }}
+                    <span class="word-rotator"><!-- word rotator -->
+                        <span class="items bold">
+                            {% for word in welcome.word_rotator %}
+                                <span><em>{{ word }}</em></span>
+                            {% endfor %}
+                        </span>
+                    </span><!-- /word rotator -->
+            </h2>
+
+            <p class="lead">{{ welcome.text }}</p>
+        </header>
+
+
+        <!-- FEATURED BOXES 3 -->
+        <div class="row featured-box-minimal">
+            {% for box in welcome.featured_boxes %}
+                <div class="col-md-4 col-sm-6 col-xs-12">
+                    <h4><i class="fa {{ box.icon }}"></i> {{ box.title }}</h4>
+
+                    <p>{{ box.text }}</p>
+                </div>
+            {% endfor %}
+        </div>
+        <!-- /FEATURED BOXES 3 -->
+
+    </div>
+</section>
+<!-- /WELCOME -->
+
+
+<!-- PREMIUM -->
+<section class="alternate">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-6">
+                <h2>{{ premium.header }} <strong>{{ premium.header_strong }}</strong></h2>
+
+                <p class="lead">{{ premium.lead_text }}</p>
+
+                <p>{{ premium.text }}</p>
+            </div>
+
+            <div class="col-md-6 text-center">
+                <img class="img-responsive animate_fade_in" src="{{ MEDIA_URL }}{% thumbnail premium.image 550 360 %}"
+                     alt=""/>
+            </div>
+        </div>
+
+        {% boxed_counters_shortcode premium.boxed_counters %}
+    </div>
+</section>
+<!-- /PREMIUM -->
+
+
+<!-- DARK CALLOUT -->
+{% arrow_callout_shortcode callout_down 'down' 'True' %}
+<!-- /DARK CALLOUT -->
+
+<section>
+    <div class="container">
+
+        <div class="text-center">
+            <img class="img-responsive animate_fade_in" src="{{ MEDIA_URL }}{% thumbnail features 940 500 %}" alt=""/>
+        </div>
+
+    </div>
+    <!-- /.container -->
+</section>
+
+
+<!-- DARK CALLOUT -->
+{% arrow_callout_shortcode callout_up 'up' 'True' %}
+<!-- /DARK CALLOUT -->
+
+<!-- CALLOUT -->
+{% default_callout_shortcode callout_colored 'colored' 'True' %}
+<!-- /CALLOUT -->
+
+
+<!-- TESTIMONIALS -->
+<section>
+    <div class="container">
+
+
+        {% header_testimonial_shortcode testimonials.header_testimonial %}
+
+        <div class="row">
+            {% for testimonial in testimonials.narrow_testimonials %}
+                <div class="col-md-4">
+                    {% classic_testimonial_shortcode testimonial %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="row">
+            {% for testimonial in testimonials.wide_testimonials %}
+                <div class="col-md-6">
+                    {% classic_testimonial_shortcode testimonial %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="owl-carousel animate_from_bottom text-center"
+             data-plugin-options='{"items": 1, "singleItem": true, "navigation": false, "pagination": true, "autoPlay": true, "transitionStyle":"fadeUp"}'>
+            <!-- transitionStyle: fade, backSlide, goDown, fadeUp,  -->
+            {% for testimonial in testimonials.carousel_testimonials %}
+                {% testimonials_carousel_shortcode testimonial %}
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+<!-- /TESTIMONIALS -->
+
+
+<!-- CALLOUT -->
+{% default_callout_shortcode callout_bottom 'dark' 'True' %}
+<!-- /CALLOUT -->

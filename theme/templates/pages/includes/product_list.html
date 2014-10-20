@@ -1,0 +1,35 @@
+{% load mezzanine_tags shop_tags i18n %}
+
+{% for product in products %}
+    <div class="col-md-4 col-sm-4"><!-- item -->
+        <a class="shop-item-list" href="{{ product.get_absolute_url }}">
+            {% if product.image %}
+            <figure><!-- image -->
+                <img class="img-responsive" src="{{ MEDIA_URL }}{% thumbnail product.image 148 148 %}" alt="" />
+            </figure><!-- /image -->
+            {% else %}
+            <div class="placeholder"></div>
+            {% endif %}
+            <span class="shop-stock-info stock-yes"><!-- stock -->
+                <i class="fa fa-check"></i> в наличии
+            </span><!-- /stock -->
+            <div class="product-info"><!-- title and price -->
+                <h2>
+                    <span class="product-name">{{ product }}</span>
+                    {% if product.has_price %}
+                        <span class="bold">
+                            {% if product.max_price != product.min_price %}от{% endif %}
+                            {{ product.price|currency }}
+                            {% if product.content_model == "productstone" %}за м&sup2;{% endif %}
+                        </span>
+                        {% if product.on_sale %}
+                        <span class="line-through">{{ product.unit_price|currency }}</span>
+                        {% endif %}
+                    {% else %}
+                        <span class="bold">{% trans "Coming soon" %}</span>
+                    {% endif %}
+                </h2>
+            </div><!-- /title and price -->
+        </a>
+    </div><!-- /item -->
+{% endfor %}

@@ -1,0 +1,27 @@
+{% load i18n future pages_tags mezzanine_tags %}
+{% spaceless %}
+{% if page_branch_in_menu %}
+    {% for page in page_branch %}
+        {% if page.in_menu %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
+                    </h3>
+                </div>
+                <div class="panel-body preview">
+                    {% editable page.content %}
+                    {{ page.content|richtext_filters|safe }}
+                    {% endeditable %}
+                </div>
+                <div class="panel-footer">
+                    <div class="text-right">
+                        <a class="btn btn-default" href="{{ page.get_absolute_url }}">Читать далее</a>
+                    </div>
+                </div>
+            </div>
+            {% if page.has_children_in_menu %}{% page_menu page %}{% endif %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% endspaceless %}

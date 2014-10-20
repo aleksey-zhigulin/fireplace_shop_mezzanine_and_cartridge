@@ -4,8 +4,8 @@
 ==========================================*/
 
 body {
-  /*padding-top: 20px;*/
-  /*line-height: 165%;*/
+  padding-top: 50px;
+  line-height: 165%;
 }
 h1 {
   margin-bottom: 15px;
@@ -28,14 +28,14 @@ ul, ol {
 .navlist-menu-level-0 {
   margin:-5px 0;
 }
-/*.navbar-text {*/
-  /*font-style: italic;*/
-  /*font-size: 11px;*/
+.navbar-text {
+  font-style: italic;
+  font-size: 11px;
   /*color: #aaa !important;*/
-  /*line-height: 100%;*/
-  /*padding-top: 5px;*/
-  /*margin:15px 20px 0 5px;*/
-/*}*/
+  line-height: 100%;
+  padding-top: 5px;
+  margin:15px 20px 0 5px;
+}
 .navbar-form.navbar-right {
   padding-right: 0;
   margin-right: -10px;
@@ -46,11 +46,14 @@ ul, ol {
 .messages {
   margin-top: 20px;
 }
-/*.tree > .nav .nav > li {*/
-  /*padding-left: 15px;*/
-/*}*/
+.tree > .nav .nav > li {
+  padding-left: 15px;
+}
 .tree .active > a {
   background-color: #EEEEEE;
+}
+.tree .active-branch > a {
+  font-weight: bold;
 }
 .breadcrumb > li + li:before {
   padding: 0 5px 0 10px;
@@ -62,12 +65,11 @@ ul, ol {
 .nav-footer > ul {
   display: inline-block;
   width: 120px;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: 50px;
   vertical-align: top;
 }
 .nav-footer > ul > li {
-  padding: 0;
+  padding: 10px 0;
 }
 footer {
   background-color: #F8F8F8;
@@ -124,8 +126,8 @@ img.pull-left {
           MULTI-LEVEL DROP-DOWN NAV
 ==========================================*/
 .nav > li > a.dropdown-toggle:hover{
-  background-color: #e7e7e7;
-  color: #555;
+  /*background-color: #e7e7e7;*/
+  /*color: #555;*/
 }
 .dropdown-submenu {
   position: relative;
@@ -211,6 +213,9 @@ img.pull-left {
 .tag-weight-4 {
   font-size: 180%;
 }
+.recent-posts img {
+    margin: 2px;
+}
 
 /*========================================
             MEZZANINE FORMS
@@ -239,7 +244,7 @@ img.pull-left {
 .form-group > textarea {
   display: block;
   width: 100%;
-  /*max-width: 300px;*/
+  max-width: 300px;
   height: 34px;
   padding: 6px 12px;
   font-size: 14px;
@@ -357,9 +362,10 @@ img.pull-left {
   width: 25%;
 }
 .form-actions {
-  background-color: transparent;
-  /*padding: 20px;*/
-  /*margin-bottom: 15px;*/
+  background-color: #F8F8F8;
+  border-top: 1px solid #E7E7E7;
+  padding: 20px;
+  margin-bottom: 15px;
   border-radius: 5px;
 }
 /* We apply the clearfix hack to .form-actions because we often
@@ -458,19 +464,19 @@ float the buttons inside it. This prevents collapsing. */
 ==========================================*/
 
 /* Display dropdowns on hover only in desktops (md and lg classes) */
-/*@media (min-width: 768px) {*/
-  /*.navbar-nav > li.dropdown:hover > ul.dropdown-menu {*/
-    /*display: block;*/
-  /*}*/
-/*}*/
-/*.tree {display:none;}*/
-/*@media (min-width: 992px) {*/
-  /*.tree {display:block;}*/
-/*}*/
-/*.navbar .container {width:100%;}*/
-/*@media (min-width: 992px) {*/
-  /*.navbar .container {width:970px;}*/
-/*}*/
-/*@media (min-width: 1200px) {*/
-  /*.navbar .container {width:1170px;}*/
-/*}*/
+@media (min-width: 768px) {
+  .navbar-nav > li.dropdown:hover > ul.dropdown-menu {
+    display: block;
+  }
+}
+.tree {display:none;}
+@media (min-width: 992px) {
+  .tree {display:block;}
+}
+.navbar .container {width:100%;}
+@media (min-width: 992px) {
+  .navbar .container {width:970px;}
+}
+@media (min-width: 1200px) {
+  .navbar .container {width:1170px;}
+}

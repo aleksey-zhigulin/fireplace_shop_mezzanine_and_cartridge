@@ -1,13 +1,23 @@
 {% load i18n future pages_tags %}
 
-
 {% for page in page_branch %}
-    {% if not page.is_current and page.is_current_or_ascendant %}
-        <li id="breadcrumb-menu-{{ page.html_id }}">
-        <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
-        </li>
+
+    {% if page.is_primary and forloop.first %}
+    <li>
+        <a href="{% url "home" %}">{% trans "Home" %}</a>
+    </li>
     {% endif %}
-    {% if not page.is_current %}
-        {% page_menu page %}
+
+    {% if page.is_current_or_ascendant %}
+        {% if page.is_current %}
+            <li class="active">{{ page.title }}</li>
+        {% else %}
+            <li>
+                <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
+            </li>
+        {% endif %}
+        {% if page.has_children %}{% page_menu page %}{% endif %}
     {% endif %}
+
 {% endfor %}
+

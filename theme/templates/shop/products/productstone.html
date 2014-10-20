@@ -1,0 +1,16 @@
+{% extends "shop/product.html" %}
+{% load shop_tags mezzanine_tags i18n %}
+{% block characteristics %}
+    {% include "shop/includes/characteristics.html" with panel_title='Описание' characteristics=characteristics.items%}
+{% endblock %}
+
+{% block add_product_form%}
+{% for field in add_product_form %}
+    {% if field.html_name != "quantity" %}
+    <div id="add-cart" class="form-group">
+        {{ field.errors }}
+        {{ field.label_tag }} {{ field }}
+    </div>
+    {% endif %}
+{% endfor %}
+{% endblock %}

@@ -30,9 +30,9 @@
         <td class="right">{{ order.total|currency }}</td>
         <td>{{ order.get_status_display }}</td>
         <td class="order-actions">
-            <a class="btn btn-sm btn-primary" href="{% url "shop_invoice" order.id %}?format=pdf">{% trans "Скачать PDF" %}</a>
-            <a class="btn btn-sm btn-default" href="{% url "shop_invoice_resend" order.id %}?next={{ request.path }}">{% trans "Отправить информацию о заказе заново" %}</a>
-            <a class="btn btn-sm btn-default" target="_blank" href="{% url "shop_invoice" order.id %}">{% trans "Посмотреть информация о заказе" %}</a>
+            <a class="btn btn-sm btn-primary" href="{% url "shop_invoice" order.id %}?format=pdf">{% trans "Download PDF" %}</a>
+            <a class="btn btn-sm btn-default" href="{% url "shop_invoice_resend" order.id %}?next={{ request.path }}">{% trans "Re-send order email" %}</a>
+            <a class="btn btn-sm btn-default" target="_blank" href="{% url "shop_invoice" order.id %}">{% trans "View invoice" %}</a>
         </td>
     </tr>
     {% endfor %}
@@ -41,7 +41,7 @@
 {% pagination_for orders %}
 
 {% else %}
-<p>{% trans "Вы еще ничего не заказали у нас." %}</p>
+<p>{% trans "You have not ordered anything from us yet." %}</p>
 {% endif %}
 
 {% endblock %}

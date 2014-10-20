@@ -1,0 +1,116 @@
+{% extends "pages/page.html" %}
+
+{% load mezzanine_tags %}
+
+{% block breadcrumb_menu %}{% endblock %}
+
+{% block main %}
+
+    <!-- GOOGLE MAP -->
+    <div id="gmap"><!-- map container --></div>
+    {% block extra_js %}{{ block.super }}
+    <script type="text/javascript">
+        var	$googlemap_moscow_latitude 	= 55.8386043,
+            $googlemap_moscow_longitude	= 37.4393103,
+            $googlemap_podolsk_latitude 	= 55.420245,
+            $googlemap_podolsk_longitude	= 37.546350,
+            $googlemap_zoom			= 9;
+    </script>
+    {% endblock %}
+    <!-- /GOOGLE MAP -->
+
+    <!-- CONTENT -->
+    <section>
+        <div class="container">
+
+            <div class="row">
+
+                <!-- FORM -->
+                <div class="col-md-8">
+
+                    <h3>Drop us a line or just say <strong><em>Hello!</em></strong></h3>
+
+                    <!-- Alert -->
+                    <div id="_sent_ok_" class="alert alert-success fade in fsize16 hide">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <span id="_msg_txt_"><strong>Thank You!</strong> Your message successfully sent!</span>
+                    </div><!-- /Alert -->
+
+                    <form id="contactForm" action="php/contact.php" method="post">
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <label>Full Name *</label>
+                                    <input required type="text" value="" data-msg-required="Please enter your name." maxlength="100" class="form-control" name="contact_name" id="contact_name">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>E-mail Address *</label>
+                                    <input required type="email" value="" data-msg-required="Please enter your email address." data-msg-email="Please enter a valid email address." maxlength="100" class="form-control" name="contact_email" id="contact_email">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <label>Subject</label>
+                                    <input type="text" value="" data-msg-required="Please enter the subject." maxlength="100" class="form-control" name="contact_subject" id="contact_subject">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <label>Message *</label>
+                                    <textarea required maxlength="5000" data-msg-required="Please enter your message." rows="10" class="form-control" name="contact_comment" id="contact_comment"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input class="hidden" type="text" name="captcha" id="captcha" value="" /><!-- keep it hidden -->
+                                <input type="submit" value="Send Message" class="btn btn-primary btn-lg" id="contact_submit" />
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <!-- /FORM -->
+
+
+                <!-- INFO -->
+                <div class="col-md-4">
+
+                    <h2>Приезжайте к нам</h2>
+
+                    <p>
+                        бла бла бла
+                    </p>
+
+                    <div class="divider half-margins"><!-- divider --></div>
+
+                    <p>
+                        <span class="block"><strong><i class="fa fa-map-marker"></i> Адрес:</strong> г. Подольск, Большая Серпуховская 30</span>
+                        <span class="block"><strong><i class="fa fa-phone"></i> Телефон:</strong> <a href="tel:+7 (499) 390-21-86">+7 (499) 390-21-86</a></span>
+                        <span class="block"><strong><i class="fa fa-envelope"></i> Email:</strong> <a href="mailto:info@azbuka-kamnya.ru">info@azbuka-kamnya.ru</a></span>
+                    </p>
+
+                    <div class="divider half-margins"><!-- divider --></div>
+
+                    <h4 class="font300">Время работы</h4>
+                    <p>
+                        <span class="block"><strong>Понедельник-Суббота:</strong> с 10:00 до 19:00</span>
+                        <span class="block"><strong>Воскресенье:</strong> с 10:00 до 17:00</span>
+                    </p>
+
+                </div>
+                <!-- /INFO -->
+
+            </div>
+
+        </div>
+    </section>
+    <!-- /CONTENT -->
+
+{% endblock %}
+
+

@@ -17,14 +17,6 @@ from xml.dom import minidom
 
 CURRENCIES = {'E': 'EUR', 'R': 'RUR', 'U': 'USD'}
 
-def prettify(elem):
-    """Return a pretty-printed XML string for the Element.
-    """
-    rough_string = tostring(elem, 'utf-8')
-    reparsed = minidom.parseString(rough_string)
-    return reparsed.toprettyxml(indent="  ").encode('utf-8')
-
-
 class Command(BaseCommand):
     help = _('Daily generate YML file for Yandex')
 
@@ -68,7 +60,7 @@ def generate_xml():
 
     offers = ElementTree.SubElement(shop, 'offers')
     for product in Product.objects.published():
-        if not product.unit_price:
+        if not product.unit_price or product.content_model == 'productstone':
             continue
         offer = ElementTree.SubElement(
             offers,
@@ -112,7 +104,6 @@ def generate_xml():
     tree = ElementTree.ElementTree(root).getroot()
     doctype = """<?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE yml_catalog SYSTEM "shops.dtd">"""
-    # xml_string = prettify(tree).replace('<?xml version="1.0" ?>', doctype)
     xml_string = '\n'.join([doctype, tostring(tree, 'utf-8')])
     if settings.DEBUG:
         open('products.xml', 'w').write(xml_string)

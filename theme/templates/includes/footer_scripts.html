@@ -1,39 +1,6 @@
-{% load staticfiles mezzanine_tags %}
+{% load mezzanine_tags %}
 
 {% editable_loader %}
-
-<!-- Yandex.Metrika counter -->
-{% if not request.user.is_staff %}
-{% block yaParams %}{% endblock %}
-<script type="text/javascript">
-(function (d, w, c) {
-    (w[c] = w[c] || []).push(function() {
-        try {
-            w.yaCounter25193285 = new Ya.Metrika({id:25193285,
-                    webvisor:true,
-                    clickmap:true,
-                    trackLinks:true,
-                    accurateTrackBounce:true,
-                    params:window.yaParams||{ }
-            });
-        } catch(e) { }
-    });
-
-    var n = d.getElementsByTagName("script")[0],
-        s = d.createElement("script"),
-        f = function () { n.parentNode.insertBefore(s, n); };
-    s.type = "text/javascript";
-    s.async = true;
-    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
-
-    if (w.opera == "[object Opera]") {
-        d.addEventListener("DOMContentLoaded", f, false);
-    } else { f(); }
-})(document, window, "yandex_metrika_callbacks");
-</script>
-<noscript><div><img src="//mc.yandex.ru/watch/25193285" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-{% endif %}
-<!-- /Yandex.Metrika counter -->
 
 <script>
 {% if settings.GOOGLE_ANALYTICS_ID and not request.user.is_staff %}
@@ -48,62 +15,3 @@ _gaq.unshift(['_setAccount', '{{ settings.GOOGLE_ANALYTICS_ID }}']);
 })(document, 'script');
 {% endif %}
 </script>
-
-{#  Auto closing alerts #}
-
-<script type="text/javascript">
-    $(document).ready(function () {
-
-        window.setTimeout(function() {
-            $(".alert").fadeTo(1500, 0).slideUp(500, function(){
-                $(this).remove();
-            });
-        }, 700);
-
-    });
-</script>
-
-{#  Makes modal reload    #}
-
-<script>
-    $('#myModal').on('hidden.bs.modal', function () {
-      $(this).removeData('bs.modal');
-    });
-</script>
-
-{#  Cart panel affix helper    #}
-
-<script>
-    $(document).ready(
-        $(function() {
-            $('#bottom_cart').removeClass("hidden");
-            $('#bottom_cart').affix({
-                offset: { bottom: $('#bottom_cart').offset().bottom }
-            });
-        })
-    )
-</script>
-
-{#  Home page images positioning #}
-
-<script>
-    resizeImg = function() {
-        $(".thumbnail-home-slides").each(function(){
-            var refW = $(this).width();
-            var refH = $(this).height();
-
-            if ($(window).width() < 768) {
-                $(this).css("height", refW / 2);
-                $(this).find("img").css("height", refW / 2 + 2);
-            } else {
-                $(this).css("height", '');
-                $(this).find("img").css("height", refH + 2);
-            }
-            $(this).find("img").css("width", refW);
-        });
-    }
-    $(window).resize(resizeImg);
-    $(document).ready(resizeImg);
-</script>
-
-<script src="{% static "js/ajax-forms.js" %}"></script>

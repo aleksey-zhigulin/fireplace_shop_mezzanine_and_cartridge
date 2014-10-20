@@ -1,0 +1,34 @@
+{% load i18n future pages_tags shop_tags mezzanine_tags %}
+
+<div id="slides-on-home" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+        {% for slide in slides %}
+            <li data-target="#slides-on-home" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
+        {% endfor %}
+    </ol>
+
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner">
+        {% for slide in slides %}
+            <div class="item {% if forloop.first %}active{% endif %}">
+                <a href="{{ slide.link.get_absolute_url }}">
+                    <img src="{{ MEDIA_URL }}{% thumbnail slide.file 900 500 %}">
+                </a>
+                <div class="carousel-caption">
+                    <h3>{{ slide.title }}</h3>
+                    <p>{{ slide.description }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Controls -->
+    <a class="left carousel-control" href="#slides-on-home" role="button" data-slide="prev">
+       <span class="glyphicon glyphicon-chevron-left"></span>
+    </a>
+    <a class="right carousel-control" href="#slides-on-home" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+    </a>
+</div>
+

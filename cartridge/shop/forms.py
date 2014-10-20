@@ -25,7 +25,7 @@ from cartridge.shop.models import Product, ProductOption, ProductVariation
 from cartridge.shop.models import Cart, CartItem, Order, DiscountCode
 from cartridge.shop.utils import (make_choices, set_locale, set_shipping,
                                   clear_session)
-
+import datetime
 
 ADD_PRODUCT_ERRORS = {
     "invalid_options": _("The selected options are currently unavailable."),
@@ -537,3 +537,11 @@ class DiscountAdminForm(forms.ModelForm):
             error = _("Please enter a value for only one type of reduction.")
             self._errors[fields[0]] = self.error_class([error])
         return super(DiscountAdminForm, self).clean()
+
+
+# class BookCallForm(forms.Form):
+#     phone_number = forms.IntegerField()
+#     name = forms.CharField()
+#     when = forms.DateField()
+#     def clean(self):
+#         pass

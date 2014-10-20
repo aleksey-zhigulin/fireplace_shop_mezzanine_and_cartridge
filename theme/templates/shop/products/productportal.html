@@ -1,32 +1,16 @@
 {% extends "shop/product.html" %}
 {% load shop_tags mezzanine_tags i18n %}
 {% block characteristics %}
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h4>Характеристики</h4>
-        </div>
-        <table class="table table-hover">
-            <tbody>
-                {% for name, value in characteristics.items %}
-                    {% if value %}
-                        <tr>
-                            <td>{{ name }}</td>
-                            <td>{{ value}}</td>
-                        </tr>
-                    {% endif %}
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+    {% include "shop/includes/characteristics.html" with panel_title='Характеристики' characteristics=characteristics.items%}
 {% endblock %}
 
 {% block suitable_prod %}
     {% if suitable_topka %}
     <h2>Подходящие топки</h2>
-    {% include "shop/includes/suitable_prods.html" with suitable_products=suitable_topka %}
+    {% include "pages/includes/product_list.html" with products=suitable_topka %}
     {% endif %}
     {% if suitable_hearth %}
     <h2>Подходящие очаги</h2>
-    {% include "shop/includes/suitable_prods.html" with suitable_products=suitable_hearth %}
+    {% include "pages/includes/product_list.html" with products=suitable_hearth %}
     {% endif %}
 {% endblock %}

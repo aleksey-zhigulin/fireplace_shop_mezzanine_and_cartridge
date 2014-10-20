@@ -1,0 +1,75 @@
+{% extends "pages/page.html" %}
+
+{% load mezzanine_tags %}
+
+{% block main %}
+    <!-- CONTENT -->
+    <section>
+        <div class="container">
+
+            <!-- BORN TO BE A WINNER -->
+            <article class="row">
+                <div class="col-md-6">
+                    <div class="owl-carousel controlls-over"
+                         data-plugin-options='{"items": 1, "singleItem": true, "navigation": true, "pagination": false, "transitionStyle":"fadeUp"}'>
+                        {% for image in images %}
+                            <div>
+                                <img class="img-responsive" src="{{ MEDIA_URL }}{% thumbnail image.file 555 311 %}" alt="">
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h3>
+                        {{ header }}
+                        <span class="word-rotator"><!-- word rotator -->
+                            <span class="items bold">
+                                {% for word in header_word_rotator %}
+                                    <span>{{ word }}</span>
+                                {% endfor %}
+                            </span>
+                        </span><!-- /word rotator -->
+                    </h3>
+
+                    {{ content|safe }}
+                </div>
+            </article>
+            <!-- /BORN TO BE A WINNER -->
+
+
+            <hr/>
+
+
+            <h3>{{ timeline.header }}</h3>
+
+            <!-- Timeline -->
+            <div class="timeline">
+                <div class="timeline-left">
+                    {% for year in timeline.years %}
+                        <div class="item">
+                            <h4><b>{{ year.number }}</b></h4>
+
+                            <p>{{ year.progress }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- /Timeline -->
+
+
+            <!-- Partners/Brands -->
+            <div class="owl-carousel"
+                 data-plugin-options='{"items": 5, "singleItem": false, "autoPlay": true, "navigation": false, "pagination": false}'>
+                {% for brand in brands %}
+                    <div class="text-center">
+                        <img class="img-responsive" src="{{ MEDIA_URL }}{% thumbnail brand.image 137 77 %}" alt="">
+                    </div>
+                {% endfor %}
+            </div>
+            <!-- /Partners/Brands -->
+
+        </div>
+    </section>
+    <!-- /CONTENT -->
+
+{% endblock %}
