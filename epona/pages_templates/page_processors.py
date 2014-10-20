@@ -2,9 +2,12 @@
 
 from __future__ import unicode_literals
 
+from django.http.response import HttpResponseRedirect
+
 from mezzanine.pages.page_processors import processor_for
 
-from epona.pages_templates.models import HomeVersion1, AboutUsBasic
+from epona.pages_templates.models import HomeVersion1, AboutUsBasic, Contacts
+from epona.pages_templates.forms import FeedBackForm
 
 
 @processor_for(HomeVersion1)
@@ -43,7 +46,7 @@ def homeversion1_processor(request, page):
 
 
 @processor_for(AboutUsBasic)
-def homeversion1_processor(request, page):
+def aboutusbasic_processor(request, page):
     page = page.aboutusbasic
     return {
         "images": page.images.all(),
@@ -55,4 +58,21 @@ def homeversion1_processor(request, page):
             "years": page.years.all(),
         },
         "brands": page.brands.all(),
+    }
+
+
+@processor_for(Contacts)
+def contacts_processor(request, page):
+    form = FeedBackForm()
+    if request.method == "POST":
+        form = FeedBackForm(request.POST)
+        if form.is_valid():
+            # Form processing goes here.
+            redirect = request.path + "?submitted=true"
+            return HttpResponseRedirect(redirect)
+    return {
+        "feedback_form": form,
+        "form_header": page.contacts.form_header,
+        "info_header": page.contacts.info_header,
+        "info_content": page.contacts.info_content,
     }

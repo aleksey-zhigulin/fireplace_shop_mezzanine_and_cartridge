@@ -1,0 +1,132 @@
+{% extends "pages/page.html" %}
+
+{% load mezzanine_tags %}
+
+{% block breadcrumb_menu %}{% endblock %}
+
+{% block main %}
+
+    <!-- GOOGLE MAP -->
+    <div id="gmap"><!-- map container --></div>
+    {% block extra_js %}{{ block.super }}
+        <script type="text/javascript">
+            var $googlemap_moscow_latitude = 55.8386043,
+                    $googlemap_moscow_longitude = 37.4393103,
+                    $googlemap_podolsk_latitude = 55.420245,
+                    $googlemap_podolsk_longitude = 37.546350,
+                    $googlemap_zoom = 9;
+        </script>
+    {% endblock %}
+    <!-- /GOOGLE MAP -->
+
+    <!-- CONTENT -->
+    <section>
+        <div class="container">
+
+            <div class="row">
+
+                <!-- FORM -->
+                <div class="col-md-8">
+
+                    <h3>{{ form_header }}</h3>
+
+                    <!-- Alert -->
+                    <div id="_sent_ok_"
+                         class="alert alert-success fade in fsize16 {% if not request.GET.submitted %}hide{% endif %}">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <span id="_msg_txt_"><strong>Спасибо!</strong> Ваше сообщение успешно отправлено!</span>
+                    </div>
+                    <!-- /Alert -->
+
+                    <form action="." method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-6 {% if feedback_form.fullname.errors %}has-error{% endif %}">
+                                    <label class="control-label">
+                                        {{ feedback_form.fullname.label }}{% if feedback_form.fullname.field.required %}
+                                            *{% endif %}</label>
+                                    {{ feedback_form.fullname }}
+                                </div>
+                                <div class="col-md-6 {% if feedback_form.email.errors %}has-error{% endif %}">
+                                    <label class="control-label">
+                                        {{ feedback_form.email.label }}{% if feedback_form.email.field.required %}
+                                            *{% endif %}</label>
+                                    {{ feedback_form.email }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-12 {% if feedback_form.subject.errors %}has-error{% endif %}">
+                                    <label class="control-label">
+                                        {{ feedback_form.subject.label }}{% if feedback_form.subject.field.required %}
+                                            *{% endif %}</label>
+                                    {{ feedback_form.subject }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-12 {% if feedback_form.message.errors %}has-error{% endif %}">
+                                    <label class="control-label">
+                                        {{ feedback_form.message.label }}{% if feedback_form.message.field.required %}
+                                            *{% endif %}</label>
+                                    {{ feedback_form.message }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input class="hidden" type="text" name="captcha" id="captcha" value=""/><!-- keep it hidden -->
+                                <input type="submit" value="Отправить сообщение" class=" btn btn-primary btn-lg"
+                                       id="contact_submit"/>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <!-- /FORM -->
+
+
+                <!-- INFO -->
+                <div class="col-md-4">
+
+                    <h2>{{ info_header }}</h2>
+
+                    <p>
+                        {{ info_content }}
+                    </p>
+
+                    <div class="divider half-margins"><!-- divider --></div>
+
+                    <p>
+                        <span class="block"><strong><i class="fa fa-map-marker"></i> Адрес в Москве:</strong> ул. Сходненская 10, офис 15</span>
+                        <span class="block"><strong><i class="fa fa-map-marker"></i> Адрес в Подольске:</strong> ул. Большая Серпуховская 30</span>
+                        <span class="block"><strong><i class="fa fa-phone"></i> Телефон:</strong> <a
+                                href="tel:+7 (499) 390-21-86">+7 (499) 390-21-86</a></span>
+                        <span class="block"><strong><i class="fa fa-envelope"></i> Email:</strong> <a
+                                href="mailto:info@azbuka-kamnya.ru">info@azbuka-kamnya.ru</a></span>
+                    </p>
+
+                    <div class="divider half-margins"><!-- divider --></div>
+
+                    <h4 class="font300">Время работы</h4>
+
+                    <p>
+                        <span class="block"><strong>Понедельник-Суббота:</strong> с 10:00 до 19:00</span>
+                        <span class="block"><strong>Воскресенье:</strong> с 10:00 до 17:00</span>
+                    </p>
+
+                </div>
+                <!-- /INFO -->
+
+            </div>
+
+        </div>
+    </section>
+    <!-- /CONTENT -->
+
+{% endblock %}
+
+
